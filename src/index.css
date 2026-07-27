@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 @theme {
-  --font-display: "Cinzel", "Georgia", serif;
-  --font-body: "Crimson Text", "Georgia", serif;
+  --font-display: "Inter", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, sans-serif;
 
   --color-ocean-950: #050d18;
   --color-ocean-900: #081a2c;
