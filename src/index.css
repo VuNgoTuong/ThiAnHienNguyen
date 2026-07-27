@@ -1,0 +1,95 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Cinzel", "Georgia", serif;
+  --font-body: "Crimson Text", "Georgia", serif;
+
+  --color-ocean-950: #050d18;
+  --color-ocean-900: #081a2c;
+  --color-ocean-800: #0d2842;
+  --color-ocean-700: #133a5c;
+  --color-ocean-600: #1a4f78;
+  --color-ocean-500: #1f6690;
+
+  --color-teal-500: #1c8a8a;
+  --color-teal-400: #2fb0ab;
+
+  --color-parchment-100: #faf3df;
+  --color-parchment-200: #f2e6c4;
+  --color-parchment-300: #e6d3a3;
+
+  --color-gold-400: #e8c368;
+  --color-gold-500: #d3a24a;
+  --color-gold-600: #b3812f;
+
+  --color-ink-900: #2a1e10;
+  --color-ink-700: #4a3820;
+
+  --shadow-parchment: 0 12px 30px -12px rgb(0 0 0 / 0.6);
+
+  --animate-drift-slow: drift 26s linear infinite;
+  --animate-drift-medium: drift 16s linear infinite;
+  --animate-drift-fast: drift 10s linear infinite reverse;
+  --animate-bob: bob 3.2s ease-in-out infinite;
+  --animate-twinkle: twinkle 3.6s ease-in-out infinite;
+}
+
+@keyframes drift {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--color-ocean-950);
+  color: var(--color-parchment-200);
+  overflow: hidden;
+}
+
+h1,
+h2,
+h3,
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: 0.02em;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-gold-600) transparent;
+}
