@@ -3,6 +3,8 @@ import { Lock, CheckCircle2 } from 'lucide-react'
 import { useTranslation } from '../../hooks/useGame.js'
 import { uiStrings } from '../../data/uiStrings.js'
 import { percentToWorld3D } from '../../utils/world3dCoords.js'
+import { PalmTree } from './PalmIsland.jsx'
+import { IslandTerrain } from './IslandTerrain.jsx'
 
 // 3D counterpart of the old IslandNode.jsx — same badge/lock/label markup
 // (kept as a drei <Html> overlay so click handling stays plain DOM instead
@@ -16,14 +18,10 @@ export function Island3D({ island, unlocked, solved, onClick, isFinal = false })
 
   return (
     <group position={[x, 0, z]}>
-      <mesh position={[0, -0.05, 0]} scale={scale} castShadow receiveShadow>
-        <cylinderGeometry args={[1.1, 1.4, 0.3, 12]} />
-        <meshStandardMaterial color={shoreColor} roughness={0.9} />
-      </mesh>
-      <mesh position={[0, 0.35, 0]} scale={scale} castShadow>
-        <coneGeometry args={[0.75, 0.9, 12]} />
-        <meshStandardMaterial color={landColor} roughness={0.85} />
-      </mesh>
+      <group scale={scale}>
+        <IslandTerrain shoreColor={shoreColor} landColor={landColor} />
+      </group>
+      <PalmTree position={[0.2 * scale, 0.72 * scale, 0.15 * scale]} scale={0.55 * scale} lean={0.1} />
 
       <Html center distanceFactor={14} position={[0, 1.6 * scale, 0]}>
         <button

@@ -4,8 +4,8 @@
 export const uiStrings = {
   gameTitle: { vi: 'Hành Trình Khám Phá', en: 'Voyage of Discovery' },
   gameSubtitle: {
-    vi: 'Vượt qua 5 hòn đảo, chinh phục từng thử thách, và khám phá chiếc La Bàn đã thất lạc.',
-    en: 'Cross 5 islands, conquer every challenge, and uncover the lost Compass.',
+    vi: 'Cân hết 5 hòn đảo, đè bẹp từng thử thách, rồi lôi cổ chiếc La Bàn đã biến mất về.',
+    en: 'Smash through 5 islands, crush every challenge, and drag that missing Compass back home.',
   },
   newVoyage: { vi: 'Hành Trình Mới', en: 'New Voyage' },
   continueVoyage: { vi: 'Tiếp Tục Hành Trình', en: 'Continue Voyage' },
@@ -17,38 +17,38 @@ export const uiStrings = {
   loadingFlavor3: { vi: 'Đang dựng cột buồm...', en: 'Raising the mast...' },
   loadingFlavor4: { vi: 'Đang vẽ lại hải đồ...', en: 'Charting the seas...' },
 
-  nameEntryTitle: { vi: 'Bạn tên là gì?', en: "What's your name?" },
+  nameEntryTitle: { vi: 'Tên gì? Khai mau!', en: 'Name? Spit it out!' },
   nameEntrySubtitle: {
-    vi: 'Trước khi lên thuyền, hãy cho tôi biết nên gọi bạn là gì.',
-    en: 'Before we set sail, tell me what to call you.',
+    vi: 'Trước khi lên thuyền thì khai tên ra đã, đừng có giấu giếm.',
+    en: "Before we set sail, cough up your name — no hiding.",
   },
-  nameEntryPlaceholder: { vi: 'Nhập tên của bạn...', en: 'Enter your name...' },
+  nameEntryPlaceholder: { vi: 'Gõ tên vô đây...', en: 'Type your name already...' },
   nameEntryButton: { vi: 'Tiếp Tục', en: 'Continue' },
   // Shown when the entered name doesn't match isHienName() — see utils/secretMode.js
   nameEntryRejected: {
-    vi: 'Ơ, không phải An Hiền thì vô đây làm gì? Game này đóng cửa với người lạ, out ngay đi nha!',
-    en: "Hey, if you're not An Hiền, what are you doing here? This game's closed to strangers — scram!",
+    vi: 'Không phải An Hiền thì vô đây làm cái gì? Game này không tiếp người lạ, cút ngay!',
+    en: "If you're not An Hiền, what the hell are you doing here? This game doesn't take strangers — get out!",
   },
 
   // Identity-check quiz, shown right after a successful name entry.
   verifyTitle: { vi: 'Xác Minh Danh Tính', en: 'Identity Check' },
-  verifyBirthdayQuestion: { vi: 'Bạn chắc là An Hiền? Vậy bạn sinh ngày mấy?', en: "You sure you're An Hiền? So what's your birthday?" },
-  verifyNumerologyQuestion: { vi: 'Vậy bạn thần số học số mấy?', en: "So, what's your numerology number?" },
-  verifyRelationshipQuestion: { vi: 'Bạn có đang quen ai không?', en: 'Are you seeing anyone right now?' },
+  verifyBirthdayQuestion: { vi: 'Chắc là An Hiền thật không đấy? Sinh ngày mấy, khai mau!', en: "You sure you're really An Hiền? Spit out your birthday!" },
+  verifyNumerologyQuestion: { vi: 'Thần số học số mấy, nói lẹ lên.', en: "What's your numerology number — hurry up." },
+  verifyRelationshipQuestion: { vi: 'Có đang cặp bồ với ai không, khai thật đi.', en: 'Seeing anyone right now? Be honest.' },
   verifyRelationshipYes: { vi: 'Có', en: 'Yes' },
   verifyRelationshipNo: { vi: 'Không', en: 'No' },
-  verifyRelationshipYesResponse: { vi: 'Haha, mình cũng nghĩ vậy đó!', en: 'Haha, I thought so too!' },
-  verifyRelationshipNoResponse: { vi: 'Vậy bạn làm mình buồn nhiều rồi đó...', en: 'Well, that makes me a little sad...' },
+  verifyRelationshipYesResponse: { vi: 'Hê, biết ngay mà!', en: 'Ha, knew it!' },
+  verifyRelationshipNoResponse: { vi: 'Ế dữ vậy, thảm ghê đó...', en: "Damn, still single? Rough..." },
 
   greetingTitle: { vi: 'Chào', en: 'Hi' }, // rendered as "{greetingTitle} {playerName}!"
   greetingBody: {
-    vi: 'Chào mừng bạn đến với Hành Trình Khám Phá. Phía trước là 5 hòn đảo với những thử thách đang chờ bạn chinh phục.',
-    en: 'Welcome to Voyage of Discovery. Ahead of you lie 5 islands, each with a challenge waiting to be conquered.',
+    vi: 'Chào mừng tới Hành Trình Khám Phá. Phía trước có 5 hòn đảo với cả đống thử thách đang đợi, đừng có than mệt giữa chừng đó.',
+    en: "Welcome to Voyage of Discovery. Ahead of you are 5 islands loaded with challenges — don't you dare whine about being tired halfway through.",
   },
   // Only shown when secretModeUnlocked (playerName === "Hiền") — see utils/secretMode.js
   secretGreetingTease: {
-    vi: 'À mà này... "Hiền" mà lại thích phiêu lưu thế này à? Để xem lần này có "hiền" nổi hết cả hành trình không nhé!',
-    en: '...wait, "Hiền" out here chasing adventures? Let\'s see if you can stay "gentle" through the whole voyage!',
+    vi: 'À mà này... "Hiền" mà bày đặt thích phiêu lưu vậy à? Coi mày có "hiền" nổi hết cả hành trình này không kkk!',
+    en: '...wait, "Hiền" out here acting all adventurous? Let\'s see if you can stay "gentle" through the whole damn voyage!',
   },
   startJourney: { vi: 'Bắt Đầu Hành Trình', en: 'Start the Journey' },
 
@@ -64,12 +64,12 @@ export const uiStrings = {
   continueLabel: { vi: 'Tiếp Tục', en: 'Continue' },
   returnToShip: { vi: 'Quay Về Thuyền', en: 'Return to Ship' },
   islandCompleteMessage: {
-    vi: 'đã hé lộ bí mật của mình. Con đường phía trước đã rõ ràng hơn rồi.',
-    en: 'has given up its secret. The way onward is a little clearer now.',
+    vi: 'chịu khai bí mật ra rồi đó. Đường phía trước rõ hơn chút, đi tiếp lẹ lên.',
+    en: "spilled its secret. The way onward's a bit clearer now — keep moving.",
   },
   islandRevisitMessage: {
-    vi: 'Bạn đã khám phá bí mật của hòn đảo này rồi.',
-    en: "You've already charted this island's secret.",
+    vi: 'Bí mật chỗ này khui banh rồi, khỏi mò lại cho mệt.',
+    en: "You already cracked this island's secret — quit poking around.",
   },
 
   fragmentFoundTitle: { vi: 'Đã Tìm Thấy Mảnh La Bàn', en: 'Compass Fragment Found' },
@@ -77,15 +77,15 @@ export const uiStrings = {
   answerPlaceholder: { vi: 'Nhập câu trả lời...', en: 'Type your answer...' },
   answerButton: { vi: 'Trả Lời', en: 'Answer' },
   checkButton: { vi: 'Kiểm Tra', en: 'Check' },
-  hintPrompt: { vi: 'Bí quá? Gợi ý sẽ xuất hiện sau khi đoán sai.', en: 'Stuck? A hint appears after a wrong guess.' },
-  skipQuestion: { vi: 'Chưa biết? Bỏ qua câu này', en: "Don't know? Skip this question" },
+  hintPrompt: { vi: 'Bí á? Đoán trật một phát là có gợi ý liền, khỏi kêu ca.', en: "Stuck? Guess wrong once and a hint shows up — stop whining." },
+  skipQuestion: { vi: 'Không biết thì thôi, bỏ qua luôn cho lẹ.', en: "Don't know? Just skip it already." },
   resetSelectionHint: {
     vi: 'Chọn một bên trái và một bên phải để ghép cặp.',
     en: 'Pick one from each side to try a match.',
   },
   observationPrompt: {
-    vi: 'Tìm biểu tượng khác biệt trước khi hết giờ!',
-    en: 'Find the odd one out before time runs out!',
+    vi: 'Lẹ lên, tìm cái khác biệt trước khi hết giờ, đừng có lề mề!',
+    en: "Hurry up, find the odd one out before time's up — quit dawdling!",
   },
 
   // Word-chain lesson
@@ -97,21 +97,21 @@ export const uiStrings = {
   wordChainYourTurn: { vi: 'Lượt của bạn', en: 'Your turn' },
   wordChainNeedsSyllable: { vi: 'Từ tiếp theo phải bắt đầu bằng', en: 'The next word must start with' },
   wordChainUnknown: {
-    vi: 'Từ này chưa có trong vốn từ của tôi, thử từ khác nhé.',
-    en: "That word isn't in my vocabulary yet — try another.",
+    vi: 'Từ này tao chưa nghe qua bao giờ, kiếm từ khác đi.',
+    en: "Never heard that word in my life — try another.",
   },
   wordChainWrongStart: { vi: 'Từ phải bắt đầu đúng tiếng yêu cầu.', en: 'The word must start with the required syllable.' },
-  wordChainUsed: { vi: 'Từ này đã dùng rồi, thử từ khác nhé.', en: "That word's already been used — try another." },
+  wordChainUsed: { vi: 'Từ này xài rồi, lặp lại làm gì, kiếm từ khác đi.', en: "Already used that one — quit repeating, pick another." },
   wordChainNeedsTwoSyllables: { vi: 'Hãy nhập một từ có đúng 2 tiếng.', en: 'Enter a word with exactly 2 syllables.' },
   wordChainAiStuck: {
-    vi: 'Máy chịu thua lượt này! Bạn ra một từ mới để tiếp tục nhé.',
-    en: "The AI is stuck this round! Start a fresh word to keep going.",
+    vi: 'Tao chịu thua lượt này! Ra từ mới đi rồi tính tiếp.',
+    en: "I'm stuck this round! Throw out a new word so we can keep going.",
   },
 
   endingTitle: { vi: 'Hành Trình Đã Hoàn Tất', en: 'The Voyage is Complete' },
   endingSubtitle: {
-    vi: 'Chúc mừng bạn đã vượt qua tất cả thử thách và tìm lại được chiếc La Bàn Khám Phá.',
-    en: "Congratulations — you've conquered every challenge and recovered the Compass of Discovery.",
+    vi: 'Ngon, cân hết mọi thử thách và lôi được chiếc La Bàn Khám Phá về rồi đó.',
+    en: "Nice — you crushed every challenge and dragged the Compass of Discovery back.",
   },
   playAgain: { vi: 'Chơi Lại', en: 'Play Again' },
 

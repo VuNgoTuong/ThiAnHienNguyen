@@ -20,7 +20,7 @@ export function GreetingPage() {
           scrim treatment as TitleScreen's ready state, or it's unreadable. */}
       <div
         className="pointer-events-none absolute inset-0 z-[5]"
-        style={{ background: 'radial-gradient(ellipse 60% 65% at 50% 50%, rgba(5,13,24,0.7) 0%, rgba(5,13,24,0.15) 55%, rgba(5,13,24,0) 75%)' }}
+        style={{ background: 'radial-gradient(ellipse 60% 65% at 50% 50%, rgba(5,13,24,0.4) 0%, rgba(5,13,24,0.1) 55%, rgba(5,13,24,0) 75%)' }}
       />
       <motion.div
         initial={{ opacity: 0, y: 20 }}

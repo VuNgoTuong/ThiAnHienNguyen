@@ -1,7 +1,8 @@
 import { Suspense, useRef } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
-import { PerspectiveCamera, Sky } from '@react-three/drei'
+import { PerspectiveCamera } from '@react-three/drei'
 import { Ocean3D } from './Ocean3D.jsx'
+import { GradientSky } from './GradientSky.jsx'
 
 const SUN_POSITION = [70, 42, -55]
 
@@ -23,9 +24,10 @@ export function OceanBackdrop() {
   return (
     <Canvas dpr={[1, 1.5]} gl={{ antialias: true }}>
       <DriftingCamera />
-      <Sky sunPosition={SUN_POSITION} distance={450000} turbidity={2} rayleigh={2.2} mieCoefficient={0.003} mieDirectionalG={0.8} />
+      <GradientSky />
       <fog attach="fog" args={['#bfe0ee', 30, 150]} />
-      <ambientLight intensity={0.8} color="#fff8ec" />
+      <hemisphereLight args={['#cfe8ef', '#0c3a44', 0.55]} />
+      <ambientLight intensity={0.55} color="#fff8ec" />
       <directionalLight position={SUN_POSITION} intensity={1.3} color="#fff4d9" />
       <pointLight position={[0, 6, -4]} intensity={0.2} color="#fff0c8" distance={24} />
       <Suspense fallback={null}>

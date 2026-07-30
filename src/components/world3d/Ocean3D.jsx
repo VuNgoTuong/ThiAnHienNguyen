@@ -43,7 +43,7 @@ export function Ocean3D() {
 
   return (
     <mesh ref={meshRef} geometry={geometry} receiveShadow position={[0, -0.15, 0]}>
-      <meshStandardMaterial color="#1f8fa3" roughness={0.3} metalness={0.06} />
+      <meshStandardMaterial color="#136e88" roughness={0.22} metalness={0.12} envMapIntensity={1.2} />
     </mesh>
   )
 }

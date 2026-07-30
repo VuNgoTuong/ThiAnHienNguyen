@@ -6,12 +6,14 @@ import { Ocean3D } from './Ocean3D.jsx'
 import { Island3D } from './Island3D.jsx'
 import { Ship3D } from './Ship3D.jsx'
 import { Route3D } from './Route3D.jsx'
+import { GradientSky } from './GradientSky.jsx'
 import { SceneEffects } from './SceneEffects.jsx'
 import { percentToWorld3D } from '../../utils/world3dCoords.js'
 import { START_POSITION } from '../../utils/islandLogic.js'
 
 const ELEVATION_DEG = 52 // camera pitch above the ocean plane
 const FRAME_MARGIN = 1.3 // headroom around the island field so nothing touches the viewport edge
+const SUN_POSITION = [40, 80, 30]
 
 // Frames the camera so every island + the ship's starting anchorage fits on
 // screen, instead of a fixed position tuned for one particular window size.
@@ -80,10 +82,11 @@ export function WorldScene3D({
     <Canvas shadows dpr={[1, 1.5]} gl={{ antialias: true }}>
       <PerspectiveCamera makeDefault fov={42} near={0.1} far={200} />
       <CameraRig bounds={bounds} />
-      <color attach="background" args={['#bfe0ee']} />
+      <GradientSky />
       <fog attach="fog" args={['#bfe0ee', 26, 65]} />
-      <ambientLight intensity={0.75} color="#fff8ec" />
-      <directionalLight position={[8, 16, 6]} intensity={1.2} color="#fff4d9" castShadow />
+      <hemisphereLight args={['#cfe8ef', '#0c3a44', 0.5]} />
+      <ambientLight intensity={0.55} color="#fff8ec" />
+      <directionalLight position={SUN_POSITION} intensity={1.2} color="#fff4d9" castShadow />
 
       <Suspense fallback={null}>
         <Ocean3D />

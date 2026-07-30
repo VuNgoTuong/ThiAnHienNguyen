@@ -154,7 +154,7 @@ export function TitleScreen() {
         // without flattening the rest of the scene into a dark box.
         <div
           className="pointer-events-none absolute inset-0 z-[5]"
-          style={{ background: 'radial-gradient(ellipse 60% 65% at 50% 42%, rgba(5,13,24,0.72) 0%, rgba(5,13,24,0.15) 55%, rgba(5,13,24,0) 75%)' }}
+          style={{ background: 'radial-gradient(ellipse 60% 65% at 50% 42%, rgba(5,13,24,0.4) 0%, rgba(5,13,24,0.1) 55%, rgba(5,13,24,0) 75%)' }}
         />
       ) : null}
 
