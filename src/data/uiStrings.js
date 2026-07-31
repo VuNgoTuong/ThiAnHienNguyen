@@ -2,9 +2,9 @@
 // any island's content. Read through the same `t()` helper as content data
 // so components never need two different translation APIs.
 export const uiStrings = {
-  gameTitle: { vi: 'Hành Trình Khám Phá', en: 'Voyage of Discovery' },
+  gameTitle: { vi: 'Chinh phục em, nhầm!! Chinh phục thử thách đê', en: 'Challenge for you muahaha' },
   gameSubtitle: {
-    vi: 'Cân hết 5 hòn đảo, đè bẹp từng thử thách, rồi lôi cổ chiếc La Bàn đã biến mất về.',
+    vi: 'Lụm nhẹ 5 cái đảo, mỗi đảo có những thử thách cho em á kkk, chinh phục đuợc quà nha!',
     en: 'Smash through 5 islands, crush every challenge, and drag that missing Compass back home.',
   },
   newVoyage: { vi: 'Hành Trình Mới', en: 'New Voyage' },
@@ -26,15 +26,15 @@ export const uiStrings = {
   nameEntryButton: { vi: 'Tiếp Tục', en: 'Continue' },
   // Shown when the entered name doesn't match isHienName() — see utils/secretMode.js
   nameEntryRejected: {
-    vi: 'Không phải An Hiền thì vô đây làm cái gì? Game này không tiếp người lạ, cút ngay!',
-    en: "If you're not An Hiền, what the hell are you doing here? This game doesn't take strangers — get out!",
+    vi: 'Không phải An Hiền thì vô đây làm cái gì? Game này không tiếp người lạ, lượn nha!',
+    en: "If you're not An Hiền, what are you doing here? This game's not for strangers — go on, shoo!",
   },
 
   // Identity-check quiz, shown right after a successful name entry.
   verifyTitle: { vi: 'Xác Minh Danh Tính', en: 'Identity Check' },
   verifyBirthdayQuestion: { vi: 'Chắc là An Hiền thật không đấy? Sinh ngày mấy, khai mau!', en: "You sure you're really An Hiền? Spit out your birthday!" },
   verifyNumerologyQuestion: { vi: 'Thần số học số mấy, nói lẹ lên.', en: "What's your numerology number — hurry up." },
-  verifyRelationshipQuestion: { vi: 'Có đang cặp bồ với ai không, khai thật đi.', en: 'Seeing anyone right now? Be honest.' },
+  verifyRelationshipQuestion: { vi: 'Dạo này có đang quen người nào lạ không?', en: 'Been getting close to anyone new lately?' },
   verifyRelationshipYes: { vi: 'Có', en: 'Yes' },
   verifyRelationshipNo: { vi: 'Không', en: 'No' },
   verifyRelationshipYesResponse: { vi: 'Hê, biết ngay mà!', en: 'Ha, knew it!' },
@@ -47,7 +47,7 @@ export const uiStrings = {
   },
   // Only shown when secretModeUnlocked (playerName === "Hiền") — see utils/secretMode.js
   secretGreetingTease: {
-    vi: 'À mà này... "Hiền" mà bày đặt thích phiêu lưu vậy à? Coi mày có "hiền" nổi hết cả hành trình này không kkk!',
+    vi: 'À mà này... "Hiền" mà bày đặt thích phiêu lưu vậy à? Coi you có "hiền" nổi hết cả hành trình này không kkk!',
     en: '...wait, "Hiền" out here acting all adventurous? Let\'s see if you can stay "gentle" through the whole damn voyage!',
   },
   startJourney: { vi: 'Bắt Đầu Hành Trình', en: 'Start the Journey' },
@@ -76,6 +76,10 @@ export const uiStrings = {
 
   answerPlaceholder: { vi: 'Nhập câu trả lời...', en: 'Type your answer...' },
   answerButton: { vi: 'Trả Lời', en: 'Answer' },
+  openAnswerPlaceholder: { vi: 'Nghĩ gì thì gõ đó...', en: 'Whatever comes to mind...' },
+  openAnswerButton: { vi: 'Chia Sẻ', en: 'Share' },
+  openAnswerRequired: { vi: 'Câu này bắt buộc trả lời, không bỏ qua được đâu.', en: "This one's mandatory — no skipping." },
+  openAnswerTooShort: { vi: 'Ngắn quá, viết thêm chút nữa đi.', en: "Too short — write a bit more." },
   checkButton: { vi: 'Kiểm Tra', en: 'Check' },
   hintPrompt: { vi: 'Bí á? Đoán trật một phát là có gợi ý liền, khỏi kêu ca.', en: "Stuck? Guess wrong once and a hint shows up — stop whining." },
   skipQuestion: { vi: 'Không biết thì thôi, bỏ qua luôn cho lẹ.', en: "Don't know? Just skip it already." },
@@ -110,7 +114,7 @@ export const uiStrings = {
 
   endingTitle: { vi: 'Hành Trình Đã Hoàn Tất', en: 'The Voyage is Complete' },
   endingSubtitle: {
-    vi: 'Ngon, cân hết mọi thử thách và lôi được chiếc La Bàn Khám Phá về rồi đó.',
+    vi: 'Ngon, cân hết mọi thử thách và đem được chiếc La Bàn Khám Phá về rồi đó.',
     en: "Nice — you crushed every challenge and dragged the Compass of Discovery back.",
   },
   playAgain: { vi: 'Chơi Lại', en: 'Play Again' },

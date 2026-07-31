@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
 import { Bot, User, Sparkles } from 'lucide-react'
 import { useTranslation } from '../../../hooks/useGame.js'
 import { uiStrings } from '../../../data/uiStrings.js'
@@ -8,6 +9,11 @@ import { getSyllables, validateNextWord, pickAiWord, hasAnyCandidate } from '../
 const STARTER_WORD = 'học sinh'
 const TARGET_CORRECT = 10
 const AI_THINK_DELAY_MS = 650
+// Only the tail of the chain is ever shown — a chat log that scrolled back
+// to the first word would just get taller and taller over 10 rounds. The
+// full chain still lives in state (needed for the used-words check), it
+// just isn't all rendered.
+const VISIBLE_HISTORY = 5
 
 const ERROR_KEYS = {
   'needs-two-syllables': 'wordChainNeedsTwoSyllables',
@@ -16,7 +22,38 @@ const ERROR_KEYS = {
   unknown: 'wordChainUnknown',
 }
 
-export function WordChainLesson({ onCorrect }) {
+function ChatBubble({ entry }) {
+  const isPlayer = entry.by === 'player'
+  const isStart = entry.by === 'start'
+  const Icon = isStart ? Sparkles : isPlayer ? User : Bot
+
+  return (
+    <motion.div
+      layout
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.25 }}
+      className={`flex items-end gap-2 ${isPlayer ? 'flex-row-reverse self-end' : 'self-start'}`}
+    >
+      <span
+        className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full ${
+          isPlayer ? 'bg-gold-500 text-ink-900' : 'bg-ink-900/15 text-ink-700'
+        }`}
+      >
+        <Icon size={12} />
+      </span>
+      <span
+        className={`rounded-2xl px-3 py-1.5 text-sm ${
+          isPlayer ? 'rounded-br-sm bg-gold-500/90 text-ink-900' : 'rounded-bl-sm bg-parchment-100 text-ink-900'
+        }`}
+      >
+        {entry.word}
+      </span>
+    </motion.div>
+  )
+}
+
+export function WordChainLesson({ puzzle, onCorrect }) {
   const { t } = useTranslation()
   const [chain, setChain] = useState([{ word: STARTER_WORD, by: 'start' }])
   const [input, setInput] = useState('')
@@ -27,6 +64,32 @@ export function WordChainLesson({ onCorrect }) {
   const playerCorrectCount = chain.filter((entry) => entry.by === 'player').length
   const lastWord = chain[chain.length - 1].word
   const requiredStartSyllable = freeMove ? null : getSyllables(lastWord)[1]
+
+  // Per player turn — timing out ends the lesson early (same "give up and
+  // move on" behavior as a riddle timing out), it doesn't just reset the
+  // current word.
+  const timeLimitMs = puzzle?.data?.timeLimitMs ?? 15000
+  const [timeLeft, setTimeLeft] = useState(timeLimitMs)
+  const intervalRef = useRef(null)
+
+  useEffect(() => {
+    clearInterval(intervalRef.current)
+    if (aiThinking) return
+
+    const startedAt = Date.now()
+    setTimeLeft(timeLimitMs)
+    intervalRef.current = setInterval(() => {
+      const remaining = timeLimitMs - (Date.now() - startedAt)
+      if (remaining <= 0) {
+        clearInterval(intervalRef.current)
+        onCorrect()
+      } else {
+        setTimeLeft(remaining)
+      }
+    }, 100)
+    return () => clearInterval(intervalRef.current)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chain.length, aiThinking, timeLimitMs])
 
   // Proactively detect a dead syllable (no unused dictionary word starts
   // with it) so the player is never left guessing at the impossible —
@@ -59,6 +122,7 @@ export function WordChainLesson({ onCorrect }) {
     setChain(nextChain)
 
     if (nextChain.filter((entry) => entry.by === 'player').length >= TARGET_CORRECT) {
+      clearInterval(intervalRef.current)
       onCorrect()
       return
     }
@@ -78,23 +142,20 @@ export function WordChainLesson({ onCorrect }) {
     }, AI_THINK_DELAY_MS)
   }
 
+  const timerProgress = Math.max(0, timeLeft / timeLimitMs)
+  const visibleChain = chain.slice(-VISIBLE_HISTORY)
+
   return (
     <div className="space-y-4">
-      <div className="max-h-40 space-y-1.5 overflow-y-auto rounded-lg border border-ink-900/10 bg-ink-900/5 p-3">
-        {chain.map((entry, index) => (
-          <div
-            key={index}
-            className={`flex items-center gap-2 text-sm ${
-              entry.by === 'player' ? 'font-medium text-ink-900' : 'text-ink-700'
-            }`}
-          >
-            {entry.by === 'ai' ? <Bot size={14} className="shrink-0" /> : null}
-            {entry.by === 'player' ? <User size={14} className="shrink-0" /> : null}
-            {entry.by === 'start' ? <Sparkles size={14} className="shrink-0" /> : null}
-            {entry.word}
-          </div>
-        ))}
-        {aiThinking ? <p className="text-xs text-ink-700/60 italic">{t(uiStrings.wordChainAiThinking)}</p> : null}
+      <div className="flex flex-col gap-2 rounded-xl border border-ink-900/10 bg-ink-900/5 p-3">
+        <AnimatePresence initial={false}>
+          {visibleChain.map((entry) => (
+            <ChatBubble key={`${chain.length - visibleChain.length}-${entry.word}`} entry={entry} />
+          ))}
+        </AnimatePresence>
+        {aiThinking ? (
+          <p className="pl-8 text-xs text-ink-700/60 italic">{t(uiStrings.wordChainAiThinking)}</p>
+        ) : null}
       </div>
 
       <div className="flex items-center justify-between gap-3 text-xs text-ink-700">
@@ -105,7 +166,10 @@ export function WordChainLesson({ onCorrect }) {
           <span className="text-gold-600">{t(uiStrings.wordChainAiStuck)}</span>
         ) : (
           <span>
-            {t(uiStrings.wordChainNeedsSyllable)} "{requiredStartSyllable}"
+            {t(uiStrings.wordChainNeedsSyllable)}{' '}
+            <span className="rounded-full bg-gold-400/20 px-2 py-0.5 font-display text-gold-700">
+              {requiredStartSyllable}
+            </span>
           </span>
         )}
       </div>
@@ -116,6 +180,15 @@ export function WordChainLesson({ onCorrect }) {
           style={{ width: `${(playerCorrectCount / TARGET_CORRECT) * 100}%` }}
         />
       </div>
+
+      {!aiThinking ? (
+        <div className="h-1.5 w-full overflow-hidden rounded-full bg-ink-900/10">
+          <div
+            className={`h-full transition-[width] ${timerProgress < 0.25 ? 'bg-red-600' : 'bg-gold-600'}`}
+            style={{ width: `${timerProgress * 100}%` }}
+          />
+        </div>
+      ) : null}
 
       <form onSubmit={handleSubmit} className="flex gap-2">
         <input

@@ -10,6 +10,7 @@ import { ParchmentPanel } from '../components/ui/ParchmentPanel.jsx'
 import { Button } from '../components/ui/Button.jsx'
 import { fadeStep } from '../utils/motionPresets.js'
 import { uiStrings } from '../data/uiStrings.js'
+import { pickRandomRiddles } from '../data/riddleBank.js'
 
 // Step machine: arrival -> discovery -> lesson[0..n-1] -> complete. A
 // previously solved island skips straight to a revisit summary. An island
@@ -23,8 +24,22 @@ export function IslandPage() {
   const [step, setStep] = useState(() => (alreadySolved ? 'revisit' : 'arrival'))
   const [lessonIndex, setLessonIndex] = useState(0)
   const [revealedFragment, setRevealedFragment] = useState(null)
+  // Picked once per island visit — every 'riddle-random' lesson slot gets
+  // a distinct riddle from the bank, so the 3 slots never repeat the same
+  // one in a single playthrough. See data/islands.js for why the lessons
+  // themselves carry no prompt/data.
+  const [randomRiddles] = useState(() =>
+    pickRandomRiddles((island?.lessons ?? []).filter((lesson) => lesson.type === 'riddle-random').length),
+  )
 
   if (!island) return null
+
+  function resolveLesson(lesson, index) {
+    if (lesson.type !== 'riddle-random') return lesson
+    const slot = island.lessons.slice(0, index).filter((entry) => entry.type === 'riddle-random').length
+    const riddle = randomRiddles[slot]
+    return { ...lesson, type: 'riddle', prompt: riddle.prompt, data: riddle.data }
+  }
 
   function handleLessonSolved() {
     const lesson = island.lessons[lessonIndex]
@@ -48,7 +63,7 @@ export function IslandPage() {
     setScene('map')
   }
 
-  const currentLesson = island.lessons[lessonIndex]
+  const currentLesson = resolveLesson(island.lessons[lessonIndex], lessonIndex)
   const arrivalLines =
     state.secretModeUnlocked && island.arrival.secretLines
       ? [...island.arrival.lines, ...island.arrival.secretLines]

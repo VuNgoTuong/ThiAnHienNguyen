@@ -12,10 +12,10 @@ export const finalIsland = {
     speaker: GUIDE,
     lines: [
       {
-        vi: 'Mày cân hết cả 4 hòn đảo rồi. Chỉ còn một thử thách cuối.',
+        vi: 'You cân hết cả 4 hòn đảo rồi. Chỉ còn một thử thách cuối.',
         en: "You've conquered all 4 islands. One last trial left.",
       },
-      { vi: 'Giờ tự sắp xếp lại hành trình của chính mày đi.', en: 'Now put your own journey back in order.' },
+      { vi: 'Giờ tự sắp xếp lại hành trình của chính you đi.', en: 'Now put your own journey back in order.' },
     ],
     secretLines: [
       {
@@ -28,7 +28,7 @@ export const finalIsland = {
     title: { vi: 'Hành Trình Của Bạn', en: 'Your Journey' },
     story: [
       {
-        vi: 'Từng mảnh la bàn mày gom được giờ hội tụ hết rồi. Sắp đúng thứ tự là xong.',
+        vi: 'Từng mảnh la bàn you gom được giờ hội tụ hết rồi. Sắp đúng thứ tự là xong.',
         en: 'Every fragment you scraped together has come together now. Just order them right to finish.',
       },
     ],
@@ -37,9 +37,9 @@ export const finalIsland = {
     {
       id: 'level5-sequence',
       type: 'sequence',
-      prompt: { vi: 'Sắp xếp lại đúng thứ tự các hòn đảo mày đã đi qua:', en: "Arrange the islands you've been through in the right order:" },
+      prompt: { vi: 'Sắp xếp lại đúng thứ tự các hòn đảo you đã đi qua:', en: "Arrange the islands you've been through in the right order:" },
       secretPrompt: {
-        vi: 'Sắp lại đúng thứ tự các hòn đảo — mày mà sắp sai, tao cạy mồm mày ra cười cả năm luôn đó!!!:',
+        vi: 'Sắp lại đúng thứ tự các hòn đảo — you mà sắp sai, tao cạy mồm you ra cười cả năm luôn đó!!!:',
         en: "Arrange them right — screw it up, Hiền, and I will never let you live it down:",
       },
       data: {
@@ -56,9 +56,9 @@ export const finalIsland = {
   ending: {
     speaker: GUIDE,
     lines: [
-      { vi: 'Ngon, mày hoàn thành hành trình rồi đó!', en: "Nice — you finished the whole damn journey!" },
+      { vi: 'Ngon, you hoàn thành hành trình rồi đó!', en: "Nice — you finished the whole damn journey!" },
       {
-        vi: 'Mày cân hết mọi thử thách bằng chính sự lì lợm và thông minh của mày.',
+        vi: 'You cân hết mọi thử thách bằng chính sự lì lợm và thông minh của you.',
         en: 'You crushed every trial with your own stubbornness and wit.',
       },
       {
