@@ -23,20 +23,24 @@ export function RiddlePuzzle({ puzzle, onCorrect }) {
   const [shake, setShake] = useState(0)
   const hintsRevealed = Math.min(attempts, puzzle.data.hints.length)
 
-  // 10s to answer by default — timing out behaves exactly like the skip
-  // button (moves on without credit for actually solving it), the same
-  // "give up" escape hatch that already existed here.
+  // 10s per attempt by default. Running out of time does NOT pass the
+  // riddle through — it counts as a failed attempt (same as a wrong
+  // guess: reveals a hint, shakes the input) and the clock just restarts.
+  // Only an actually-correct answer, or the explicit skip link, finishes
+  // this lesson.
   const timeLimitMs = puzzle.data.timeLimitMs ?? 10000
   const [timeLeft, setTimeLeft] = useState(timeLimitMs)
   const intervalRef = useRef(null)
 
   useEffect(() => {
-    const startedAt = Date.now()
+    let startedAt = Date.now()
     intervalRef.current = setInterval(() => {
       const remaining = timeLimitMs - (Date.now() - startedAt)
       if (remaining <= 0) {
-        clearInterval(intervalRef.current)
-        onCorrect()
+        setAttempts((count) => count + 1)
+        setShake((n) => n + 1)
+        startedAt = Date.now()
+        setTimeLeft(timeLimitMs)
       } else {
         setTimeLeft(remaining)
       }

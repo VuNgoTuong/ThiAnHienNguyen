@@ -65,9 +65,9 @@ export function WordChainLesson({ puzzle, onCorrect }) {
   const lastWord = chain[chain.length - 1].word
   const requiredStartSyllable = freeMove ? null : getSyllables(lastWord)[1]
 
-  // Per player turn — timing out ends the lesson early (same "give up and
-  // move on" behavior as a riddle timing out), it doesn't just reset the
-  // current word.
+  // Per player turn — timing out does NOT pass the lesson through. It
+  // restarts the whole round from the starter word, so all 10 correct
+  // chains still have to happen inside the time limit, turn by turn.
   const timeLimitMs = puzzle?.data?.timeLimitMs ?? 15000
   const [timeLeft, setTimeLeft] = useState(timeLimitMs)
   const intervalRef = useRef(null)
@@ -82,7 +82,10 @@ export function WordChainLesson({ puzzle, onCorrect }) {
       const remaining = timeLimitMs - (Date.now() - startedAt)
       if (remaining <= 0) {
         clearInterval(intervalRef.current)
-        onCorrect()
+        setChain([{ word: STARTER_WORD, by: 'start' }])
+        setInput('')
+        setError(null)
+        setFreeMove(false)
       } else {
         setTimeLeft(remaining)
       }

@@ -74,8 +74,8 @@ export const islands = [
         id: 'level1-wordchain',
         type: 'word-chain',
         prompt: {
-          vi: 'Giờ thì... nối chữ với tao cho vui coi kkk! Nối đúng 10 lần là qua thử thách. Mỗi lượt 15 giây thôi đó!',
-          en: "Now... let's chain words for fun! Chain 10 correct in a row to clear this trial. 15 seconds a turn!",
+          vi: 'Giờ thì... nối chữ với tao cho vui coi kkk! Nối đúng 10 lần là qua thử thách. Mỗi lượt 15 giây thôi đó, hết giờ là phải nối lại từ đầu nha!',
+          en: "Now... let's chain words for fun! Chain 10 correct in a row to clear this trial. 15 seconds a turn — run out and you start the whole round over!",
         },
         data: { timeLimitMs: 15000 },
       },
