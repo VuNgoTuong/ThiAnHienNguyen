@@ -67,3 +67,17 @@ export function pickAiWord({ requiredStartSyllable, usedWords }) {
   const withFollowups = ranked.filter((entry) => entry.followups > 0)
   return (withFollowups[0] ?? ranked[0]).word
 }
+
+// Precomputed once (not per-call) — words whose second syllable starts at
+// least one other dictionary word, so a freshly picked starter doesn't
+// immediately dead-end the player into a free move on turn one.
+const startableWords = wordChainDictionary
+  .map((word) => normalize(word))
+  .filter((word) => hasAnyCandidate({ requiredStartSyllable: getSyllables(word)[1], usedWords: new Set([word]) }))
+
+// Picks a random opening word for the chain instead of always the same one —
+// called on both initial mount and every timeout restart.
+export function pickRandomStartWord() {
+  const pool = startableWords.length > 0 ? startableWords : wordChainDictionary.map((word) => normalize(word))
+  return pool[Math.floor(Math.random() * pool.length)]
+}

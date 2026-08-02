@@ -4,9 +4,8 @@ import { Bot, User, Sparkles } from 'lucide-react'
 import { useTranslation } from '../../../hooks/useGame.js'
 import { uiStrings } from '../../../data/uiStrings.js'
 import { Button } from '../../ui/Button.jsx'
-import { getSyllables, validateNextWord, pickAiWord, hasAnyCandidate } from '../../../utils/wordChainEngine.js'
+import { getSyllables, validateNextWord, pickAiWord, hasAnyCandidate, pickRandomStartWord } from '../../../utils/wordChainEngine.js'
 
-const STARTER_WORD = 'học sinh'
 const TARGET_CORRECT = 10
 const AI_THINK_DELAY_MS = 650
 // Only the tail of the chain is ever shown — a chat log that scrolled back
@@ -55,7 +54,7 @@ function ChatBubble({ entry }) {
 
 export function WordChainLesson({ puzzle, onCorrect }) {
   const { t } = useTranslation()
-  const [chain, setChain] = useState([{ word: STARTER_WORD, by: 'start' }])
+  const [chain, setChain] = useState(() => [{ word: pickRandomStartWord(), by: 'start' }])
   const [input, setInput] = useState('')
   const [error, setError] = useState(null)
   const [aiThinking, setAiThinking] = useState(false)
@@ -82,7 +81,7 @@ export function WordChainLesson({ puzzle, onCorrect }) {
       const remaining = timeLimitMs - (Date.now() - startedAt)
       if (remaining <= 0) {
         clearInterval(intervalRef.current)
-        setChain([{ word: STARTER_WORD, by: 'start' }])
+        setChain([{ word: pickRandomStartWord(), by: 'start' }])
         setInput('')
         setError(null)
         setFreeMove(false)
