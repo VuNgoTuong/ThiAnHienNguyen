@@ -30,6 +30,17 @@ export const uiStrings = {
     en: "If you're not An Hiền, what are you doing here? This game's not for strangers — go on, shoo!",
   },
 
+  playerInfoNameLabel: { vi: 'Họ và tên', en: 'Full name' },
+  playerInfoBirthdayLabel: { vi: 'Ngày sinh', en: 'Birthday' },
+  playerInfoPhoneLabel: { vi: 'Số điện thoại', en: 'Phone number' },
+  playerInfoPhonePlaceholder: { vi: 'Nhập số điện thoại...', en: 'Enter your phone number...' },
+  playerInfoEmailLabel: { vi: 'Email', en: 'Email' },
+  playerInfoEmailPlaceholder: { vi: 'Nhập email...', en: 'Enter your email...' },
+  playerInfoSchoolLabel: { vi: 'Trường / Nơi làm việc', en: 'School / Workplace' },
+  playerInfoSchoolPlaceholder: { vi: 'Học ở đâu, làm ở đâu...', en: 'Where do you study or work...' },
+  playerInfoAddressLabel: { vi: 'Địa chỉ', en: 'Address' },
+  playerInfoAddressPlaceholder: { vi: 'Nhập địa chỉ...', en: 'Enter your address...' },
+
   // Identity-check quiz, shown right after a successful name entry.
   verifyTitle: { vi: 'Xác Minh Danh Tính', en: 'Identity Check' },
   verifyBirthdayQuestion: { vi: 'Chắc là An Hiền thật không đấy? Sinh ngày mấy, khai mau!', en: "You sure you're really An Hiền? Spit out your birthday!" },

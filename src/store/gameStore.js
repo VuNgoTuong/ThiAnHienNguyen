@@ -10,6 +10,7 @@ export const initialState = {
   scene: 'title', // 'title' | 'name-entry' | 'verify' | 'greeting' | 'map' | 'island' | 'final' | 'ending'
   language: 'vi', // 'vi' | 'en'
   playerName: '',
+  playerInfo: { birthday: '', phone: '', email: '', school: '', address: '' },
   currentIslandId: null,
   visitedIslandIds: [],
   solvedPuzzleIds: [],
@@ -65,6 +66,9 @@ export const useGameStore = create((set) => ({
   setLanguage: (language) => set((s) => ({ state: deriveComputed({ ...s.state, language }) })),
 
   setPlayerName: (playerName) => set((s) => ({ state: deriveComputed({ ...s.state, playerName }) })),
+
+  setPlayerInfo: (playerInfo) =>
+    set((s) => ({ state: deriveComputed({ ...s.state, playerInfo: { ...s.state.playerInfo, ...playerInfo } }) })),
 
   arriveAtIsland: (islandId) =>
     set((s) => ({
