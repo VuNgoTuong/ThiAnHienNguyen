@@ -234,7 +234,7 @@ export const islands = [
     arrival: {
       speaker: GUIDE,
       lines: [
-        { vi: 'Chào mừng em tới Đảo Trí Tuệ — thử thách cuối cùng!', en: 'Welcome to Isle of Wit — final trial!' },
+        { vi: 'Chào mừng em tới Đảo Trí Tuệ — nơi AI thử đoán về em!', en: 'Welcome to Isle of Wit — where the AI tries to guess you!' },
       ],
       secretLines: [
         {
@@ -244,33 +244,19 @@ export const islands = [
       ],
     },
     discovery: {
-      title: { vi: 'Ngọn Hải Đăng Trí Tuệ', en: 'The Lighthouse of Wit' },
+      title: { vi: 'AI Room', en: 'The AI Room' },
       story: [
         {
-          vi: 'Một ngọn hải đăng cũ đứng sừng sững giữa đảo, ánh sáng chỉ bật lên cho những ai đủ kiên nhẫn để suy nghĩ — anh tin đó là em.',
-          en: "An old lighthouse towers at the center of the island — its light only switches on for those patient enough to think it through. Anh believes that's you.",
+          vi: 'Giữa đảo là một căn phòng kính nhỏ, nơi AI Core lặng lẽ phát sáng — lần này, đến lượt nó thử đoán về em.',
+          en: "At the heart of the island sits a small glass room where the AI Core glows quietly — this time, it's the AI's turn to try guessing you.",
         },
       ],
     },
     lessons: [
       {
-        id: 'level4-riddle',
-        type: 'riddle',
-        prompt: {
-          vi: '"Cái gì luôn tiến về phía trước mà không bao giờ lùi lại?"',
-          en: '"What always moves forward and never goes back?"',
-        },
-        secretPrompt: {
-          vi: '"Cái gì luôn tiến tới mà chẳng bao giờ lùi? Gợi ý: giống như tình cảm anh dành cho em vậy, chỉ có tăng chứ chẳng bao giờ giảm."',
-          en: '"What always moves forward and never goes back? Hint: kind of like anh\'s feelings for you — they only ever grow, never fade."',
-        },
-        data: {
-          acceptedAnswers: ['thời gian', 'thời gian trôi', 'time'],
-          hints: [
-            { vi: 'Nó trôi qua từng giây, từng phút.', en: 'It passes by, second by second.' },
-            { vi: 'Không ai có thể quay ngược nó lại.', en: 'No one can turn it back.' },
-          ],
-        },
+        id: 'level4-ai-guess',
+        type: 'ai-guess',
+        data: {},
       },
     ],
     fragment: {

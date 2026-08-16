@@ -56,6 +56,7 @@ export const uiStrings = {
   continueLabel: { vi: 'Tiếp Tục', en: 'Continue' },
   returnToShip: { vi: 'Quay Về Thuyền', en: 'Return to Ship' },
   goToIsland3: { vi: 'ĐẾN ĐẢO 3', en: 'TO ISLAND 3' },
+  goToIsland4: { vi: 'ĐẾN ĐẢO 4', en: 'TO ISLAND 4' },
   islandCompleteMessage: {
     vi: 'đã hé lộ bí mật của nó cho em rồi đó. Đường phía trước sáng hơn một chút, mình đi tiếp nha.',
     en: "has whispered its secret to you. The way onward's a little brighter now — let's keep going.",

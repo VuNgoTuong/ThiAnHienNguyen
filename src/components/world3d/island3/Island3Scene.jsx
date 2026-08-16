@@ -4,7 +4,7 @@ import { PerspectiveCamera } from '@react-three/drei'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Bot } from 'lucide-react'
 import gsap from 'gsap'
-import { useTranslation } from '../../../hooks/useGame.js'
+import { useGame, useTranslation } from '../../../hooks/useGame.js'
 import { uiStrings } from '../../../data/uiStrings.js'
 import { AI_REACTIONS, COMBO_LABELS, island3Copy } from '../../../data/quizAssets.js'
 import { SceneEffects } from '../SceneEffects.jsx'
@@ -108,6 +108,7 @@ function getScoreLines(score) {
 // "return to ship" flow picks up exactly like every other island.
 export function Island3Scene({ lesson, onSolved, secretModeUnlocked = false }) {
   const { t } = useTranslation()
+  const { recordIsland3Result } = useGame()
   const questions = lesson.data.questions
 
   const [phase, setPhase] = useState('transition') // transition|title|ai-intro|quiz|ending|results|teaser
@@ -126,6 +127,11 @@ export function Island3Scene({ lesson, onSolved, secretModeUnlocked = false }) {
   const glowBoostRef = useRef(0)
   const skipRef = useRef(null)
   const advanceTimeoutRef = useRef(null)
+  // Per-question answer records (time/choice/category) — never re-rendered
+  // on, only read once the quiz ends to feed Island 4's prediction engine.
+  const answerRecordsRef = useRef([])
+  const questionStartRef = useRef(Date.now())
+  const resultRecordedRef = useRef(false)
 
   const question = questions[questionIndex]
   const score = answerLog.filter((entry) => entry === 'correct').length
@@ -222,12 +228,24 @@ export function Island3Scene({ lesson, onSolved, secretModeUnlocked = false }) {
 
   useEffect(() => () => clearTimeout(advanceTimeoutRef.current), [])
 
+  // Restart the per-question stopwatch every time a fresh question is shown.
+  useEffect(() => {
+    if (phase === 'quiz') questionStartRef.current = Date.now()
+  }, [phase, questionIndex])
+
   function handleSelect(optionId) {
     if (answered) return
     setSelectedId(optionId)
     setAnswered(true)
 
     const correct = optionId === question.correctOptionId
+    answerRecordsRef.current[questionIndex] = {
+      correct,
+      elapsedMs: Date.now() - questionStartRef.current,
+      optionIndex: question.options.findIndex((option) => option.id === optionId),
+      category: question.category,
+      layout: question.layout,
+    }
     setAnswerLog((log) => {
       const next = [...log]
       next[questionIndex] = correct ? 'correct' : 'wrong'
@@ -286,6 +304,12 @@ export function Island3Scene({ lesson, onSolved, secretModeUnlocked = false }) {
     if (camera) {
       gsap.to(camera.position, { ...WIDE_CAM, duration: 1.4, ease: 'power2.inOut' })
       gsap.to(lookTargetRef.current, { ...WIDE_LOOK, duration: 1.4, ease: 'power2.inOut' })
+    }
+    // Hand the run's stats off to the store once, so Island 4's "AI guesses
+    // you" predictions have real behavior to draw from.
+    if (!resultRecordedRef.current) {
+      resultRecordedRef.current = true
+      recordIsland3Result(summarizeAnswerRecords(answerRecordsRef.current))
     }
     const timeout = setTimeout(() => setPhase('results'), 3400)
     return () => clearTimeout(timeout)
@@ -645,6 +669,33 @@ function QuestionImage({ image }) {
       className="h-full w-full object-cover"
     />
   )
+}
+
+// Rolls the raw per-question records into the aggregate shape stored in
+// `state.island3Result` — this is the only "profile data" Island 4 has to
+// work with, so keep it cheap, deterministic, and free of any question ids
+// (the prediction engine only ever needs the shape, not the source quiz).
+function summarizeAnswerRecords(records) {
+  const clean = records.filter(Boolean)
+  const total = clean.length
+  const score = clean.filter((entry) => entry.correct).length
+  const avgAnswerTimeMs = total ? Math.round(clean.reduce((sum, entry) => sum + entry.elapsedMs, 0) / total) : 0
+  const firstOptionPicks = clean.filter((entry) => entry.optionIndex === 0).length
+  const imageEntries = clean.filter((entry) => entry.layout === 'image-question')
+  const worldEntries = clean.filter((entry) => entry.category === '🌍')
+  const animalEntries = clean.filter((entry) => entry.category === '🐘')
+  return {
+    score,
+    total,
+    avgAnswerTimeMs,
+    firstOptionPicks,
+    imageCorrect: imageEntries.filter((entry) => entry.correct).length,
+    imageTotal: imageEntries.length,
+    worldCorrect: worldEntries.filter((entry) => entry.correct).length,
+    worldTotal: worldEntries.length,
+    animalCorrect: animalEntries.filter((entry) => entry.correct).length,
+    animalTotal: animalEntries.length,
+  }
 }
 
 function hexToRgb(hex) {

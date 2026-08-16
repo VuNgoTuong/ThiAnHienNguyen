@@ -7,6 +7,7 @@ import { DialogBox } from '../components/dialog/DialogBox.jsx'
 import { PuzzleEngine } from '../components/puzzle/PuzzleEngine.jsx'
 import { HiddenCoveScene } from '../components/world3d/hiddenCove/HiddenCoveScene.jsx'
 import { Island3Scene } from '../components/world3d/island3/Island3Scene.jsx'
+import { Island4Scene } from '../components/world3d/island4/Island4Scene.jsx'
 import { FragmentRevealModal } from '../components/inventory/FragmentRevealModal.jsx'
 import { ParchmentPanel } from '../components/ui/ParchmentPanel.jsx'
 import { Button } from '../components/ui/Button.jsx'
@@ -95,6 +96,15 @@ export function IslandPage() {
     )
   }
 
+  if (island.id === 'level-4-wit' && step === 'arrival') {
+    return (
+      <div className="relative h-full w-full">
+        <Island4Scene onSolved={handleLessonSolved} secretModeUnlocked={state.secretModeUnlocked} />
+        <FragmentRevealModal fragment={revealedFragment} onContinue={handleFragmentContinue} />
+      </div>
+    )
+  }
+
   const isWideLesson = step === 'lesson' && currentLesson.type === 'word-chain'
 
   return (
@@ -159,7 +169,16 @@ export function IslandPage() {
                     {t(uiStrings.goToIsland3)}
                   </Button>
                 ) : null}
-                <Button icon={Anchor} variant={island.id === 'level-2-mystery' ? 'ghost' : 'primary'} onClick={handleReturnToMap}>
+                {island.id === 'level-3-challenge' ? (
+                  <Button icon={Sparkles} onClick={() => arriveAtIsland('level-4-wit')} className="mb-3">
+                    {t(uiStrings.goToIsland4)}
+                  </Button>
+                ) : null}
+                <Button
+                  icon={Anchor}
+                  variant={island.id === 'level-2-mystery' || island.id === 'level-3-challenge' ? 'ghost' : 'primary'}
+                  onClick={handleReturnToMap}
+                >
                   {t(uiStrings.returnToShip)}
                 </Button>
               </ParchmentPanel>
