@@ -1,30 +1,35 @@
-import { useMemo } from 'react'
+import { useMemo, useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import { PalmTree } from './PalmIsland.jsx'
 
-const ROCK = '#7d7568'
-const ROCK_DARK = '#4a423a'
-const ROCK_LIGHT = '#a89a82'
-const MOSS = '#5c7a42'
-const SAND = '#d8c485'
+const ROCK_BASE = '#4d463b'
+const ROCK_SLOPE = '#61584a'
+const ROCK_LIGHT = '#786e5c'
+const MOSS = '#3b7a42'
+const SAND = '#e6d59e'
 
-// A vertical streak pattern instead of a plain blue plane — cheap to fake
-// falling water without a video texture or a real particle system.
 function useWaterfallTexture() {
   return useMemo(() => {
     const canvas = document.createElement('canvas')
-    canvas.width = 32
-    canvas.height = 128
+    canvas.width = 128
+    canvas.height = 512
     const ctx = canvas.getContext('2d')
-    for (let i = 0; i < 50; i++) {
+
+    ctx.fillStyle = '#3fa0c7'
+    ctx.fillRect(0, 0, canvas.width, canvas.height)
+
+    // Flowing water white & turquoise foam streaks
+    for (let i = 0; i < 200; i++) {
       const x = Math.random() * canvas.width
-      const w = 1 + Math.random() * 2
-      const h = 10 + Math.random() * 30
+      const w = 1.5 + Math.random() * 4.5
+      const h = 25 + Math.random() * 100
       const y = Math.random() * canvas.height
-      ctx.fillStyle = `rgba(255,255,255,${0.25 + Math.random() * 0.4})`
+      const alpha = 0.35 + Math.random() * 0.6
+      ctx.fillStyle = i % 3 === 0 ? `rgba(255, 255, 255, ${alpha})` : `rgba(205, 245, 255, ${alpha})`
       ctx.fillRect(x, y, w, h)
     }
+
     const texture = new THREE.CanvasTexture(canvas)
     texture.wrapS = THREE.RepeatWrapping
     texture.wrapT = THREE.RepeatWrapping
@@ -33,108 +38,216 @@ function useWaterfallTexture() {
   }, [])
 }
 
-// One faceted chunk of the cliff — a low-segment cone with flat shading
-// reads as broken rock instead of a smooth dome. Each tier also gets its
-// own x/z offset (not stacked on a shared center axis), so the stack piles
-// up lopsided like real karst rather than tapering into a neat, symmetric
-// "Christmas tree" silhouette.
-function RockTier({ x = 0, y, z = 0, radius, height, rotationY, squash = [1, 1], color = ROCK }) {
-  return (
-    <mesh
-      position={[x, y, z]}
-      rotation={[0, rotationY, 0]}
-      scale={[squash[0], 1, squash[1]]}
-      castShadow
-      receiveShadow
-    >
-      <coneGeometry args={[radius, height, 5, 1]} />
-      <meshStandardMaterial color={color} roughness={0.95} flatShading />
-    </mesh>
-  )
+// Procedural seamless mountain cliff geometry with a carved ravine notch for the waterfall
+function useMountainGeometry() {
+  return useMemo(() => {
+    const geo = new THREE.CylinderGeometry(0.38, 1.45, 2.6, 48, 32)
+    const pos = geo.attributes.position
+
+    for (let i = 0; i < pos.count; i++) {
+      let x = pos.getX(i)
+      let y = pos.getY(i)
+      let z = pos.getZ(i)
+
+      const normY = (y + 1.3) / 2.6 // 0 (bottom) to 1 (top)
+      const angle = Math.atan2(z, x)
+
+      // Organic mountain cliff noise
+      const n1 = Math.sin(x * 2.2 + y * 1.8) * Math.cos(z * 2.4) * 0.16
+      const n2 = Math.sin(angle * 5) * 0.1
+
+      // Carve out a waterfall ravine channel on the front face (+Z side)
+      if (z > 0.05 && Math.abs(x) < 0.5 && normY > 0.15 && normY < 0.88) {
+        const ravineDepth = (0.28 - Math.abs(x) * 0.45) * Math.sin((normY - 0.15) * (Math.PI / 0.73))
+        z -= Math.max(0, ravineDepth)
+      } else {
+        x += n1 + n2 * 0.4
+        z += n1 + n2 * 0.4
+      }
+
+      pos.setXYZ(i, x, y, z)
+    }
+
+    geo.computeVertexNormals()
+    return geo
+  }, [])
 }
 
-// The summit — a short, flat-topped cylinder instead of another tapering
-// cone, so the cliff ends in a plateau (something for the top-of-cliff
-// vegetation to actually sit on) rather than a bare point.
-function Plateau({ x = 0, y, z = 0, radius, color = ROCK_LIGHT }) {
-  return (
-    <mesh position={[x, y, z]} castShadow receiveShadow>
-      <cylinderGeometry args={[radius, radius * 1.3, 0.16, 5]} />
-      <meshStandardMaterial color={color} roughness={0.95} flatShading />
-    </mesh>
-  )
-}
+function WaterfallMistParticles({ position }) {
+  const particlesRef = useRef(null)
 
-function MossPatch({ position, scale = 1 }) {
+  const particles = useMemo(() => {
+    return Array.from({ length: 16 }).map((_, i) => ({
+      x: (Math.random() - 0.5) * 0.4,
+      y: (Math.random() - 0.5) * 0.2,
+      z: (Math.random() - 0.5) * 0.3,
+      scale: 0.18 + Math.random() * 0.22,
+      speed: 0.8 + Math.random() * 1.2,
+      phase: i * 0.4,
+    }))
+  }, [])
+
+  useFrame(({ clock }) => {
+    if (!particlesRef.current) return
+    const t = clock.getElapsedTime()
+    particlesRef.current.children.forEach((child, i) => {
+      const p = particles[i]
+      const cycle = (t * p.speed + p.phase) % Math.PI
+      child.scale.setScalar(p.scale * (0.8 + Math.sin(cycle) * 0.4))
+      child.material.opacity = Math.sin(cycle) * 0.35
+    })
+  })
+
   return (
-    <mesh position={position} scale={[scale, scale * 0.5, scale]}>
-      <sphereGeometry args={[0.25, 8, 6]} />
-      <meshStandardMaterial color={MOSS} roughness={0.9} />
-    </mesh>
+    <group ref={particlesRef} position={position}>
+      {particles.map((p, i) => (
+        <mesh key={i} position={[p.x, p.y, p.z]}>
+          <sphereGeometry args={[0.25, 8, 8]} />
+          <meshBasicMaterial color="#e5f7ff" transparent opacity={0.25} depthWrite={false} />
+        </mesh>
+      ))}
+    </group>
   )
 }
 
 function Waterfall({ position, height }) {
   const texture = useWaterfallTexture()
+  const streamRef = useRef(null)
+
   useFrame(({ clock }) => {
-    texture.offset.y = -clock.getElapsedTime() * 0.4
+    const t = clock.getElapsedTime()
+    texture.offset.y = -t * 0.7
+    if (streamRef.current) {
+      streamRef.current.scale.x = 1 + Math.sin(t * 3.5) * 0.03
+    }
   })
+
   return (
     <group position={position}>
-      <mesh>
-        <planeGeometry args={[0.28, height]} />
+      {/* Primary Cascading Water Stream in Ravine */}
+      <mesh ref={streamRef} position={[0, 0, 0]}>
+        <cylinderGeometry args={[0.13, 0.22, height, 20, 1, true]} />
         <meshStandardMaterial
           map={texture}
           transparent
-          color="#eaf6fb"
-          emissive="#bfe0ee"
-          emissiveIntensity={0.3}
+          color="#d2f2ff"
+          emissive="#52c8ed"
+          emissiveIntensity={0.85}
+          side={THREE.DoubleSide}
+          roughness={0.12}
+          depthWrite={false}
+        />
+      </mesh>
+
+      {/* Outer Water Spray Veil */}
+      <mesh position={[0, 0, 0.05]} rotation={[0.08, 0, 0]}>
+        <planeGeometry args={[0.38, height]} />
+        <meshStandardMaterial
+          map={texture}
+          transparent
+          opacity={0.85}
+          color="#ffffff"
+          emissive="#76d8f5"
+          emissiveIntensity={0.6}
           side={THREE.DoubleSide}
           depthWrite={false}
         />
       </mesh>
-      {/* splash pool where it meets the shore */}
-      <mesh position={[0, -height / 2, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <circleGeometry args={[0.22, 12]} />
-        <meshStandardMaterial color="#eaf6fb" transparent opacity={0.6} roughness={0.4} />
+
+      {/* Waterfall Crest Notch Curve at Mountain Top */}
+      <mesh position={[0, height / 2, -0.06]} rotation={[Math.PI / 3.5, 0, 0]}>
+        <cylinderGeometry args={[0.14, 0.12, 0.24, 16, 1, true]} />
+        <meshStandardMaterial color="#80e0fc" transparent opacity={0.8} emissive="#3ec5ec" emissiveIntensity={0.8} />
       </mesh>
+
+      {/* Waterfall Base Splash Pool Foaming Ripples */}
+      <mesh position={[0, -height / 2 + 0.02, 0.12]} rotation={[-Math.PI / 2, 0, 0]}>
+        <ringGeometry args={[0.08, 0.42, 32]} />
+        <meshBasicMaterial color="#ffffff" transparent opacity={0.75} side={THREE.DoubleSide} />
+      </mesh>
+      <mesh position={[0, -height / 2 + 0.01, 0.15]} rotation={[-Math.PI / 2, 0, 0]}>
+        <ringGeometry args={[0.22, 0.62, 32]} />
+        <meshBasicMaterial color="#8de5fc" transparent opacity={0.5} side={THREE.DoubleSide} />
+      </mesh>
+
+      {/* Volumetric Water Mist Spray */}
+      <WaterfallMistParticles position={[0, -height / 2 + 0.12, 0.14]} />
+
+      {/* Water Glow Point Light illuminating the Ravine */}
+      <pointLight position={[0, 0, 0.1]} intensity={0.7} distance={2.5} color="#55e2f7" />
     </group>
   )
 }
 
-// A dramatic karst-cliff island with a waterfall, for the Title intro's
-// background scenery — a taller, rockier counterpart to PalmIsland's low
-// tropical atoll, so the establishing shot has one striking landmark
-// instead of two identical mounds.
-export function RockyIsland({ position = [0, 0, 0], scale = 1 }) {
+function OrganicBush({ position, scale = 1, color = MOSS }) {
   return (
     <group position={position} scale={scale}>
-      <mesh position={[0, -0.05, 0]} castShadow receiveShadow>
-        <cylinderGeometry args={[1.3, 1.6, 0.3, 16]} />
-        <meshStandardMaterial color={SAND} roughness={0.9} />
+      <mesh position={[0, 0, 0]} castShadow>
+        <sphereGeometry args={[0.28, 14, 10]} />
+        <meshStandardMaterial color={color} roughness={0.7} />
       </mesh>
-
-      <RockTier x={0} y={0.45} z={0} radius={1.1} height={1.0} rotationY={0.3} squash={[1, 0.85]} color={ROCK} />
-      <RockTier x={0.28} y={1.05} z={-0.18} radius={0.72} height={0.95} rotationY={-0.5} squash={[0.9, 1]} color={ROCK_DARK} />
-      <RockTier x={-0.22} y={1.62} z={0.2} radius={0.52} height={0.85} rotationY={0.9} squash={[1, 0.85]} color={ROCK} />
-      <RockTier x={0.12} y={2.1} z={-0.12} radius={0.38} height={0.65} rotationY={-1.2} squash={[0.85, 1]} color={ROCK_DARK} />
-      <Plateau x={0.05} y={2.44} z={-0.05} radius={0.34} color={ROCK_LIGHT} />
-
-      <MossPatch position={[0.55, 0.32, 0.55]} scale={0.5} />
-      <MossPatch position={[0.05, 0.9, -0.35]} scale={0.4} />
-      <MossPatch position={[-0.35, 1.45, 0.3]} scale={0.32} />
-
-      <Waterfall position={[0.1, 1.25, 0.7]} height={1.7} />
-
-      {/* small canopy on the summit plateau, echoing the base foliage */}
-      <mesh position={[0.05, 2.6, -0.05]} castShadow>
-        <coneGeometry args={[0.24, 0.34, 8]} />
-        <meshStandardMaterial color={MOSS} roughness={0.85} />
+      <mesh position={[0.12, 0.08, 0.1]} scale={0.75} castShadow>
+        <sphereGeometry args={[0.22, 12, 10]} />
+        <meshStandardMaterial color={color} roughness={0.7} />
       </mesh>
-
-      <PalmTree position={[0.85, 0.05, 0.85]} scale={0.7} lean={0.15} />
-      <PalmTree position={[-1.0, 0.05, 0.5]} scale={0.55} lean={-0.1} />
-      <PalmTree position={[0.9, 0.05, -0.75]} scale={0.5} lean={0.05} />
     </group>
   )
 }
+
+function RockBoulder({ position, scale = 1, rotation = 0 }) {
+  return (
+    <mesh position={position} scale={[scale, scale * 0.8, scale * 0.9]} rotation={[0.2, rotation, 0.1]} castShadow receiveShadow>
+      <dodecahedronGeometry args={[0.18, 1]} />
+      <meshStandardMaterial color={ROCK_SLOPE} roughness={0.88} />
+    </mesh>
+  )
+}
+
+export function RockyIsland({ position = [0, 0, 0], scale = 1, rotation = [0, 0, 0] }) {
+  const mountainGeo = useMountainGeometry()
+
+  return (
+    <group position={position} scale={scale} rotation={rotation}>
+      {/* Sandy Shore Base Skirt */}
+      <mesh position={[0, -0.06, 0]} castShadow receiveShadow>
+        <cylinderGeometry args={[1.35, 1.72, 0.28, 36]} />
+        <meshStandardMaterial color={SAND} roughness={0.88} />
+      </mesh>
+
+      {/* Seamless Single Mountain Peak with Carved Ravine */}
+      <mesh geometry={mountainGeo} position={[0, 1.25, 0]} castShadow receiveShadow>
+        <meshStandardMaterial color={ROCK_BASE} roughness={0.82} metalness={0.08} />
+      </mesh>
+
+      {/* Waterfall flowing INSIDE the mountain ravine notch */}
+      <Waterfall position={[0, 1.22, 0.42]} height={2.1} />
+
+      {/* Summit Rainforest Canopy */}
+      <mesh position={[0, 2.52, -0.05]} castShadow>
+        <sphereGeometry args={[0.45, 20, 16]} />
+        <meshStandardMaterial color={MOSS} roughness={0.7} />
+      </mesh>
+      <mesh position={[0.15, 2.65, 0.05]} scale={0.7} castShadow>
+        <sphereGeometry args={[0.35, 16, 12]} />
+        <meshStandardMaterial color="#2d6b33" roughness={0.7} />
+      </mesh>
+
+      {/* Terraced Bush Clusters & Moss Patches */}
+      <OrganicBush position={[0.45, 0.65, 0.52]} scale={0.9} color={MOSS} />
+      <OrganicBush position={[-0.42, 0.72, -0.38]} scale={0.85} color="#2d6b33" />
+      <OrganicBush position={[0.28, 1.45, -0.28]} scale={0.75} color={MOSS} />
+      <OrganicBush position={[-0.35, 1.62, 0.32]} scale={0.8} color="#2d6b33" />
+
+      {/* Coastal & Cliffside Boulders */}
+      <RockBoulder position={[0.85, 0.08, 0.75]} scale={0.9} rotation={0.4} />
+      <RockBoulder position={[-1.0, 0.08, 0.45]} scale={0.8} rotation={1.1} />
+      <RockBoulder position={[0.82, 0.08, -0.7]} scale={0.75} rotation={2.2} />
+
+      {/* Coastal Palm Trees */}
+      <PalmTree position={[0.88, 0.05, 0.82]} scale={0.8} lean={0.14} />
+      <PalmTree position={[-1.05, 0.05, 0.48]} scale={0.65} lean={-0.1} />
+      <PalmTree position={[0.92, 0.05, -0.72]} scale={0.6} lean={0.06} />
+    </group>
+  )
+}
+

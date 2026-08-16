@@ -36,7 +36,7 @@ export function DialogBox({ speaker, lines, onComplete }) {
       className="block w-full max-w-2xl cursor-pointer p-6 text-left"
     >
       {speaker ? (
-        <p className="mb-2 font-display text-xs tracking-wide text-gold-600">{t(speaker)}</p>
+        <p className="mb-3 font-display text-xs font-bold tracking-widest text-gold-700 uppercase">{t(speaker)}</p>
       ) : null}
 
       <AnimatePresence mode="wait">
@@ -45,7 +45,7 @@ export function DialogBox({ speaker, lines, onComplete }) {
           initial={{ opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.2 }}
-          className="min-h-16 font-body text-lg leading-relaxed text-ink-900"
+          className="min-h-20 font-serif text-xl font-medium leading-relaxed text-ink-900"
         >
           {displayedText}
         </motion.p>

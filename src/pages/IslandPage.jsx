@@ -66,7 +66,7 @@ export function IslandPage() {
   const currentLesson = resolveLesson(island.lessons[lessonIndex], lessonIndex)
   const arrivalLines =
     state.secretModeUnlocked && island.arrival.secretLines
-      ? [...island.arrival.lines, ...island.arrival.secretLines]
+      ? island.arrival.secretLines
       : island.arrival.lines
 
   if (step === 'lesson' && currentLesson.type === 'hidden-cove') {
@@ -100,7 +100,7 @@ export function IslandPage() {
   return (
     <div className="relative flex h-full w-full items-center justify-center p-6">
       <Ocean />
-      <div className={`relative z-10 flex w-full flex-col items-center ${isWideLesson ? 'max-w-3xl' : 'max-w-2xl'}`}>
+      <div className={`relative z-10 flex w-full flex-col items-center ${isWideLesson ? 'max-w-4xl sm:max-w-5xl' : 'max-w-2xl'}`}>
         <AnimatePresence mode="wait">
           {step === 'arrival' ? (
             <motion.div key="arrival" {...fadeStep} className="w-full">

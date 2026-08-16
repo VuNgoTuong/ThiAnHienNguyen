@@ -18,33 +18,24 @@ export const islands = [
       speaker: GUIDE,
       lines: [
         {
-          vi: 'Chào mừng em tới Đảo Làm Quen — chặng đầu tiên trong hành trình nhỏ anh dành riêng cho em.',
-          en: "Welcome to the Isle of Getting Acquainted — the first stop on this little journey I made just for you.",
-        },
-        {
-          vi: 'Không có gì hóc búa đâu, chỉ một ván nối chữ cho vui thôi em.',
-          en: "Nothing tricky here — just a fun round of word-chain.",
+          vi: 'Chào mừng em tới Đảo Làm Quen! Cùng bắt đầu thử thách nhé.',
+          en: "Welcome to the Isle of Getting Acquainted! Let's begin.",
         },
       ],
       secretLines: [
         {
-          vi: 'Khoan đã... "Hiền" à? Tên dịu dàng vậy mà dám một mình ra khơi, anh thấy thương ghê.',
-          en: '...wait, "Hiền"? Such a gentle name, out here sailing alone — that makes anh love you a little more.',
-        },
-        {
-          vi: 'Được rồi, anh sẽ để mắt tới em đặc biệt một chút. Có mệt giữa chừng thì cứ nghỉ, anh vẫn ở đây chờ em mà.',
-          en: "Alright, anh will be keeping a close, caring eye on you. If you get tired halfway, take your time — anh will be right here waiting.",
+          vi: 'Hiền à? Tên dịu dàng quá. Anh chờ em ở đây nhé!',
+          en: "Hiền? Such a gentle name. Anh will be right here for you!",
         },
       ],
     },
     discovery: {
-      title: { vi: 'Làm Quen', en: 'Getting Acquainted' },
+      title: { vi: 'Thử Thách Nối Chữ', en: 'Word Chain Trial' },
       story: [
         {
-          vi: 'Đảo này không thử bộ não em đâu — chỉ là một ván nối chữ cùng anh cho vui thôi.',
-          en: "This island isn't testing your mind — just a fun round of word-chain together.",
+          vi: 'Nối đúng 10 từ liên tiếp cùng anh để vượt qua đảo 1 nha em.',
+          en: 'Connect 10 words in a row to clear Island 1.',
         },
-        { vi: 'Sẵn sàng chưa em?', en: 'Ready?' },
       ],
     },
     lessons: [
@@ -52,10 +43,10 @@ export const islands = [
         id: 'level1-wordchain',
         type: 'word-chain',
         prompt: {
-          vi: 'Giờ thì... nối chữ cùng anh cho vui nha! Nối đúng 10 lần liên tiếp là qua được thử thách này. Mỗi lượt có 15 giây thôi, hết giờ là mình nối lại từ đầu nha em.',
-          en: "Now... let's chain words together! Ten correct in a row clears this trial. You've got 15 seconds a turn — if time runs out, we just start the round over, no worries.",
+          vi: 'Nối đúng 10 từ liên tiếp. Mỗi lượt 20 giây.',
+          en: 'Connect 10 words in a row. 20 seconds per turn.',
         },
-        data: { timeLimitMs: 15000 },
+        data: { timeLimitMs: 20000 },
       },
     ],
     fragment: {
@@ -76,16 +67,15 @@ export const islands = [
     arrival: {
       speaker: GUIDE,
       lines: [
-        { vi: 'Mình cập bến Vịnh Ẩn Giấu rồi — Level 2 đây em.', en: "We've landed at the Hidden Cove — Level 2." },
         {
-          vi: 'Đảo này có một trò nhỏ: anh đưa hình, em đoán xem đó là gì nha.',
-          en: "This island has a little game: anh shows you a picture, you guess what it is.",
+          vi: 'Cập bến Vịnh Ẩn Giấu rồi! Nhìn hình rồi đoán xem đó là gì nhé.',
+          en: "We've landed at Hidden Cove! Look at each picture and guess what it is.",
         },
       ],
       secretLines: [
         {
-          vi: 'Đảo này giấu kho báu đó, Hiền — nhưng với anh, kho báu lớn nhất vẫn là được ngồi đây chờ em suy nghĩ.',
-          en: "This island hides a treasure, Hiền — though for anh, the real treasure is just getting to sit here and wait for you.",
+          vi: 'Đảo này giấu kho báu đó Hiền — cố lên em nhé!',
+          en: "This island hides a treasure Hiền — you've got this!",
         },
       ],
     },
@@ -93,12 +83,8 @@ export const islands = [
       title: { vi: 'Vịnh Ẩn Giấu', en: 'The Hidden Cove' },
       story: [
         {
-          vi: 'Không khí ở đây yên tĩnh lạ thường, như thể hòn đảo đang chờ một người đủ tinh tế để lắng nghe — anh nghĩ đó là em.',
-          en: 'The air here is strangely still, like the island is waiting for someone thoughtful enough to listen — anh thinks that\'s you.',
-        },
-        {
-          vi: 'Anh sẽ đưa em xem lần lượt từng hình một. Nhìn kỹ rồi đoán xem đó là gì nha.',
-          en: 'anh will show you one picture at a time. Look closely, then guess what it is.',
+          vi: 'Nhìn kỹ từng hình rồi chọn đáp án đúng nhé.',
+          en: 'Look closely at each picture and choose the right answer.',
         },
       ],
     },
@@ -116,8 +102,8 @@ export const islands = [
               id: 'level2-quiz-1',
               prompt: { vi: 'Nhìn hình và đoán xem đây là gì:', en: 'Look at the picture and guess what it is:' },
               secretPrompt: {
-                vi: 'Nhìn hình và đoán xem đây là gì — đừng đoán bừa như đoán tâm trạng của anh à nha.',
-                en: "Look at the picture and guess — don't just guess blindly like you do with anh's moods.",
+                vi: 'Nhìn hình và đoán xem đây là gì nha em.',
+                en: "Look at the picture and guess.",
               },
               emoji: '🍌',
               effect: 'blur',
@@ -133,8 +119,8 @@ export const islands = [
               id: 'level2-quiz-2',
               prompt: { vi: 'Còn đây là gì nào:', en: 'And this one:' },
               secretPrompt: {
-                vi: 'Đoán xem đây là con gì — gợi ý: dễ thương y như em vậy đó.',
-                en: 'Guess what this animal is — hint: just as cute as you.',
+                vi: 'Đoán xem đây là con gì nha em.',
+                en: 'Guess what this animal is.',
               },
               emoji: '🐱',
               effect: 'silhouette',
@@ -148,10 +134,10 @@ export const islands = [
             },
             {
               id: 'level2-quiz-3',
-              prompt: { vi: 'Nhìn gần quá hén, đoán xem đây là gì:', en: "Zoomed in real close — what's this:" },
+              prompt: { vi: 'Đoán xem đây là hình gì:', en: "What's this:" },
               secretPrompt: {
-                vi: 'Đoán xem cái gì đây — không phải trái tim em đang giữ kỹ đâu.',
-                en: "Guess what this is — not the heart you're guarding so carefully.",
+                vi: 'Đoán xem cái gì đây nha em.',
+                en: "Guess what this is.",
               },
               emoji: '⚓',
               effect: 'zoom',
@@ -166,12 +152,12 @@ export const islands = [
             {
               id: 'level2-quiz-4',
               prompt: {
-                vi: 'Nhìn kỹ đi, hình sẽ biến mất nhanh lắm à nha:',
-                en: 'Look closely — this one disappears fast:',
+                vi: 'Nhìn kỹ đi, hình biến mất nhanh lắm đó:',
+                en: 'Look closely — this disappears fast:',
               },
               secretPrompt: {
-                vi: 'Chớp mắt là mất hình đó — giống hồi em chớp mắt là hết tin anh vậy.',
-                en: "Blink and it's gone — kinda like how fast you stopped trusting anh that one time.",
+                vi: 'Chớp mắt là mất hình đó nha em.',
+                en: "Blink and it's gone.",
               },
               emoji: '🌴',
               effect: 'flash',
@@ -205,13 +191,12 @@ export const islands = [
     arrival: {
       speaker: GUIDE,
       lines: [
-        { vi: 'Mình tới Đảo Thử Thách rồi — Level 3 đây em.', en: 'The Isle of Challenge, Level 3.' },
-        { vi: 'Em đi được nửa chặng đường rồi đó.', en: "You're halfway there, sweetheart." },
+        { vi: 'Chào mừng em tới Đảo Thử Thách Level 3!', en: 'Welcome to Level 3 Challenge Isle!' },
       ],
       secretLines: [
         {
-          vi: 'Này Hiền, đám sinh vật biển cứ bơi quanh em mãi — chắc tụi nó cũng thấy em đáng yêu như anh thấy vậy.',
-          en: "Hey Hiền, the sea creatures keep circling you — guess they think you're just as lovely as anh does.",
+          vi: 'Nỗ lực lên Hiền nhé, anh tin em!',
+          en: "Keep going Hiền, I believe in you!",
         },
       ],
     },
@@ -219,8 +204,8 @@ export const islands = [
       title: { vi: 'Quiz Arena', en: 'Quiz Arena' },
       story: [
         {
-          vi: 'Ở giữa đảo có một vòng năng lượng kỳ lạ — nơi anh hay gọi đùa là Quiz Arena.',
-          en: 'At the center of this island sits a strange ring of light — anh jokingly calls it the Quiz Arena.',
+          vi: 'Sẵn sàng bước vào Quiz Arena chưa em?',
+          en: 'Ready to enter the Quiz Arena?',
         },
       ],
     },
@@ -249,13 +234,12 @@ export const islands = [
     arrival: {
       speaker: GUIDE,
       lines: [
-        { vi: 'Mình tới Đảo Trí Tuệ rồi — Level 4 đây em.', en: 'The Isle of Wit, Level 4.' },
-        { vi: 'Đây là thử thách cuối trước khi em chạm tới chân trời rồi đó.', en: 'Last trial before you reach the horizon.' },
+        { vi: 'Chào mừng em tới Đảo Trí Tuệ — thử thách cuối cùng!', en: 'Welcome to Isle of Wit — final trial!' },
       ],
       secretLines: [
         {
-          vi: 'Sóng to gió lớn vầy, chắc em đang mệt lắm phải không? Ráng thêm chút nữa thôi, anh tin em làm được.',
-          en: "Rough seas and wind like this — you must be tired. Just a little further, anh knows you've got this.",
+          vi: 'Cố lên Hiền nhé, anh tin em làm được!',
+          en: "You got this Hiền, I believe in you!",
         },
       ],
     },

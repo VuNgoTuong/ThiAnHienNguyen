@@ -6,16 +6,16 @@ import { Ocean3D } from './Ocean3D.jsx'
 import { Ship3D } from './Ship3D.jsx'
 import { Birds } from './Birds.jsx'
 import { PalmIsland } from './PalmIsland.jsx'
-import { RockyIsland } from './RockyIsland.jsx'
+import { ParadiseIsland } from './ParadiseIsland.jsx'
 import { GradientSky } from './GradientSky.jsx'
 import { SceneEffects } from './SceneEffects.jsx'
 import { useShipVoyage } from '../../hooks/useShipVoyage.js'
 
 const SUN_POSITION = [70, 42, -55]
 
-const REST = { x: 0, y: 3.2, z: 8, rotX: -0.09, fogNear: 30, fogFar: 150 }
-const START = { x: 0, y: 52, z: 12, rotX: -1.15, rotY: -0.18, fogNear: 45, fogFar: 170 }
-const MID = { x: 22, y: 26, z: 36, rotX: -0.78, rotY: -0.06, fogNear: 35, fogFar: 120 }
+const REST = { x: 0, y: 3.2, z: 8, rotX: -0.09, fogNear: 25, fogFar: 160 }
+const START = { x: 0, y: 52, z: 12, rotX: -1.15, rotY: -0.18, fogNear: 35, fogFar: 180 }
+const MID = { x: 22, y: 26, z: 36, rotX: -0.78, rotY: -0.06, fogNear: 30, fogFar: 140 }
 
 const HOLD_S = 0.6
 const DIVE_S = 1.7
@@ -50,7 +50,7 @@ function IntroCamera({ onSettled, onDiveStart }) {
 
   return (
     <>
-      <fog ref={fogRef} attach="fog" args={['#bfe0ee', START.fogNear, START.fogFar]} />
+      <fog ref={fogRef} attach="fog" args={['#a8d4e6', START.fogNear, START.fogFar]} />
       <PerspectiveCamera ref={cameraRef} makeDefault fov={55} near={0.1} far={260} />
     </>
   )
@@ -70,33 +70,40 @@ function ArrivingShip({ start }) {
 }
 
 export function TitleIntroScene({ onSettled }) {
-  // A state setter as the ref callback (not useRef) — GodRays needs the
-  // *mounted* mesh instance, and only a state update forces SceneEffects to
-  // re-render once that mesh actually exists (a plain ref wouldn't).
   const [sunMesh, setSunMesh] = useState(null)
   const [diveStarted, setDiveStarted] = useState(false)
 
   return (
     <Canvas dpr={[1, 1.5]} gl={{ antialias: true }}>
-      <GradientSky />
+      <GradientSky sunPosition={SUN_POSITION} />
       <IntroCamera onSettled={onSettled} onDiveStart={() => setDiveStarted(true)} />
-      <hemisphereLight args={['#cfe8ef', '#0c3a44', 0.55]} />
-      <ambientLight intensity={0.55} color="#fff8ec" />
-      <directionalLight position={SUN_POSITION} intensity={1.3} color="#fff4d9" />
-      <pointLight position={[0, 6, -4]} intensity={0.2} color="#fff0c8" distance={10} />
-      <mesh ref={setSunMesh} position={SUN_POSITION}>
-        <sphereGeometry args={[3.6, 16, 16]} />
-        <meshBasicMaterial color="#fffbe8" />
-      </mesh>
+      <hemisphereLight args={['#e8f4f8', '#0e3a47', 0.65]} />
+      <ambientLight intensity={0.65} color="#fff6e5" />
+      <directionalLight position={SUN_POSITION} intensity={1.5} color="#ffe2b3" castShadow />
+      <pointLight position={[-8, 4, -8]} intensity={0.8} color="#ffe585" distance={15} />
+
+      {/* Sun Mesh with Glowing Corona */}
+      <group position={SUN_POSITION}>
+        <mesh ref={setSunMesh}>
+          <sphereGeometry args={[4.2, 24, 24]} />
+          <meshBasicMaterial color="#fffbe6" />
+        </mesh>
+        <mesh>
+          <sphereGeometry args={[6.5, 16, 16]} />
+          <meshBasicMaterial color="#ffeab3" transparent opacity={0.35} />
+        </mesh>
+      </group>
 
       <Clouds material={undefined} limit={40}>
-        <Cloud seed={1} position={[-18, 28, -40]} scale={2.6} opacity={0.7} speed={0.08} bounds={[10, 3, 6]} />
-        <Cloud seed={2} position={[16, 34, -55]} scale={3.2} opacity={0.6} speed={0.06} bounds={[12, 3, 6]} />
-        <Cloud seed={3} position={[0, 40, -70]} scale={2.2} opacity={0.55} speed={0.07} bounds={[9, 3, 5]} />
+        <Cloud seed={1} position={[-18, 28, -40]} scale={2.8} opacity={0.75} speed={0.08} bounds={[10, 3, 6]} color="#fffcf5" />
+        <Cloud seed={2} position={[16, 34, -55]} scale={3.4} opacity={0.65} speed={0.06} bounds={[12, 3, 6]} color="#fff8ea" />
+        <Cloud seed={3} position={[0, 40, -70]} scale={2.5} opacity={0.6} speed={0.07} bounds={[9, 3, 5]} color="#fffcf5" />
       </Clouds>
 
       <Birds />
-      <RockyIsland position={[-13, 0, -18]} scale={1.4} />
+
+      {/* Ultra-beautiful Tropical Paradise Island */}
+      <ParadiseIsland position={[-7.5, -0.2, -11]} scale={1.85} rotation={[0, 0.4, 0]} />
       <PalmIsland position={[15, 0, -24]} scale={1.1} />
 
       <Suspense fallback={null}>

@@ -5,15 +5,17 @@ export function LanguageToggle({ className = '' }) {
 
   return (
     <div
-      className={`inline-flex overflow-hidden rounded-full border border-parchment-200/20 text-xs font-display tracking-wide ${className}`}
+      className={`inline-flex overflow-hidden rounded-full border border-gold-400/30 bg-ocean-950/75 p-0.5 text-xs font-display backdrop-blur-md shadow-md ${className}`}
     >
       {['vi', 'en'].map((code) => (
         <button
           key={code}
           type="button"
           onClick={() => setLanguage(code)}
-          className={`px-2.5 py-1 transition-colors ${
-            language === code ? 'bg-gold-400 text-ink-900' : 'bg-ocean-950/60 text-parchment-200/70 hover:text-parchment-100'
+          className={`rounded-full px-3 py-1 transition-all duration-200 uppercase font-semibold ${
+            language === code
+              ? 'bg-gradient-to-r from-gold-400 to-gold-500 text-ink-900 shadow-[0_0_12px_rgba(232,195,104,0.5)]'
+              : 'text-parchment-200/70 hover:text-parchment-100 hover:bg-gold-500/10'
           }`}
         >
           {code}
@@ -22,3 +24,4 @@ export function LanguageToggle({ className = '' }) {
     </div>
   )
 }
+

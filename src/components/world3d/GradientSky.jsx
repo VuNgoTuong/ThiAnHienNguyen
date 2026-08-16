@@ -1,19 +1,17 @@
 import { useMemo } from 'react'
 import * as THREE from 'three'
 
-// A hand-authored gradient backdrop instead of a physically-simulated
-// atmosphere. The Preetham sky model (drei's <Sky>) saturates to a large
-// blown-out white band near the horizon at this game's low, deck-level
-// camera angles no matter how its turbidity/mie knobs are tuned — the
-// grazing view angle always has the longest atmospheric path. A simple
-// vertical color ramp gives full, reliable art control over that band
-// instead, which suits this game's painterly/stylized look better than a
-// physically-accurate sky anyway.
+// Atmospheric sky shader with smooth Rayleigh scattering, horizon haze,
+// and warm sun halo gradient for a painterly, natural sky.
 const VERTEX_SHADER = `
   varying vec3 vWorldPosition;
+  varying vec3 vSunVector;
+  uniform vec3 sunPosition;
+
   void main() {
     vec4 worldPosition = modelMatrix * vec4(position, 1.0);
     vWorldPosition = worldPosition.xyz;
+    vSunVector = normalize(sunPosition);
     gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
   }
 `
@@ -22,46 +20,55 @@ const FRAGMENT_SHADER = `
   uniform vec3 topColor;
   uniform vec3 horizonColor;
   uniform vec3 bottomColor;
+  uniform vec3 sunColor;
   uniform float exponent;
   varying vec3 vWorldPosition;
+  varying vec3 vSunVector;
+
   void main() {
-    float h = normalize(vWorldPosition).y;
-    vec3 upper = mix(horizonColor, topColor, pow(max(h, 0.0), exponent));
-    vec3 lower = mix(horizonColor, bottomColor, pow(max(-h, 0.0), exponent));
-    vec3 color = h >= 0.0 ? upper : lower;
-    // THREE.Color stores these uniforms in linear working space (color
-    // management converts the sRGB hex on the way in); this is a bare
-    // ShaderMaterial with no <colorspace_fragment> chunk to convert back
-    // on the way out, so without this the sky renders far too dark.
-    gl_FragColor = vec4(pow(color, vec3(1.0 / 2.2)), 1.0);
+    vec3 dir = normalize(vWorldPosition);
+    float h = max(dir.y, 0.0);
+    
+    // Vertical atmospheric color gradient
+    vec3 skyBase = mix(horizonColor, topColor, pow(h, exponent));
+    if (dir.y < 0.0) {
+      skyBase = mix(horizonColor, bottomColor, pow(max(-dir.y, 0.0), 0.5));
+    }
+
+    // Sun atmospheric halo
+    float cosTheta = max(dot(dir, vSunVector), 0.0);
+    float sunGlow = pow(cosTheta, 32.0) * 0.45 + pow(cosTheta, 4.0) * 0.2;
+    vec3 finalColor = skyBase + sunColor * sunGlow;
+
+    // Convert from linear to sRGB for rendering
+    gl_FragColor = vec4(pow(finalColor, vec3(1.0 / 2.2)), 1.0);
   }
 `
 
 export function GradientSky({
-  topColor = '#3f8fc9',
-  horizonColor = '#fdf6e0',
-  bottomColor = '#1a7690',
-  exponent = 0.7,
-  // Must stay under every camera's `far` (200-260 across the three scenes
-  // this is used in) or the sphere sits beyond the clip plane and never
-  // renders at all — which silently happened here before, making every
-  // color/exponent tweak invisible since the DOM's fallback CSS background
-  // was showing through instead.
-  radius = 150,
+  topColor = '#124373',
+  horizonColor = '#fde5b6',
+  bottomColor = '#0c2d4a',
+  sunColor = '#ffdfa9',
+  exponent = 0.55,
+  radius = 160,
+  sunPosition = [70, 42, -55],
 }) {
   const uniforms = useMemo(
     () => ({
       topColor: { value: new THREE.Color(topColor) },
       horizonColor: { value: new THREE.Color(horizonColor) },
       bottomColor: { value: new THREE.Color(bottomColor) },
+      sunColor: { value: new THREE.Color(sunColor) },
+      sunPosition: { value: new THREE.Vector3(...sunPosition) },
       exponent: { value: exponent },
     }),
-    [topColor, horizonColor, bottomColor, exponent],
+    [topColor, horizonColor, bottomColor, sunColor, exponent, sunPosition],
   )
 
   return (
     <mesh>
-      <sphereGeometry args={[radius, 24, 16]} />
+      <sphereGeometry args={[radius, 32, 24]} />
       <shaderMaterial
         uniforms={uniforms}
         vertexShader={VERTEX_SHADER}
@@ -74,3 +81,4 @@ export function GradientSky({
     </mesh>
   )
 }
+

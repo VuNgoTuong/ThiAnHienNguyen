@@ -7,8 +7,14 @@ import { WorldMapPage } from '../../pages/WorldMapPage.jsx'
 import { IslandPage } from '../../pages/IslandPage.jsx'
 import { FinalIslandPage } from '../../pages/FinalIslandPage.jsx'
 import { EndingPage } from '../../pages/EndingPage.jsx'
+import { WaterfallExperience } from '../waterfall/WaterfallExperience.jsx'
 import { HUD } from './HUD.jsx'
 import { AchievementToast } from '../achievements/AchievementToast.jsx'
+
+function WaterfallSceneWrapper() {
+  const { setScene } = useGame()
+  return <WaterfallExperience onBack={() => setScene('map')} />
+}
 
 const SCENES = {
   title: TitleScreen,
@@ -19,9 +25,10 @@ const SCENES = {
   island: IslandPage,
   final: FinalIslandPage,
   ending: EndingPage,
+  waterfall: WaterfallSceneWrapper,
 }
 
-const NO_HUD_SCENES = new Set(['title', 'name-entry', 'verify', 'greeting', 'ending'])
+const NO_HUD_SCENES = new Set(['title', 'name-entry', 'verify', 'greeting', 'ending', 'waterfall'])
 
 export function GameShell() {
   const { state } = useGame()

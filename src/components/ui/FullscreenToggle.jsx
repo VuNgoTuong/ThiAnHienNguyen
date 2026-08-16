@@ -13,7 +13,7 @@ export function FullscreenToggle({ className = '' }) {
       onClick={toggleFullscreen}
       aria-label={t(isFullscreen ? uiStrings.exitFullscreen : uiStrings.enterFullscreen)}
       title={t(isFullscreen ? uiStrings.exitFullscreen : uiStrings.enterFullscreen)}
-      className={`rounded-full border border-parchment-200/15 bg-ocean-950/60 p-2.5 text-parchment-100 backdrop-blur transition-colors hover:border-gold-500/50 hover:text-gold-400 ${className}`}
+      className={`rounded-full border border-gold-400/30 bg-ocean-950/75 p-2.5 text-parchment-100 backdrop-blur-md shadow-md transition-all duration-200 hover:border-gold-400 hover:text-gold-300 hover:bg-gold-500/15 hover:shadow-[0_0_15px_rgba(232,195,104,0.3)] ${className}`}
     >
       {isFullscreen ? <Minimize size={18} /> : <Maximize size={18} />}
     </button>

@@ -61,9 +61,6 @@ export function WorldScene3D({
   shipPosition,
   shipBearing,
 }) {
-  // Bounds cover every island, the Final Island (even while still locked, so
-  // the camera never has to jump when it unlocks), and the ship's starting
-  // anchorage — the full set of points that can ever appear on the map.
   const bounds = useMemo(() => {
     const points = [...islands.map((island) => island.position), finalIsland.position, START_POSITION].map(
       ({ x, y }) => percentToWorld3D(x, y),
@@ -74,7 +71,6 @@ export function WorldScene3D({
       minZ: Math.min(...points.map((p) => p.z)),
       maxZ: Math.max(...points.map((p) => p.z)),
     }
-    // islands/finalIsland are static data — this only ever needs to run once.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -82,11 +78,11 @@ export function WorldScene3D({
     <Canvas shadows dpr={[1, 1.5]} gl={{ antialias: true }}>
       <PerspectiveCamera makeDefault fov={42} near={0.1} far={200} />
       <CameraRig bounds={bounds} />
-      <GradientSky />
-      <fog attach="fog" args={['#bfe0ee', 26, 65]} />
-      <hemisphereLight args={['#cfe8ef', '#0c3a44', 0.5]} />
-      <ambientLight intensity={0.55} color="#fff8ec" />
-      <directionalLight position={SUN_POSITION} intensity={1.2} color="#fff4d9" castShadow />
+      <GradientSky sunPosition={SUN_POSITION} />
+      <fog attach="fog" args={['#a8d4e6', 28, 70]} />
+      <hemisphereLight args={['#e8f4f8', '#0e3a47', 0.6]} />
+      <ambientLight intensity={0.6} color="#fff6e5" />
+      <directionalLight position={SUN_POSITION} intensity={1.4} color="#ffe2b3" castShadow />
 
       <Suspense fallback={null}>
         <Ocean3D />

@@ -37,10 +37,13 @@ const QUESTION_VIEWS = [VIEW_REST, VIEW_TREE, VIEW_WELL, VIEW_CAVE]
 function CoveCamera({ cameraRef, lookTargetRef }) {
   const localRef = useRef(null)
 
-  useFrame(() => {
+  useFrame(({ clock }) => {
     const camera = localRef.current
     if (!camera) return
-    camera.lookAt(lookTargetRef.current.x, lookTargetRef.current.y, lookTargetRef.current.z)
+    const t = clock.getElapsedTime()
+    const swayX = Math.sin(t * 0.8) * 0.08
+    const swayY = Math.cos(t * 0.6) * 0.06
+    camera.lookAt(lookTargetRef.current.x + swayX, lookTargetRef.current.y + swayY, lookTargetRef.current.z)
   })
 
   return (
@@ -66,7 +69,7 @@ function CoveCamera({ cameraRef, lookTargetRef }) {
 export function HiddenCoveScene({ lesson, onSolved, secretModeUnlocked = false }) {
   const { t } = useTranslation()
 
-  const [phase, setPhase] = useState('title') // 'title' | 'exploring' | 'finale' | 'done'
+  const [phase, setPhase] = useState('exploring') // 'exploring' | 'finale' | 'done'
   const [questionIndex, setQuestionIndex] = useState(0)
   const [burstActive, setBurstActive] = useState(false)
 
@@ -79,11 +82,6 @@ export function HiddenCoveScene({ lesson, onSolved, secretModeUnlocked = false }
 
   const questions = lesson.data.questions
   const currentQuestion = questions[questionIndex]
-
-  useEffect(() => {
-    const timeout = setTimeout(() => setPhase((p) => (p === 'title' ? 'exploring' : p)), 3200)
-    return () => clearTimeout(timeout)
-  }, [])
 
   function moveCamera(view) {
     const camera = cameraRef.current
@@ -156,25 +154,6 @@ export function HiddenCoveScene({ lesson, onSolved, secretModeUnlocked = false }
         <SceneEffects />
       </Canvas>
 
-      {/* title card */}
-      <AnimatePresence>
-        {phase === 'title' ? (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.8 }}
-            className="pointer-events-none absolute inset-0 z-20 flex flex-col items-center justify-center bg-ocean-950/35 text-center"
-          >
-            <p className="mb-2 font-display text-sm tracking-[0.3em] text-gold-400">{t(uiStrings.hiddenCoveEyebrow)}</p>
-            <h1 className="mb-4 font-display text-3xl text-parchment-100 sm:text-4xl">
-              {t({ vi: 'Vịnh Ẩn Giấu', en: 'The Hidden Cove' })}
-            </h1>
-            <p className="max-w-md px-6 text-sm text-parchment-200/85">{t(uiStrings.hiddenCoveSubtitle)}</p>
-          </motion.div>
-        ) : null}
-      </AnimatePresence>
-
       {/* question progress */}
       {phase !== 'title' ? (
         <div className="pointer-events-none absolute inset-x-0 top-4 z-10 flex justify-center">
@@ -197,18 +176,43 @@ export function HiddenCoveScene({ lesson, onSolved, secretModeUnlocked = false }
         {phase === 'exploring' ? (
           <motion.div
             key={questionIndex}
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -16 }}
-            className="pointer-events-auto absolute inset-x-0 bottom-4 z-10 flex justify-center px-4"
+            initial={{ opacity: 0, y: 20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -20, scale: 0.95 }}
+            transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+            className="pointer-events-auto absolute inset-x-0 bottom-6 z-10 flex justify-center px-4"
           >
-            <ParchmentPanel className="w-full max-w-sm p-5 text-center">
-              <p className="mb-1 font-display text-[10px] tracking-wide text-gold-600">
-                {questionIndex + 1}/{questions.length}
+            <div className="relative w-full max-w-md overflow-hidden rounded-3xl border border-amber-400/40 bg-gradient-to-b from-ocean-900/95 via-ocean-950/90 to-ocean-900/95 p-6 shadow-[0_25px_65px_rgba(0,0,0,0.85)] backdrop-blur-2xl text-center sm:max-w-lg sm:p-7">
+              {/* Ambient Glows */}
+              <div className="pointer-events-none absolute -top-12 left-10 h-32 w-32 rounded-full bg-cyan-500/20 blur-2xl" />
+              <div className="pointer-events-none absolute -top-10 right-10 h-32 w-32 rounded-full bg-amber-400/20 blur-2xl" />
+
+              <div className="relative mb-3 flex items-center justify-between border-b border-amber-400/20 pb-3">
+                <span className="font-display text-xs font-bold tracking-widest text-amber-400 uppercase">
+                  Vịnh Ẩn Giấu — Thử Thách {questionIndex + 1}/{questions.length}
+                </span>
+                <div className="flex gap-1.5">
+                  {questions.map((q, idx) => (
+                    <span
+                      key={q.id}
+                      className={`h-2.5 w-2.5 rounded-full transition-all duration-300 ${
+                        idx < questionIndex
+                          ? 'bg-amber-400 shadow-[0_0_8px_rgba(245,158,11,0.8)]'
+                          : idx === questionIndex
+                            ? 'bg-cyan-400 shadow-[0_0_8px_rgba(45,212,191,0.8)] animate-pulse'
+                            : 'bg-white/15'
+                      }`}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              <p className="relative mb-4 font-display text-base font-bold leading-relaxed text-parchment-100 italic sm:text-lg">
+                {t(promptField)}
               </p>
-              <p className="mb-3 text-sm leading-relaxed text-ink-900/90 italic">{t(promptField)}</p>
+
               <PictureQuizPuzzle puzzle={{ data: currentQuestion }} onCorrect={handleQuestionCorrect} />
-            </ParchmentPanel>
+            </div>
           </motion.div>
         ) : null}
       </AnimatePresence>

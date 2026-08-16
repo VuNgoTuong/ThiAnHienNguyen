@@ -51,9 +51,11 @@ function QuizQuestion({ question, onCorrect, onWrong }) {
 
   return (
     <>
-      <h2 className="mb-1 font-display text-xs tracking-wide text-gold-600">{t(uiStrings.verifyTitle)}</h2>
-      <p className="mb-5 font-body text-lg text-ink-900 italic">{t(question.prompt)}</p>
-      <div className="grid gap-2">
+      <h2 className="mb-2 font-display text-xs tracking-widest text-gold-700 uppercase font-semibold">
+        {t(uiStrings.verifyTitle)}
+      </h2>
+      <p className="mb-6 font-serif text-xl font-medium text-ink-900 italic leading-snug">{t(question.prompt)}</p>
+      <div className="grid gap-3">
         {question.options.map((option) => {
           const isSelected = selected === option.id
           const showCorrect = status === 'correct' && isSelected
@@ -64,19 +66,21 @@ function QuizQuestion({ question, onCorrect, onWrong }) {
               type="button"
               onClick={() => handleSelect(option.id)}
               disabled={status === 'correct'}
-              animate={showWrong ? { x: [0, -6, 6, -4, 4, 0] } : {}}
+              whileHover={status !== 'correct' ? { scale: 1.02, x: 2 } : undefined}
+              whileTap={status !== 'correct' ? { scale: 0.98 } : undefined}
+              animate={showWrong ? { x: [0, -8, 8, -6, 6, 0] } : {}}
               transition={{ duration: 0.4 }}
-              className={`flex items-center justify-between rounded-lg border px-4 py-2.5 text-left font-body text-ink-900 transition-colors ${
+              className={`flex items-center justify-between rounded-xl border-2 px-5 py-3.5 text-left font-body text-base font-semibold transition-all duration-200 shadow-sm ${
                 showCorrect
-                  ? 'border-green-600 bg-green-600/10'
+                  ? 'border-emerald-600 bg-emerald-500/20 text-emerald-950 shadow-[0_0_15px_rgba(16,185,129,0.3)]'
                   : showWrong
-                    ? 'border-red-600 bg-red-600/10'
-                    : 'border-ink-900/20 bg-parchment-100 hover:border-gold-600'
+                    ? 'border-red-600 bg-red-500/20 text-red-950 shadow-[0_0_15px_rgba(239,68,68,0.3)]'
+                    : 'border-gold-600/30 bg-[#fbf5e6] text-ink-900 hover:border-gold-600 hover:bg-[#ffffff] hover:shadow-md'
               }`}
             >
               <span>{t(option.label)}</span>
-              {showCorrect ? <Check size={16} className="text-green-700" /> : null}
-              {showWrong ? <X size={16} className="text-red-700" /> : null}
+              {showCorrect ? <Check size={18} className="text-emerald-700 font-bold" /> : null}
+              {showWrong ? <X size={18} className="text-red-700 font-bold" /> : null}
             </motion.button>
           )
         })}
