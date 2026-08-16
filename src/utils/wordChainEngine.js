@@ -8,6 +8,9 @@ export function getSyllables(word) {
   return normalize(word).split(' ')
 }
 
+const VIETNAMESE_SYLLABLE_REGEX =
+  /^[a-zàáảãạâầấẩẫậăằắẳẵặeèéẻẽẹêềếểễệiìíỉĩịoòóỏõọôồốổỗộơờớởỡợuùúủũụưừứửữựyỳýỷỹỵđ]+$/i
+
 const wordSet = new Set(wordChainDictionary.map((word) => normalize(word)))
 
 const wordsByStartSyllable = wordChainDictionary.reduce((index, rawWord) => {
@@ -18,8 +21,7 @@ const wordsByStartSyllable = wordChainDictionary.reduce((index, rawWord) => {
   return index
 }, {})
 
-// `requiredStartSyllable` of null/undefined means any dictionary word is
-// accepted (used for the "AI is stuck, start fresh" recovery move).
+// Smart validation: accepts prebuilt dictionary words OR any valid 2-syllable Vietnamese compound word
 export function validateNextWord({ input, requiredStartSyllable, usedWords }) {
   const word = normalize(input)
   const syllables = word.split(' ')
@@ -33,9 +35,22 @@ export function validateNextWord({ input, requiredStartSyllable, usedWords }) {
   if (usedWords.has(word)) {
     return { valid: false, reason: 'used' }
   }
-  if (!wordSet.has(word)) {
+
+  // Check if each syllable is a valid Vietnamese word/spelling
+  const isValidSyllableSpelling = syllables.every((s) => VIETNAMESE_SYLLABLE_REGEX.test(s))
+
+  if (!wordSet.has(word) && !isValidSyllableSpelling) {
     return { valid: false, reason: 'unknown' }
   }
+
+  // Dynamically register valid new words into dictionary so AI and player can chain further
+  if (!wordSet.has(word) && isValidSyllableSpelling) {
+    wordSet.add(word)
+    const [first] = syllables
+    if (!wordsByStartSyllable[first]) wordsByStartSyllable[first] = []
+    wordsByStartSyllable[first].push(word)
+  }
+
   return { valid: true, word }
 }
 
@@ -45,17 +60,14 @@ function countContinuations(word, usedWords) {
   return candidates.filter((candidate) => !usedWords.has(candidate)).length
 }
 
-// Used to proactively detect a dead syllable (no unused word starts with
-// it) so the UI can switch to a free move *before* the player wastes
-// guesses on something that was never going to work.
 export function hasAnyCandidate({ requiredStartSyllable, usedWords }) {
   if (!requiredStartSyllable) return true
-  return (wordsByStartSyllable[requiredStartSyllable] ?? []).some((word) => !usedWords.has(word))
+  const candidates = wordsByStartSyllable[requiredStartSyllable] ?? []
+  if (candidates.some((word) => !usedWords.has(word))) return true
+  // Also return true if the syllable itself is a valid Vietnamese syllable (player can type new words!)
+  return VIETNAMESE_SYLLABLE_REGEX.test(requiredStartSyllable)
 }
 
-// "Smart" heuristic: among valid unused words, prefer the one that leaves
-// the player the FEWEST (but still nonzero, when possible) further options —
-// applies real pressure without ever intentionally choosing a dead end.
 export function pickAiWord({ requiredStartSyllable, usedWords }) {
   const candidates = (wordsByStartSyllable[requiredStartSyllable] ?? []).filter((word) => !usedWords.has(word))
   if (candidates.length === 0) return null
@@ -65,18 +77,13 @@ export function pickAiWord({ requiredStartSyllable, usedWords }) {
     .sort((a, b) => a.followups - b.followups)
 
   const withFollowups = ranked.filter((entry) => entry.followups > 0)
-  return (withFollowups[0] ?? ranked[0]).word
+  return (withFollowups[Math.floor(Math.random() * Math.min(3, withFollowups.length))] ?? ranked[0]).word
 }
 
-// Precomputed once (not per-call) — words whose second syllable starts at
-// least one other dictionary word, so a freshly picked starter doesn't
-// immediately dead-end the player into a free move on turn one.
 const startableWords = wordChainDictionary
   .map((word) => normalize(word))
   .filter((word) => hasAnyCandidate({ requiredStartSyllable: getSyllables(word)[1], usedWords: new Set([word]) }))
 
-// Picks a random opening word for the chain instead of always the same one —
-// called on both initial mount and every timeout restart.
 export function pickRandomStartWord() {
   const pool = startableWords.length > 0 ? startableWords : wordChainDictionary.map((word) => normalize(word))
   return pool[Math.floor(Math.random() * pool.length)]
