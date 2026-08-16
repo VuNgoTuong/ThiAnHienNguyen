@@ -10,11 +10,11 @@ export const initialState = {
   scene: 'title', // 'title' | 'name-entry' | 'verify' | 'greeting' | 'map' | 'island' | 'final' | 'ending'
   language: 'vi', // 'vi' | 'en'
   playerName: '',
-  playerInfo: { birthday: '', phone: '', email: '', school: '', address: '' },
   currentIslandId: null,
   visitedIslandIds: [],
   solvedPuzzleIds: [],
   collectedFragmentIds: [],
+  discoveredClueIds: [], // generic per-island exploration clues (e.g. Hidden Cove) — not tied to any one island
   unlockedAchievementIds: [],
   lastUnlockedAchievementIds: [], // transient — drives the achievement toast, cleared once shown
   finalIslandUnlocked: false,
@@ -67,9 +67,6 @@ export const useGameStore = create((set) => ({
 
   setPlayerName: (playerName) => set((s) => ({ state: deriveComputed({ ...s.state, playerName }) })),
 
-  setPlayerInfo: (playerInfo) =>
-    set((s) => ({ state: deriveComputed({ ...s.state, playerInfo: { ...s.state.playerInfo, ...playerInfo } }) })),
-
   arriveAtIsland: (islandId) =>
     set((s) => ({
       state: deriveComputed({
@@ -89,6 +86,11 @@ export const useGameStore = create((set) => ({
   collectFragment: (fragmentId) =>
     set((s) => ({
       state: deriveComputed({ ...s.state, collectedFragmentIds: addUnique(s.state.collectedFragmentIds, fragmentId) }),
+    })),
+
+  discoverClue: (clueId) =>
+    set((s) => ({
+      state: deriveComputed({ ...s.state, discoveredClueIds: addUnique(s.state.discoveredClueIds, clueId) }),
     })),
 
   seeEnding: () => set((s) => ({ state: deriveComputed({ ...s.state, scene: 'ending', endingSeen: true }) })),

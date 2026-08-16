@@ -4,6 +4,7 @@ import { Compass, Play, RotateCcw } from 'lucide-react'
 import { useGame, useTranslation } from '../hooks/useGame.js'
 import { Button } from '../components/ui/Button.jsx'
 import { LanguageToggle } from '../components/ui/LanguageToggle.jsx'
+import { FullscreenToggle } from '../components/ui/FullscreenToggle.jsx'
 import { hasSave, loadGame, clearGame } from '../utils/saveSystem.js'
 import { uiStrings } from '../data/uiStrings.js'
 
@@ -165,8 +166,9 @@ export function TitleScreen() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.4 }}
-          className="absolute top-4 right-4 z-10"
+          className="absolute top-4 right-4 z-10 flex items-center gap-2"
         >
+          <FullscreenToggle />
           <LanguageToggle />
         </motion.div>
       ) : null}
@@ -180,16 +182,18 @@ export function TitleScreen() {
         >
           <motion.div
             variants={STAGGER_ITEM}
-            initial={{ opacity: 0, rotate: -540 }}
-            animate={{ opacity: 1, rotate: 0 }}
-            transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ opacity: 0, scale: 0.85 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
             className="drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)]"
           >
-            <Compass size={40} className="text-gold-400" />
+            <Compass size={34} strokeWidth={1.5} className="text-gold-400" />
           </motion.div>
           <motion.div variants={STAGGER_ITEM} className="drop-shadow-[0_2px_10px_rgba(0,0,0,0.75)]">
-            <h1 className="font-display text-4xl text-parchment-100 sm:text-5xl">{t(uiStrings.gameTitle)}</h1>
-            <p className="mt-3 max-w-md font-body text-lg text-parchment-200/90">{t(uiStrings.gameSubtitle)}</p>
+            <h1 className="font-display text-3xl font-medium tracking-tight text-parchment-100 sm:text-4xl">
+              {t(uiStrings.gameTitle)}
+            </h1>
+            <p className="mt-3 max-w-sm font-body text-base text-parchment-200/75">{t(uiStrings.gameSubtitle)}</p>
           </motion.div>
           <motion.div variants={STAGGER_ITEM} className="mt-4 flex flex-col items-center gap-3">
             <Button icon={Play} onClick={handleNewVoyage}>

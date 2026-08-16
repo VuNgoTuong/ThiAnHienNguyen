@@ -5,6 +5,7 @@ import { SequencePuzzle } from '../components/puzzle/types/SequencePuzzle.jsx'
 import { ObservationPuzzle } from '../components/puzzle/types/ObservationPuzzle.jsx'
 import { WordChainLesson } from '../components/puzzle/types/WordChainLesson.jsx'
 import { OpenQuestionPuzzle } from '../components/puzzle/types/OpenQuestionPuzzle.jsx'
+import { PictureQuizPuzzle } from '../components/puzzle/types/PictureQuizPuzzle.jsx'
 
 // Maps a lesson/puzzle's `type` string to the component that renders it, so
 // PuzzleEngine never needs a switch statement — adding a new type later is
@@ -17,4 +18,5 @@ export const puzzleRegistry = {
   observation: ObservationPuzzle,
   'word-chain': WordChainLesson,
   'open-question': OpenQuestionPuzzle,
+  'picture-quiz': PictureQuizPuzzle,
 }

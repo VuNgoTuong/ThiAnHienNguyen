@@ -11,21 +11,21 @@ export const achievements = [
   {
     id: 'first-landfall',
     name: { vi: 'Bước Chân Đầu Tiên', en: 'First Landfall' },
-    description: { vi: 'You đã đặt chân lên hòn đảo đầu tiên.', en: "You've set foot on your first island." },
+    description: { vi: 'Em đã đặt những bước chân đầu tiên lên hòn đảo này rồi đó.', en: "You've taken your first steps onto the island." },
     icon: 'Anchor',
     condition: (state) => state.visitedIslandIds.length >= 1,
   },
   {
     id: 'riddle-solver',
     name: { vi: 'Người Giải Đố', en: 'Riddle Solver' },
-    description: { vi: 'You đã cân được thử thách đầu tiên.', en: 'You crushed your first challenge.' },
+    description: { vi: 'Em đã vượt qua thử thách đầu tiên một cách xuất sắc.', en: 'You aced your very first challenge.' },
     icon: 'ScrollText',
     condition: (state) => state.solvedPuzzleIds.length >= 1,
   },
   {
     id: 'fully-charted',
     name: { vi: 'Khám Phá Trọn Vẹn', en: 'Fully Charted' },
-    description: { vi: 'You đã lết hết qua mọi hòn đảo.', en: 'You dragged yourself through every island.' },
+    description: { vi: 'Em đã ghé qua trọn vẹn tất cả các hòn đảo rồi.', en: "You've explored every single island." },
     icon: 'Map',
     // Dynamic against the current island count, so this stays correct if
     // more/fewer islands are added later.
@@ -34,7 +34,7 @@ export const achievements = [
   {
     id: 'threefold-compass',
     name: { vi: 'La Bàn Trọn Vẹn', en: 'Compass Complete' },
-    description: { vi: 'You đã gom đủ tất cả Mảnh La Bàn.', en: "You've hoarded every Compass Fragment." },
+    description: { vi: 'Em đã thu thập đủ tất cả các Mảnh La Bàn rồi.', en: "You've collected every Compass Fragment." },
     icon: 'Compass',
     condition: (state) => state.collectedFragmentIds.length >= islands.length,
   },
@@ -42,8 +42,8 @@ export const achievements = [
     id: 'horizon-keeper',
     name: { vi: 'Người Giữ Chân Trời', en: 'Horizon Keeper' },
     description: {
-      vi: 'You đã ráp lại chiếc La Bàn và xong cả hành trình.',
-      en: 'You reassembled the Compass and finished the damn voyage.',
+      vi: 'Em đã ráp lại chiếc La Bàn hoàn chỉnh và hoàn thành trọn vẹn hành trình này.',
+      en: 'You reassembled the Compass and completed the entire journey.',
     },
     icon: 'Star',
     condition: (state) => state.endingSeen,

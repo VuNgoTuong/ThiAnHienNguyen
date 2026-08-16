@@ -16,8 +16,6 @@ export function GreetingPage() {
   return (
     <div className="relative flex h-full w-full items-center justify-center p-6">
       <Ocean />
-      {/* Text sits right at the ocean's bright horizon line now — same
-          scrim treatment as TitleScreen's ready state, or it's unreadable. */}
       <div
         className="pointer-events-none absolute inset-0 z-[5]"
         style={{ background: 'radial-gradient(ellipse 60% 65% at 50% 50%, rgba(5,13,24,0.4) 0%, rgba(5,13,24,0.1) 55%, rgba(5,13,24,0) 75%)' }}
@@ -39,9 +37,6 @@ export function GreetingPage() {
             {t(uiStrings.greetingTitle)} {state.playerName}!
           </h1>
           <p className="mt-3 max-w-md font-body text-lg text-parchment-200/90">{t(uiStrings.greetingBody)}</p>
-          {state.secretModeUnlocked && (
-            <p className="mt-3 max-w-md font-body text-lg italic text-gold-300">{t(uiStrings.secretGreetingTease)}</p>
-          )}
         </div>
         <Button onClick={handleStart}>{t(uiStrings.startJourney)}</Button>
       </motion.div>

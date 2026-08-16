@@ -1,10 +1,12 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Anchor } from 'lucide-react'
+import { Anchor, Sparkles } from 'lucide-react'
 import { useGame, useCurrentIsland, useIsIslandSolved, useTranslation } from '../hooks/useGame.js'
 import { Ocean } from '../components/world/Ocean.jsx'
 import { DialogBox } from '../components/dialog/DialogBox.jsx'
 import { PuzzleEngine } from '../components/puzzle/PuzzleEngine.jsx'
+import { HiddenCoveScene } from '../components/world3d/hiddenCove/HiddenCoveScene.jsx'
+import { Island3Scene } from '../components/world3d/island3/Island3Scene.jsx'
 import { FragmentRevealModal } from '../components/inventory/FragmentRevealModal.jsx'
 import { ParchmentPanel } from '../components/ui/ParchmentPanel.jsx'
 import { Button } from '../components/ui/Button.jsx'
@@ -12,25 +14,23 @@ import { fadeStep } from '../utils/motionPresets.js'
 import { uiStrings } from '../data/uiStrings.js'
 import { pickRandomRiddles } from '../data/riddleBank.js'
 
-// Step machine: arrival -> discovery -> lesson[0..n-1] -> complete. A
-// previously solved island skips straight to a revisit summary. An island
-// can have several lessons (Level 1) or just one (everyone else) — the
-// machine doesn't need to know which.
 export function IslandPage() {
-  const { state, solvePuzzle, collectFragment, setScene } = useGame()
+  const { state, solvePuzzle, collectFragment, setScene, arriveAtIsland } = useGame()
   const { t } = useTranslation()
   const island = useCurrentIsland()
   const alreadySolved = useIsIslandSolved(island ?? { lessons: [] })
   const [step, setStep] = useState(() => (alreadySolved ? 'revisit' : 'arrival'))
   const [lessonIndex, setLessonIndex] = useState(0)
   const [revealedFragment, setRevealedFragment] = useState(null)
-  // Picked once per island visit — every 'riddle-random' lesson slot gets
-  // a distinct riddle from the bank, so the 3 slots never repeat the same
-  // one in a single playthrough. See data/islands.js for why the lessons
-  // themselves carry no prompt/data.
   const [randomRiddles] = useState(() =>
     pickRandomRiddles((island?.lessons ?? []).filter((lesson) => lesson.type === 'riddle-random').length),
   )
+
+  useEffect(() => {
+    setStep(alreadySolved ? 'revisit' : 'arrival')
+    setLessonIndex(0)
+    setRevealedFragment(null)
+  }, [island?.id])
 
   if (!island) return null
 
@@ -69,10 +69,38 @@ export function IslandPage() {
       ? [...island.arrival.lines, ...island.arrival.secretLines]
       : island.arrival.lines
 
+  if (step === 'lesson' && currentLesson.type === 'hidden-cove') {
+    return (
+      <div className="relative h-full w-full">
+        <HiddenCoveScene
+          lesson={currentLesson}
+          onSolved={handleLessonSolved}
+          secretModeUnlocked={state.secretModeUnlocked}
+        />
+        <FragmentRevealModal fragment={revealedFragment} onContinue={handleFragmentContinue} />
+      </div>
+    )
+  }
+
+  if (island.id === 'level-3-challenge' && step === 'arrival') {
+    return (
+      <div className="relative h-full w-full">
+        <Island3Scene
+          lesson={island.lessons[0]}
+          onSolved={handleLessonSolved}
+          secretModeUnlocked={state.secretModeUnlocked}
+        />
+        <FragmentRevealModal fragment={revealedFragment} onContinue={handleFragmentContinue} />
+      </div>
+    )
+  }
+
+  const isWideLesson = step === 'lesson' && currentLesson.type === 'word-chain'
+
   return (
     <div className="relative flex h-full w-full items-center justify-center p-6">
       <Ocean />
-      <div className="relative z-10 flex w-full max-w-2xl flex-col items-center">
+      <div className={`relative z-10 flex w-full flex-col items-center ${isWideLesson ? 'max-w-3xl' : 'max-w-2xl'}`}>
         <AnimatePresence mode="wait">
           {step === 'arrival' ? (
             <motion.div key="arrival" {...fadeStep} className="w-full">
@@ -126,7 +154,12 @@ export function IslandPage() {
                 <p className="mb-4 text-ink-900">
                   {t(island.name)} {t(uiStrings.islandCompleteMessage)}
                 </p>
-                <Button icon={Anchor} onClick={handleReturnToMap}>
+                {island.id === 'level-2-mystery' ? (
+                  <Button icon={Sparkles} onClick={() => arriveAtIsland('level-3-challenge')} className="mb-3">
+                    {t(uiStrings.goToIsland3)}
+                  </Button>
+                ) : null}
+                <Button icon={Anchor} variant={island.id === 'level-2-mystery' ? 'ghost' : 'primary'} onClick={handleReturnToMap}>
                   {t(uiStrings.returnToShip)}
                 </Button>
               </ParchmentPanel>

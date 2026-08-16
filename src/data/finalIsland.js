@@ -12,19 +12,19 @@ export const finalIsland = {
     speaker: GUIDE,
     lines: [
       {
-        vi: 'Cậu đã đi qua cả 4 hòn đảo rồi. Chỉ còn thử thách cuối cùng thôi.',
-        en: "You've conquered all 4 islands. One last trial left.",
+        vi: 'Em đã đi qua cả 4 hòn đảo rồi đó. Chỉ còn một thử thách cuối cùng thôi.',
+        en: "You've made it through all 4 islands. Just one last trial left.",
       },
       {
-        vi: 'Giờ thử tự ghép lại hành trình của chính mình xem nào.',
-        en: 'Now put your own journey back in order.',
+        vi: 'Giờ mình cùng ghép lại hành trình này một lần nữa nha em.',
+        en: 'Now, let\'s piece this whole journey back together, together.',
       },
     ],
 
     secretLines: [
       {
-        vi: 'Đi được tới tận đây luôn à, Hiền? Tui hơi bất ngờ đó… kiểu bất ngờ mà nể thật ấy 😆',
-        en: "Made it all the way here, Hiền? Honestly kinda impressed — the good kind of surprised.",
+        vi: 'Đi được tới tận đây luôn à, Hiền? Anh không bất ngờ đâu, vì anh luôn tin em làm được — chỉ là thấy thương em nhiều hơn thôi 🥹',
+        en: "Made it all the way here, Hiền? Not surprised, honestly — anh always believed you could. Just love you a little more for it. 🥹",
       },
     ],
   },
@@ -33,8 +33,8 @@ export const finalIsland = {
     title: { vi: 'Hành Trình Của Bạn', en: 'Your Journey' },
     story: [
       {
-        vi: 'Những mảnh la bàn cậu nhặt được giờ đã tụ lại đầy đủ. Chỉ cần sắp đúng thứ tự nữa là xong.',
-        en: 'Every fragment you scraped together has come together now. Just order them right to finish.',
+        vi: 'Những mảnh la bàn em nhặt được trên đường đi giờ đã tụ đủ cả rồi. Chỉ cần sắp đúng thứ tự nữa thôi là xong.',
+        en: 'Every fragment you gathered along the way has finally come together. Just put them in order and you\'re done.',
       },
     ],
   },
@@ -45,13 +45,13 @@ export const finalIsland = {
       type: 'sequence',
 
       prompt: {
-        vi: 'Sắp xếp lại đúng thứ tự các hòn đảo cậu đã đi qua:',
-        en: "Arrange the islands you've been through in the right order:",
+        vi: 'Sắp lại đúng thứ tự những hòn đảo em đã đi qua nha:',
+        en: "Put the islands you've traveled through back in order:",
       },
 
       secretPrompt: {
-        vi: 'Sắp đúng nha, Hiền. Sai là tao nhắc hoài đó 😏',
-        en: "Arrange them right — screw it up, Hiền, and I will never let you live it down:",
+        vi: 'Sắp đúng nha, Hiền. Dù có sai anh cũng thương thôi, nhưng đúng thì vui hơn nè 😌',
+        en: "Get it right, Hiền. Even if you don't, anh will still adore you — but it's more fun when you nail it. 😌",
       },
 
       data: {
@@ -72,16 +72,16 @@ export const finalIsland = {
 
     lines: [
       {
-        vi: 'Chuẩn rồi, cậu hoàn thành chuyến hành trình này rồi!',
-        en: "Nice — you finished the whole damn journey!",
+        vi: 'Tuyệt, em phá đảo rùi kkk!',
+        en: "That's it — you've completed the whole journey!",
       },
       {
-        vi: 'Cậu đã vượt qua mọi thử thách bằng sự kiên trì và đầu óc của mình.',
-        en: 'You crushed every trial with your own stubbornness and wit.',
+        vi: 'Em thật peak :v',
+        en: 'You cleared every trial with your own patience and smarts — anh is so proud of you.',
       },
       {
-        vi: 'Chiếc La Bàn Khám Phá giờ đã hoàn chỉnh. Hẹn gặp lại ở chuyến phiêu lưu tiếp theo!',
-        en: 'The Compass of Discovery is whole again. See you next voyage!',
+        vi: 'Chiếc La Bàn Khám Phá giờ đã hoàn chỉnh rồi. Cảm ơn em đã đi hết chặng đường này cùng anh — hẹn gặp lại ở chuyến phiêu lưu tiếp theo, công chúa nhé!',
+        en: 'The Compass of Discovery is whole again. Thank you for walking this whole road with anh — see you on the next adventure, princess.',
       },
     ],
   },

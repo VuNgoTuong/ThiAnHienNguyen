@@ -2,15 +2,13 @@ import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Check, X } from 'lucide-react'
 import { useGame, useTranslation } from '../hooks/useGame.js'
-import { Button } from '../components/ui/Button.jsx'
 import { ParchmentPanel } from '../components/ui/ParchmentPanel.jsx'
 import { Ocean } from '../components/world/Ocean.jsx'
 import { uiStrings } from '../data/uiStrings.js'
 import { fadeStep } from '../utils/motionPresets.js'
 
-// Two objectively-correct-answer questions (retry on a wrong pick, same
-// shake+reset UX as MultipleChoicePuzzle), then one just-for-fun question
-// with no wrong answer — both replies get a warm response either way.
+// Two objectively-correct-answer questions — retry on a wrong pick, same
+// shake+reset UX as MultipleChoicePuzzle.
 const QUESTIONS = [
   {
     id: 'birthday',
@@ -34,7 +32,7 @@ const QUESTIONS = [
   },
 ]
 
-function QuizQuestion({ question, onCorrect }) {
+function QuizQuestion({ question, onCorrect, onWrong }) {
   const { t } = useTranslation()
   const [selected, setSelected] = useState(null)
   const [status, setStatus] = useState('idle') // idle | wrong | correct
@@ -47,7 +45,7 @@ function QuizQuestion({ question, onCorrect }) {
       setTimeout(onCorrect, 650)
     } else {
       setStatus('wrong')
-      setTimeout(() => setStatus('idle'), 500)
+      setTimeout(() => onWrong?.(), 500)
     }
   }
 
@@ -87,40 +85,28 @@ function QuizQuestion({ question, onCorrect }) {
   )
 }
 
-function RelationshipQuestion({ onDone }) {
-  const { t } = useTranslation()
-  const [answer, setAnswer] = useState(null)
-
-  function handleAnswer(value) {
-    setAnswer(value)
-    setTimeout(onDone, 1600)
-  }
-
-  return (
-    <>
-      <h2 className="mb-1 font-display text-xs tracking-wide text-gold-600">{t(uiStrings.verifyTitle)}</h2>
-      <p className="mb-5 font-body text-lg text-ink-900 italic">{t(uiStrings.verifyRelationshipQuestion)}</p>
-      {answer ? (
-        <p className="font-body text-ink-700">
-          {t(answer === 'yes' ? uiStrings.verifyRelationshipYesResponse : uiStrings.verifyRelationshipNoResponse)}
-        </p>
-      ) : (
-        <div className="grid grid-cols-2 gap-2">
-          <Button variant="ghost" onClick={() => handleAnswer('yes')}>
-            {t(uiStrings.verifyRelationshipYes)}
-          </Button>
-          <Button variant="ghost" onClick={() => handleAnswer('no')}>
-            {t(uiStrings.verifyRelationshipNo)}
-          </Button>
-        </div>
-      )}
-    </>
-  )
-}
-
 export function VerifyIdentityPage() {
   const { setScene } = useGame()
-  const [step, setStep] = useState(0) // 0..QUESTIONS.length-1 = quiz, QUESTIONS.length = relationship question
+  const [step, setStep] = useState(0)
+  // Bumped on every wrong answer so the key below always changes — even a
+  // miss on question 1 remounts QuizQuestion and replays the entrance, which
+  // reads as "starting over" rather than a no-op.
+  const [attempt, setAttempt] = useState(0)
+
+  function handleCorrect() {
+    if (step < QUESTIONS.length - 1) {
+      setStep((s) => s + 1)
+    } else {
+      setScene('greeting')
+    }
+  }
+
+  // A wrong answer on any question sends the whole quiz back to question 1
+  // — both have to be answered right in a row, no per-question retry.
+  function handleWrong() {
+    setStep(0)
+    setAttempt((a) => a + 1)
+  }
 
   return (
     <div className="relative flex h-full w-full items-center justify-center p-6">
@@ -133,13 +119,9 @@ export function VerifyIdentityPage() {
       />
       <div className="relative z-10 w-full max-w-md">
         <AnimatePresence mode="wait">
-          <motion.div key={step} {...fadeStep}>
+          <motion.div key={`${step}-${attempt}`} {...fadeStep}>
             <ParchmentPanel className="p-8 text-center">
-              {step < QUESTIONS.length ? (
-                <QuizQuestion question={QUESTIONS[step]} onCorrect={() => setStep((s) => s + 1)} />
-              ) : (
-                <RelationshipQuestion onDone={() => setScene('greeting')} />
-              )}
+              <QuizQuestion question={QUESTIONS[step]} onCorrect={handleCorrect} onWrong={handleWrong} />
             </ParchmentPanel>
           </motion.div>
         </AnimatePresence>

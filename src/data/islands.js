@@ -3,6 +3,8 @@
 // array rather than a single `puzzle` — Level 1 has 5, everyone else has 1
 // — so the engine never has to special-case "islands with many lessons".
 
+import { quizQuestions } from './quizAssets.js'
+
 const GUIDE = { vi: 'Người Dẫn Đường', en: 'The Guide' }
 
 export const islands = [
@@ -16,22 +18,22 @@ export const islands = [
       speaker: GUIDE,
       lines: [
         {
-          vi: 'Chào tới Đảo Làm Quen — Level đầu tiên của hành trình you đó.',
-          en: "Welcome to the Isle of Getting Acquainted — the first level of your journey.",
+          vi: 'Chào mừng em tới Đảo Làm Quen — chặng đầu tiên trong hành trình nhỏ anh dành riêng cho em.',
+          en: "Welcome to the Isle of Getting Acquainted — the first stop on this little journey I made just for you.",
         },
         {
-          vi: 'Không có câu đố hóc búa gì ở đây đâu, chỉ là vài câu hỏi và một ván nối chữ cho vui thôi.',
-          en: "No brain-teasers here — just a few questions and a round of word-chain for fun.",
+          vi: 'Không có gì hóc búa đâu, chỉ một ván nối chữ cho vui thôi em.',
+          en: "Nothing tricky here — just a fun round of word-chain.",
         },
       ],
       secretLines: [
         {
-          vi: 'Khoan đã... "Hiền" á? Tên hiền lành vậy mà dám một mình ra khơi, gan dữ ha.',
-          en: 'Wait... "Hiền"? Such a sweet name daring to sail out alone — ballsy.',
+          vi: 'Khoan đã... "Hiền" à? Tên dịu dàng vậy mà dám một mình ra khơi, anh thấy thương ghê.',
+          en: '...wait, "Hiền"? Such a gentle name, out here sailing alone — that makes anh love you a little more.',
         },
         {
-          vi: 'Được rồi, tao để mắt tới you đặc biệt chút đó. Lười biếng giữa chừng là biết tay tao!',
-          en: "Alright, I'll keep a special eye on you. Slack off halfway through and you'll answer to me!",
+          vi: 'Được rồi, anh sẽ để mắt tới em đặc biệt một chút. Có mệt giữa chừng thì cứ nghỉ, anh vẫn ở đây chờ em mà.',
+          en: "Alright, anh will be keeping a close, caring eye on you. If you get tired halfway, take your time — anh will be right here waiting.",
         },
       ],
     },
@@ -39,43 +41,19 @@ export const islands = [
       title: { vi: 'Làm Quen', en: 'Getting Acquainted' },
       story: [
         {
-          vi: 'Đảo này không thử bộ não you đâu — chỉ để tao hiểu you hơn một chút, rồi nối chữ với tao một ván cho vui.',
-          en: "This island isn't testing your brain — just a chance for me to get to know you a little, then a round of word-chain for fun.",
+          vi: 'Đảo này không thử bộ não em đâu — chỉ là một ván nối chữ cùng anh cho vui thôi.',
+          en: "This island isn't testing your mind — just a fun round of word-chain together.",
         },
-        { vi: 'Sẵn sàng chưa?', en: 'Ready?' },
+        { vi: 'Sẵn sàng chưa em?', en: 'Ready?' },
       ],
     },
     lessons: [
       {
-        id: 'level1-question-1',
-        type: 'open-question',
-        prompt: {
-          vi: 'Điều gì khiến bạn vui nhất trong một ngày bình thường?',
-          en: 'What makes you happiest on an ordinary day?',
-        },
-      },
-      {
-        id: 'level1-question-2',
-        type: 'open-question',
-        prompt: {
-          vi: 'Nếu được quay lại 5 năm trước, bạn sẽ nói gì với bản thân?',
-          en: 'If you could go back 5 years, what would you tell yourself?',
-        },
-      },
-      {
-        id: 'level1-question-3',
-        type: 'open-question',
-        prompt: {
-          vi: 'Điều gì ở một người khiến bạn có thiện cảm?',
-          en: 'What is it about someone that makes you drawn to them?',
-        },
-      },
-      {
         id: 'level1-wordchain',
         type: 'word-chain',
         prompt: {
-          vi: 'Giờ thì... nối chữ với tao cho vui coi kkk! Nối đúng 10 lần là qua thử thách. Mỗi lượt 15 giây thôi đó, hết giờ là phải nối lại từ đầu nha!',
-          en: "Now... let's chain words for fun! Chain 10 correct in a row to clear this trial. 15 seconds a turn — run out and you start the whole round over!",
+          vi: 'Giờ thì... nối chữ cùng anh cho vui nha! Nối đúng 10 lần liên tiếp là qua được thử thách này. Mỗi lượt có 15 giây thôi, hết giờ là mình nối lại từ đầu nha em.',
+          en: "Now... let's chain words together! Ten correct in a row clears this trial. You've got 15 seconds a turn — if time runs out, we just start the round over, no worries.",
         },
         data: { timeLimitMs: 15000 },
       },
@@ -84,63 +62,137 @@ export const islands = [
       id: 'fragment-level1',
       name: { vi: 'Mảnh La Bàn: Khởi Đầu', en: 'Compass Fragment: The Beginning' },
       loreText: {
-        vi: 'Mảnh đầu tiên của la bàn — phần thưởng cho đứa nào dám bắt đầu.',
-        en: 'The first fragment of the compass — a reward for whoever dares to start.',
+        vi: 'Mảnh đầu tiên của la bàn — phần thưởng nhỏ cho công chúa đã dám bắt đầu hành trình này.',
+        en: 'The first fragment of the compass — a little reward for the princess who dared to begin.',
       },
     },
   },
   {
     id: 'level-2-mystery',
-    name: { vi: 'Đảo Bí Ẩn', en: 'Isle of Mystery' },
+    name: { vi: 'Vịnh Ẩn Giấu', en: 'The Hidden Cove' },
     level: 2,
     order: 2,
     position: { x: 38, y: 45 },
     arrival: {
       speaker: GUIDE,
       lines: [
-        { vi: 'Tới Đảo Bí Ẩn rồi — Level 2 đây.', en: 'Isle of Mystery, Level 2. Here we are.' },
-        { vi: 'Chỗ này giấu một câu đố nhỏ. Giải được không you?', en: 'A little riddle is hiding here. Think you can crack it?' },
+        { vi: 'Mình cập bến Vịnh Ẩn Giấu rồi — Level 2 đây em.', en: "We've landed at the Hidden Cove — Level 2." },
+        {
+          vi: 'Đảo này có một trò nhỏ: anh đưa hình, em đoán xem đó là gì nha.',
+          en: "This island has a little game: anh shows you a picture, you guess what it is.",
+        },
       ],
       secretLines: [
         {
-          vi: 'Đảo này giấu kho báu đó, Hiền — nhưng chắc kho báu to nhất vẫn là cái sự kiên nhẫn của tao khi ngồi chờ you suy nghĩ.',
-          en: "This island hides treasure, Hiền — though the biggest treasure is probably my patience waiting for your brain to work.",
+          vi: 'Đảo này giấu kho báu đó, Hiền — nhưng với anh, kho báu lớn nhất vẫn là được ngồi đây chờ em suy nghĩ.',
+          en: "This island hides a treasure, Hiền — though for anh, the real treasure is just getting to sit here and wait for you.",
         },
       ],
     },
     discovery: {
-      title: { vi: 'Điều Bí Ẩn', en: 'The Mystery' },
+      title: { vi: 'Vịnh Ẩn Giấu', en: 'The Hidden Cove' },
       story: [
         {
-          vi: 'Không khí ở đây im ru lạ thường, như kiểu hòn đảo đang đợi đứa nào đủ tinh mà lắng nghe.',
-          en: 'The air here is weirdly still, like the island is waiting for someone sharp enough to actually listen.',
+          vi: 'Không khí ở đây yên tĩnh lạ thường, như thể hòn đảo đang chờ một người đủ tinh tế để lắng nghe — anh nghĩ đó là em.',
+          en: 'The air here is strangely still, like the island is waiting for someone thoughtful enough to listen — anh thinks that\'s you.',
+        },
+        {
+          vi: 'Anh sẽ đưa em xem lần lượt từng hình một. Nhìn kỹ rồi đoán xem đó là gì nha.',
+          en: 'anh will show you one picture at a time. Look closely, then guess what it is.',
         },
       ],
     },
     lessons: [
       {
-        id: 'level2-riddle',
-        type: 'riddle',
-        prompt: { vi: '"Cái gì có răng mà không thể cắn?"', en: '"What has teeth but cannot bite?"' },
-        secretPrompt: {
-          vi: '"Cái gì có răng mà không cắn được? Gợi ý: không phải là you lúc giả bộ dữ đâu."',
-          en: '"What has teeth but cannot bite? Hint: not you pretending to be scary."',
+        id: 'level2-hidden-cove',
+        type: 'hidden-cove',
+        prompt: {
+          vi: 'Nhìn từng hình cho kỹ rồi đoán xem đó là gì nha em.',
+          en: 'Look closely at each picture and guess what it is.',
         },
         data: {
-          acceptedAnswers: ['cái lược', 'lược', 'cái lược chải đầu', 'a comb', 'comb'],
-          hints: [
-            { vi: 'Bạn dùng nó mỗi sáng để chải tóc.', en: 'You use it every morning to comb your hair.' },
-            { vi: "Nó có nhiều 'răng' nhỏ xếp thành hàng.", en: 'It has many small "teeth" lined up in a row.' },
+          questions: [
+            {
+              id: 'level2-quiz-1',
+              prompt: { vi: 'Nhìn hình và đoán xem đây là gì:', en: 'Look at the picture and guess what it is:' },
+              secretPrompt: {
+                vi: 'Nhìn hình và đoán xem đây là gì — đừng đoán bừa như đoán tâm trạng của anh à nha.',
+                en: "Look at the picture and guess — don't just guess blindly like you do with anh's moods.",
+              },
+              emoji: '🍌',
+              effect: 'blur',
+              options: [
+                { id: 'apple', text: { vi: 'Táo', en: 'Apple' } },
+                { id: 'banana', text: { vi: 'Chuối', en: 'Banana' } },
+                { id: 'orange', text: { vi: 'Cam', en: 'Orange' } },
+                { id: 'watermelon', text: { vi: 'Dưa hấu', en: 'Watermelon' } },
+              ],
+              correctOptionId: 'banana',
+            },
+            {
+              id: 'level2-quiz-2',
+              prompt: { vi: 'Còn đây là gì nào:', en: 'And this one:' },
+              secretPrompt: {
+                vi: 'Đoán xem đây là con gì — gợi ý: dễ thương y như em vậy đó.',
+                en: 'Guess what this animal is — hint: just as cute as you.',
+              },
+              emoji: '🐱',
+              effect: 'silhouette',
+              options: [
+                { id: 'dog', text: { vi: 'Chó', en: 'Dog' } },
+                { id: 'cat', text: { vi: 'Mèo', en: 'Cat' } },
+                { id: 'chicken', text: { vi: 'Gà', en: 'Chicken' } },
+                { id: 'duck', text: { vi: 'Vịt', en: 'Duck' } },
+              ],
+              correctOptionId: 'cat',
+            },
+            {
+              id: 'level2-quiz-3',
+              prompt: { vi: 'Nhìn gần quá hén, đoán xem đây là gì:', en: "Zoomed in real close — what's this:" },
+              secretPrompt: {
+                vi: 'Đoán xem cái gì đây — không phải trái tim em đang giữ kỹ đâu.',
+                en: "Guess what this is — not the heart you're guarding so carefully.",
+              },
+              emoji: '⚓',
+              effect: 'zoom',
+              options: [
+                { id: 'compass', text: { vi: 'La Bàn', en: 'Compass' } },
+                { id: 'anchor', text: { vi: 'Mỏ Neo', en: 'Anchor' } },
+                { id: 'wheel', text: { vi: 'Bánh Lái', en: 'Ship Wheel' } },
+                { id: 'sail', text: { vi: 'Cánh Buồm', en: 'Sail' } },
+              ],
+              correctOptionId: 'anchor',
+            },
+            {
+              id: 'level2-quiz-4',
+              prompt: {
+                vi: 'Nhìn kỹ đi, hình sẽ biến mất nhanh lắm à nha:',
+                en: 'Look closely — this one disappears fast:',
+              },
+              secretPrompt: {
+                vi: 'Chớp mắt là mất hình đó — giống hồi em chớp mắt là hết tin anh vậy.',
+                en: "Blink and it's gone — kinda like how fast you stopped trusting anh that one time.",
+              },
+              emoji: '🌴',
+              effect: 'flash',
+              options: [
+                { id: 'palm', text: { vi: 'Cây Dừa', en: 'Palm Tree' } },
+                { id: 'pine', text: { vi: 'Cây Thông', en: 'Pine Tree' } },
+                { id: 'rose', text: { vi: 'Hoa Hồng', en: 'Rose' } },
+                { id: 'grass', text: { vi: 'Cỏ', en: 'Grass' } },
+              ],
+              correctOptionId: 'palm',
+            },
           ],
         },
       },
     ],
     fragment: {
       id: 'fragment-level2',
-      name: { vi: 'Mảnh La Bàn: Bí Ẩn', en: 'Compass Fragment: Mystery' },
+      name: { vi: 'Mảnh La Bàn II', en: 'Compass Fragment II' },
       loreText: {
-        vi: 'Một mảnh giấu kín, chỉ lộ ra khi trí tò mò thắng thế.',
-        en: 'A hidden fragment, surfacing only when curiosity wins.',
+        vi: 'Mảnh thứ hai — phần thưởng cho đôi mắt tinh và những lần đoán đúng.',
+        en: 'The second fragment — a reward for sharp eyes and good guesses.',
       },
     },
   },
@@ -153,41 +205,30 @@ export const islands = [
     arrival: {
       speaker: GUIDE,
       lines: [
-        { vi: 'Tới Đảo Thử Thách rồi — Level 3.', en: 'Isle of Challenge, Level 3.' },
-        { vi: 'You đi được nửa đường rồi đó.', en: "You're halfway there." },
+        { vi: 'Mình tới Đảo Thử Thách rồi — Level 3 đây em.', en: 'The Isle of Challenge, Level 3.' },
+        { vi: 'Em đi được nửa chặng đường rồi đó.', en: "You're halfway there, sweetheart." },
       ],
       secretLines: [
         {
-          vi: 'Này Hiền, đám sinh vật biển cứ bơi vòng quanh you mãi — chắc tưởng you cũng lầy lội y như tụi nó vậy.',
-          en: "Hey Hiền, the sea creatures keep circling you — probably think you're just as goofy as they are.",
+          vi: 'Này Hiền, đám sinh vật biển cứ bơi quanh em mãi — chắc tụi nó cũng thấy em đáng yêu như anh thấy vậy.',
+          en: "Hey Hiền, the sea creatures keep circling you — guess they think you're just as lovely as anh does.",
         },
       ],
     },
     discovery: {
-      title: { vi: 'Chặng Đường Giữa', en: 'The Midpoint' },
+      title: { vi: 'Quiz Arena', en: 'Quiz Arena' },
       story: [
         {
-          vi: 'Mỗi bước chân trên đảo này là một lời nhắc: you đã đi xa hơn you tưởng đó.',
-          en: "Every step on this island is a reminder: you've come further than you think.",
+          vi: 'Ở giữa đảo có một vòng năng lượng kỳ lạ — nơi anh hay gọi đùa là Quiz Arena.',
+          en: 'At the center of this island sits a strange ring of light — anh jokingly calls it the Quiz Arena.',
         },
       ],
     },
     lessons: [
       {
-        id: 'level3-riddle',
-        type: 'riddle',
-        prompt: { vi: '"Con gì càng to càng nhẹ?"', en: '"What gets lighter the bigger it gets?"' },
-        secretPrompt: {
-          vi: '"Con gì càng to càng nhẹ? Không phải cái tôi của you sau khi được khen đâu!!!"',
-          en: '"What gets lighter the bigger it gets? Definitely not your ego after a compliment."',
-        },
-        data: {
-          acceptedAnswers: ['bong bóng', 'quả bóng bay', 'bóng bay', 'a balloon', 'balloon'],
-          hints: [
-            { vi: 'Nó bay lên trời khi được bơm đầy khí.', en: 'It floats into the sky when filled with air.' },
-            { vi: 'Trẻ em rất thích chơi với nó vào ngày sinh nhật.', en: 'Kids love playing with it at birthday parties.' },
-          ],
-        },
+        id: 'level3-quiz-arena',
+        type: 'quiz-arena',
+        data: { questions: quizQuestions },
       },
     ],
     fragment: {
@@ -208,13 +249,13 @@ export const islands = [
     arrival: {
       speaker: GUIDE,
       lines: [
-        { vi: 'Tới Đảo Trí Tuệ rồi — Level 4.', en: 'Isle of Wit, Level 4.' },
-        { vi: 'Đây là thử thách cuối trước khi you chạm tới chân trời.', en: 'Last trial before you hit the horizon.' },
+        { vi: 'Mình tới Đảo Trí Tuệ rồi — Level 4 đây em.', en: 'The Isle of Wit, Level 4.' },
+        { vi: 'Đây là thử thách cuối trước khi em chạm tới chân trời rồi đó.', en: 'Last trial before you reach the horizon.' },
       ],
       secretLines: [
         {
-          vi: 'Sóng to gió lớn vầy, tao cá là you sắp than "trời ơi mệt quá" cho coi.',
-          en: 'Waves and wind this rough, bet you\'re about to whine "ugh, so tired" any second.',
+          vi: 'Sóng to gió lớn vầy, chắc em đang mệt lắm phải không? Ráng thêm chút nữa thôi, anh tin em làm được.',
+          en: "Rough seas and wind like this — you must be tired. Just a little further, anh knows you've got this.",
         },
       ],
     },
@@ -222,8 +263,8 @@ export const islands = [
       title: { vi: 'Ngọn Hải Đăng Trí Tuệ', en: 'The Lighthouse of Wit' },
       story: [
         {
-          vi: 'Một ngọn hải đăng cũ đứng sừng sững giữa đảo, ánh sáng chỉ bật lên cho đứa nào chịu suy nghĩ.',
-          en: "An old lighthouse towers at the center of the island — its light only switches on for those who actually think.",
+          vi: 'Một ngọn hải đăng cũ đứng sừng sững giữa đảo, ánh sáng chỉ bật lên cho những ai đủ kiên nhẫn để suy nghĩ — anh tin đó là em.',
+          en: "An old lighthouse towers at the center of the island — its light only switches on for those patient enough to think it through. Anh believes that's you.",
         },
       ],
     },
@@ -236,8 +277,8 @@ export const islands = [
           en: '"What always moves forward and never goes back?"',
         },
         secretPrompt: {
-          vi: '"Cái gì luôn tiến tới mà chẳng bao giờ lùi? Gợi ý: không phải là quyết tâm giảm cân của you."',
-          en: '"What always moves forward and never goes back? Hint: not your diet resolutions."',
+          vi: '"Cái gì luôn tiến tới mà chẳng bao giờ lùi? Gợi ý: giống như tình cảm anh dành cho em vậy, chỉ có tăng chứ chẳng bao giờ giảm."',
+          en: '"What always moves forward and never goes back? Hint: kind of like anh\'s feelings for you — they only ever grow, never fade."',
         },
         data: {
           acceptedAnswers: ['thời gian', 'thời gian trôi', 'time'],
@@ -252,8 +293,8 @@ export const islands = [
       id: 'fragment-level4',
       name: { vi: 'Mảnh La Bàn: Trí Tuệ', en: 'Compass Fragment: Wit' },
       loreText: {
-        vi: 'Mảnh cuối trước chân trời — phần thưởng cho cái đầu tỉnh táo.',
-        en: 'The last fragment before the horizon — a reward for a clear head.',
+        vi: 'Mảnh cuối trước chân trời — phần thưởng cho công chúa thông minh nhất mà anh biết.',
+        en: 'The last fragment before the horizon — a reward for the smartest princess anh knows.',
       },
     },
   },

@@ -13,20 +13,13 @@ import { useShipVoyage } from '../../hooks/useShipVoyage.js'
 
 const SUN_POSITION = [70, 42, -55]
 
-// Matches OceanBackdrop.jsx's resting "deck view" pose exactly, so the
-// instant this intro settles, the scene looks identical to the ocean
-// backdrop used on every other screen — no visual hand-off jump.
 const REST = { x: 0, y: 3.2, z: 8, rotX: -0.09, fogNear: 30, fogFar: 150 }
-// Three waypoints instead of one straight tween: a high establishing shot,
-// a swooping mid-point (with lateral drift so it isn't a plain vertical
-// drop), then a decelerating settle into REST — reads as a scripted camera
-// move rather than a slider animating from A to B.
 const START = { x: 0, y: 52, z: 12, rotX: -1.15, rotY: -0.18, fogNear: 45, fogFar: 170 }
 const MID = { x: 22, y: 26, z: 36, rotX: -0.78, rotY: -0.06, fogNear: 35, fogFar: 120 }
 
-const HOLD_S = 0.6 // establishing-shot pause before the camera starts moving
-const DIVE_S = 1.7 // START -> MID
-const SETTLE_S = 1.8 // MID -> REST — the ship's sail duration is matched to this
+const HOLD_S = 0.6
+const DIVE_S = 1.7
+const SETTLE_S = 1.8
 
 function IntroCamera({ onSettled, onDiveStart }) {
   const cameraRef = useRef(null)
@@ -63,17 +56,11 @@ function IntroCamera({ onSettled, onDiveStart }) {
   )
 }
 
-// A ship sailing into frame during the settle beat — arrives right as the
-// camera lands, so the reveal isn't just empty water.
 function ArrivingShip({ start }) {
   const { position, bearing, sailTo } = useShipVoyage()
 
   useEffect(() => {
     if (!start) return
-    // Lands off to the right and still in front of the REST camera (z must
-    // stay well under the camera's own z=8, or it ends up beside/behind it
-    // and out of frame) — clear of the centered title column, fully inside
-    // the frame edges (not cropped).
     sailTo({ x: 92, y: 78 }, { x: 63, y: 50 })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [start])

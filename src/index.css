@@ -32,6 +32,7 @@
   --animate-drift-fast: drift 10s linear infinite reverse;
   --animate-bob: bob 3.2s ease-in-out infinite;
   --animate-twinkle: twinkle 3.6s ease-in-out infinite;
+  --animate-spin-slow: spin-slow 5s linear infinite;
 }
 
 @keyframes drift {
@@ -50,6 +51,12 @@
   }
   50% {
     transform: translateY(-6px);
+  }
+}
+
+@keyframes spin-slow {
+  to {
+    transform: rotate(360deg);
   }
 }
 

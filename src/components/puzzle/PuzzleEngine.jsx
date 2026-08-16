@@ -13,7 +13,7 @@ export function PuzzleEngine({ puzzle, onSolved, secretModeUnlocked = false }) {
   const displayedPrompt = secretModeUnlocked && puzzle.secretPrompt ? puzzle.secretPrompt : puzzle.prompt
 
   return (
-    <ParchmentPanel className="w-full max-w-2xl p-6">
+    <ParchmentPanel className="w-full p-6">
       <p className="mb-5 font-body text-lg leading-relaxed text-ink-900 italic">{t(displayedPrompt)}</p>
       <PuzzleTypeComponent puzzle={puzzle} onCorrect={onSolved} />
     </ParchmentPanel>

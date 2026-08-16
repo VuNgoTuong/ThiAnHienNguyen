@@ -5,9 +5,6 @@ import { achievements } from '../data/achievements.js'
 import { isIslandUnlocked, isIslandSolved } from '../utils/islandLogic.js'
 import { t } from '../utils/i18n.js'
 
-// Whole-store subscription (state + every action method) — used by pages
-// that both read broadly and dispatch actions, same re-render behavior the
-// old Context-based version had for these consumers.
 export function useGame() {
   return useGameStore()
 }
@@ -36,6 +33,10 @@ export function useFragments() {
   const collectedFragmentIds = useGameStore((s) => s.state.collectedFragmentIds)
   const collected = islands.map((island) => island.fragment).filter((fragment) => collectedFragmentIds.includes(fragment.id))
   return { collected, total: islands.length }
+}
+
+export function useDiscoveredClues() {
+  return useGameStore((s) => s.state.discoveredClueIds)
 }
 
 export function useAchievements() {

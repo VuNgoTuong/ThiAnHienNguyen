@@ -3,6 +3,7 @@ import { Package, Award, Compass } from 'lucide-react'
 import { useFragments, useTranslation } from '../../hooks/useGame.js'
 import { ProgressRing } from '../ui/ProgressRing.jsx'
 import { LanguageToggle } from '../ui/LanguageToggle.jsx'
+import { FullscreenToggle } from '../ui/FullscreenToggle.jsx'
 import { InventoryPanel } from '../inventory/InventoryPanel.jsx'
 import { AchievementsPanel } from '../achievements/AchievementsPanel.jsx'
 import { uiStrings } from '../../data/uiStrings.js'
@@ -25,6 +26,7 @@ export function HUD() {
         </div>
 
         <div className="pointer-events-auto flex items-center gap-2">
+          <FullscreenToggle />
           <LanguageToggle />
           <button
             type="button"
