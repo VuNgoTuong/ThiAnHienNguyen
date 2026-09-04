@@ -15,7 +15,7 @@ export function InventoryPanel({ isOpen, onClose }) {
         {islands.map((island) => {
           const isCollected = collectedIds.includes(island.fragment.id)
           return (
-            <div key={island.fragment.id} className="flex items-center gap-3 rounded-lg border border-ink-900/10 p-3">
+            <div key={island.fragment.id} className="flex items-center gap-3 rounded-2xl border border-ink-900/10 p-3">
               <CompassFragment collected={isCollected} />
               <div>
                 <p className="font-display text-sm text-ink-900">

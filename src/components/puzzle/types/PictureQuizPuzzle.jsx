@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Check, X, Sparkles, Eye, ShieldAlert } from 'lucide-react'
+import { Check, X, Eye, Sparkles } from 'lucide-react'
 import { useTranslation } from '../../../hooks/useGame.js'
-import { uiStrings } from '../../../data/uiStrings.js'
+import { Button } from '../../ui/Button.jsx'
 
 const HINT_STEPS = 3
 
@@ -29,15 +29,15 @@ function PictureFrame({ emoji, effect, wrongCount, solved }) {
   const flashHidden = effect === 'flash' && !solved && !flashPeek
 
   return (
-    <div className="relative mx-auto flex h-44 w-44 items-center justify-center overflow-hidden rounded-3xl border-2 border-amber-400/70 bg-gradient-to-b from-ocean-900 via-ocean-950 to-ocean-900 shadow-[0_0_35px_rgba(245,158,11,0.4)] backdrop-blur-xl">
-      {/* Background glowing energy aura */}
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(245,158,11,0.15),transparent_70%)]" />
+    <div className="relative mx-auto flex h-44 w-44 items-center justify-center overflow-hidden rounded-3xl border border-gold-400/40 bg-ocean-950 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.7)]">
+      {/* Ambient glow */}
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(232,195,104,0.12),transparent_70%)]" />
 
-      {/* Decorative Golden Corner Accents */}
-      <span className="pointer-events-none absolute top-2 left-2 h-2.5 w-2.5 rounded-tl-sm border-t-2 border-l-2 border-amber-400" />
-      <span className="pointer-events-none absolute top-2 right-2 h-2.5 w-2.5 rounded-tr-sm border-t-2 border-r-2 border-amber-400" />
-      <span className="pointer-events-none absolute bottom-2 left-2 h-2.5 w-2.5 rounded-bl-sm border-b-2 border-l-2 border-amber-400" />
-      <span className="pointer-events-none absolute bottom-2 right-2 h-2.5 w-2.5 rounded-br-sm border-b-2 border-r-2 border-amber-400" />
+      {/* Corner accents — same motif as ParchmentPanel */}
+      <span className="pointer-events-none absolute top-3 left-3 h-2 w-2 rounded-full border border-gold-400/50" />
+      <span className="pointer-events-none absolute top-3 right-3 h-2 w-2 rounded-full border border-gold-400/50" />
+      <span className="pointer-events-none absolute bottom-3 left-3 h-2 w-2 rounded-full border border-gold-400/50" />
+      <span className="pointer-events-none absolute bottom-3 right-3 h-2 w-2 rounded-full border border-gold-400/50" />
 
       {/* Main Emoji Graphic with Smooth Filters */}
       <motion.span
@@ -47,7 +47,7 @@ function PictureFrame({ emoji, effect, wrongCount, solved }) {
           opacity: flashHidden ? 0.05 : 1,
         }}
         transition={{ duration: 0.4, ease: 'easeOut' }}
-        className="select-none text-8xl leading-none drop-shadow-[0_10px_20px_rgba(0,0,0,0.8)]"
+        className="select-none text-8xl leading-none"
       >
         {emoji}
       </motion.span>
@@ -157,12 +157,12 @@ export function PictureQuizPuzzle({ puzzle, onCorrect }) {
               disabled={status === 'correct'}
               animate={showWrong ? { x: [0, -8, 8, -5, 5, 0] } : {}}
               transition={{ duration: 0.4 }}
-              className={`flex items-center justify-between rounded-2xl border-2 px-5 py-3.5 text-left font-display text-base font-bold shadow-xl backdrop-blur-md transition-all ${
+              className={`flex items-center justify-between rounded-2xl border px-5 py-3.5 text-left font-display text-sm font-semibold backdrop-blur-md transition-all ${
                 showCorrect
-                  ? 'border-emerald-400 bg-gradient-to-r from-emerald-500/30 to-teal-500/30 text-emerald-200 shadow-[0_0_20px_rgba(16,185,129,0.5)]'
+                  ? 'border-emerald-400/70 bg-emerald-500/15 text-emerald-200'
                   : showWrong
-                    ? 'border-red-400 bg-gradient-to-r from-red-500/30 to-rose-500/30 text-red-200 shadow-[0_0_20px_rgba(239,68,68,0.5)]'
-                    : 'border-amber-400/30 bg-ocean-900/80 text-parchment-100 hover:border-amber-400 hover:bg-ocean-800/90 hover:shadow-[0_0_15px_rgba(245,158,11,0.3)]'
+                    ? 'border-red-400/70 bg-red-500/15 text-red-200'
+                    : 'border-white/15 bg-white/5 text-parchment-100 hover:border-gold-400/50 hover:bg-white/10'
               }`}
             >
               <span>{t(option.text)}</span>
@@ -177,16 +177,9 @@ export function PictureQuizPuzzle({ puzzle, onCorrect }) {
       <AnimatePresence>
         {status === 'correct' ? (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-            <motion.button
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
-              type="button"
-              onClick={onCorrect}
-              className="w-full inline-flex items-center justify-center gap-2 rounded-2xl border border-amber-300/60 bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 px-8 py-3.5 font-display text-base font-black text-ink-950 shadow-[0_8px_25px_rgba(245,158,11,0.5)]"
-            >
-              <span>Câu Tiếp Theo</span>
-              <Sparkles size={18} />
-            </motion.button>
+            <Button icon={Sparkles} onClick={onCorrect} className="w-full">
+              Câu Tiếp Theo
+            </Button>
           </motion.div>
         ) : null}
       </AnimatePresence>

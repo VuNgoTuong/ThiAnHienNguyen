@@ -182,24 +182,23 @@ export function HiddenCoveScene({ lesson, onSolved, secretModeUnlocked = false }
             transition={{ type: 'spring', stiffness: 400, damping: 25 }}
             className="pointer-events-auto absolute inset-x-0 bottom-6 z-10 flex justify-center px-4"
           >
-            <div className="relative w-full max-w-md overflow-hidden rounded-3xl border border-amber-400/40 bg-gradient-to-b from-ocean-900/95 via-ocean-950/90 to-ocean-900/95 p-6 shadow-[0_25px_65px_rgba(0,0,0,0.85)] backdrop-blur-2xl text-center sm:max-w-lg sm:p-7">
-              {/* Ambient Glows */}
-              <div className="pointer-events-none absolute -top-12 left-10 h-32 w-32 rounded-full bg-cyan-500/20 blur-2xl" />
-              <div className="pointer-events-none absolute -top-10 right-10 h-32 w-32 rounded-full bg-amber-400/20 blur-2xl" />
+            <div className="relative w-full max-w-md overflow-hidden rounded-3xl border border-white/15 bg-white/10 p-6 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.75)] backdrop-blur-xl text-center sm:max-w-lg sm:p-7">
+              {/* Ambient glow */}
+              <div className="pointer-events-none absolute -top-12 right-10 h-32 w-32 rounded-full bg-gold-400/15 blur-2xl" />
 
-              <div className="relative mb-3 flex items-center justify-between border-b border-amber-400/20 pb-3">
-                <span className="font-display text-xs font-bold tracking-widest text-amber-400 uppercase">
-                  Vịnh Ẩn Giấu — Thử Thách {questionIndex + 1}/{questions.length}
+              <div className="relative mb-3 flex items-center justify-between border-b border-white/10 pb-3">
+                <span className="font-display text-xs font-semibold tracking-widest text-gold-300 uppercase">
+                  Vịnh Ẩn Giấu · {questionIndex + 1}/{questions.length}
                 </span>
                 <div className="flex gap-1.5">
                   {questions.map((q, idx) => (
                     <span
                       key={q.id}
-                      className={`h-2.5 w-2.5 rounded-full transition-all duration-300 ${
+                      className={`h-2 w-2 rounded-full transition-colors duration-300 ${
                         idx < questionIndex
-                          ? 'bg-amber-400 shadow-[0_0_8px_rgba(245,158,11,0.8)]'
+                          ? 'bg-gold-400'
                           : idx === questionIndex
-                            ? 'bg-cyan-400 shadow-[0_0_8px_rgba(45,212,191,0.8)] animate-pulse'
+                            ? 'bg-gold-400/50 animate-pulse'
                             : 'bg-white/15'
                       }`}
                     />
@@ -207,7 +206,7 @@ export function HiddenCoveScene({ lesson, onSolved, secretModeUnlocked = false }
                 </div>
               </div>
 
-              <p className="relative mb-4 font-display text-base font-bold leading-relaxed text-parchment-100 italic sm:text-lg">
+              <p className="relative mb-4 font-serif text-lg leading-relaxed text-parchment-100 italic">
                 {t(promptField)}
               </p>
 

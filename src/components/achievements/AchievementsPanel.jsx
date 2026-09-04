@@ -15,7 +15,7 @@ export function AchievementsPanel({ isOpen, onClose }) {
           return (
             <li
               key={achievement.id}
-              className={`flex items-center gap-3 rounded-lg border p-3 ${
+              className={`flex items-center gap-3 rounded-2xl border p-3 ${
                 achievement.unlocked ? 'border-gold-500/40 bg-gold-400/10' : 'border-ink-900/10 opacity-50'
               }`}
             >
