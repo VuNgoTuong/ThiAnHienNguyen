@@ -1,156 +1,109 @@
-// Island 3 — Quiz Arena content. All external image URLs live here (never
-// hard-coded in JSX) so they're easy to audit/replace later. Every URL is a
-// real, verified Wikimedia Commons file via their stable Special:FilePath-
-// resolved address (public domain / permissively licensed, no watermark).
-// Each image also carries a `fallbackEmoji` — QuizImage (see
-// island3/QuizCard.jsx) swaps to it automatically on a load error, so a
-// dead link never breaks the quiz.
-export const QUIZ_IMAGES = {
-  italy: 'https://upload.wikimedia.org/wikipedia/commons/3/35/Italy_map_blank.png',
-  horse: 'https://upload.wikimedia.org/wikipedia/commons/f/f5/Appaloosa_horse.JPG',
-  jupiter: 'https://upload.wikimedia.org/wikipedia/commons/e/e2/Jupiter.jpg',
-  pizza: 'https://upload.wikimedia.org/wikipedia/commons/a/a3/Eq_it-na_pizza-margherita_sep2005_sml.jpg',
-  eiffelTower: 'https://upload.wikimedia.org/wikipedia/commons/a/a8/Tour_Eiffel_Wikimedia_Commons.jpg',
-  earthFromSpace: 'https://upload.wikimedia.org/wikipedia/commons/7/78/The_Blue_Marble.jpg',
-}
-
-// `layout: 'image-question'` — one big image above 4 plain text option
-// cards. `layout: 'image-options'` — no central image, each option card
-// carries its own emoji (used for the two "odd one out" questions, exactly
-// like the spec's own emoji-illustrated option lists).
+// Island 3 — "Chuyện Của Chúng Ta" (Our Story) content. A short memory quiz
+// about the two of you. Every question uses `layout: 'image-options'` (each
+// option carries its own emoji, no external image needed) so there's
+// nothing to host or swap out — just edit the prompts/options/answers below
+// whenever the real memories are ready.
 export const quizQuestions = [
   {
     id: 'q1',
-    category: '🌍',
-    layout: 'image-question',
-    prompt: { vi: 'Quốc gia nào có hình dạng giống một chiếc ủng?', en: 'Which country is shaped like a boot?' },
-    image: { src: QUIZ_IMAGES.italy, fallbackEmoji: '🥾', alt: 'Italy' },
+    category: '📱',
+    layout: 'image-options',
+    prompt: { vi: 'Lần đầu tiên chúng ta nói chuyện là khi nào?', en: 'When did we first talk?' },
     options: [
-      { id: 'a', text: { vi: 'Pháp', en: 'France' } },
-      { id: 'b', text: { vi: 'Ý', en: 'Italy' } },
-      { id: 'c', text: { vi: 'Hy Lạp', en: 'Greece' } },
-      { id: 'd', text: { vi: 'Tây Ban Nha', en: 'Spain' } },
+      { id: 'a', emoji: '📱', text: { vi: 'Trên mạng xã hội', en: 'On social media' } },
+      { id: 'b', emoji: '👯', text: { vi: 'Qua bạn chung', en: 'Through a mutual friend' } },
+      { id: 'c', emoji: '🚶', text: { vi: 'Tình cờ gặp ngoài đời', en: 'Ran into each other' } },
+      { id: 'd', emoji: '🎉', text: { vi: 'Ở một sự kiện', en: 'At an event' } },
     ],
-    correctOptionId: 'b',
+    correctOptionId: 'a',
   },
   {
     id: 'q2',
-    category: '🐘',
-    layout: 'image-question',
-    prompt: { vi: 'Con vật nào có thể ngủ đứng?', en: 'Which animal can sleep standing up?' },
-    image: { src: QUIZ_IMAGES.horse, fallbackEmoji: '🐴', alt: 'Horse' },
+    category: '🍜',
+    layout: 'image-options',
+    prompt: { vi: 'Món ăn đầu tiên hai đứa ăn cùng nhau là gì?', en: 'What was the first meal we ate together?' },
     options: [
-      { id: 'a', text: { vi: 'Voi', en: 'Elephant' } },
-      { id: 'b', text: { vi: 'Cá heo', en: 'Dolphin' } },
-      { id: 'c', text: { vi: 'Ngựa', en: 'Horse' } },
-      { id: 'd', text: { vi: 'Chim cánh cụt', en: 'Penguin' } },
+      { id: 'a', emoji: '🧋', text: { vi: 'Trà sữa', en: 'Milk tea' } },
+      { id: 'b', emoji: '🍚', text: { vi: 'Cơm', en: 'Rice' } },
+      { id: 'c', emoji: '🍲', text: { vi: 'Lẩu', en: 'Hot pot' } },
+      { id: 'd', emoji: '🍟', text: { vi: 'Đồ ăn vặt', en: 'Street food' } },
     ],
-    correctOptionId: 'c',
+    correctOptionId: 'a',
   },
   {
     id: 'q3',
-    category: '🌌',
-    layout: 'image-question',
-    prompt: { vi: 'Hành tinh nào lớn nhất trong Hệ Mặt Trời?', en: 'Which is the largest planet in the Solar System?' },
-    image: { src: QUIZ_IMAGES.jupiter, fallbackEmoji: '🪐', alt: 'Jupiter' },
+    category: '💌',
+    layout: 'image-options',
+    prompt: { vi: 'Ai là người chủ động nhắn tin trước?', en: 'Who texted first?' },
     options: [
-      { id: 'a', text: { vi: 'Trái Đất', en: 'Earth' } },
-      { id: 'b', text: { vi: 'Sao Hỏa', en: 'Mars' } },
-      { id: 'c', text: { vi: 'Sao Mộc', en: 'Jupiter' } },
-      { id: 'd', text: { vi: 'Sao Thổ', en: 'Saturn' } },
+      { id: 'a', emoji: '🙋‍♂️', text: { vi: 'Anh', en: 'Me' } },
+      { id: 'b', emoji: '🙋‍♀️', text: { vi: 'Em', en: 'You' } },
+      { id: 'c', emoji: '🤝', text: { vi: 'Cả hai cùng lúc', en: 'Both at once' } },
+      { id: 'd', emoji: '🤔', text: { vi: 'Không nhớ nữa', en: "Can't remember" } },
     ],
-    correctOptionId: 'c',
+    correctOptionId: 'a',
   },
   {
     id: 'q4',
-    category: '🍕',
-    layout: 'image-question',
-    prompt: { vi: 'Món ăn này nổi tiếng đến từ quốc gia nào?', en: 'This famous dish comes from which country?' },
-    image: { src: QUIZ_IMAGES.pizza, fallbackEmoji: '🍕', alt: 'Pizza' },
+    category: '📍',
+    layout: 'image-options',
+    prompt: { vi: 'Buổi hẹn nào là đáng nhớ nhất?', en: 'Which date was the most memorable?' },
     options: [
-      { id: 'a', text: { vi: 'Ý', en: 'Italy' } },
-      { id: 'b', text: { vi: 'Nhật Bản', en: 'Japan' } },
-      { id: 'c', text: { vi: 'Mexico', en: 'Mexico' } },
-      { id: 'd', text: { vi: 'Ấn Độ', en: 'India' } },
+      { id: 'a', emoji: '💫', text: { vi: 'Buổi hẹn đầu tiên', en: 'Our first date' } },
+      { id: 'b', emoji: '✈️', text: { vi: 'Một chuyến đi xa', en: 'A trip away' } },
+      { id: 'c', emoji: '🌙', text: { vi: 'Một buổi tối bình thường', en: 'An ordinary night' } },
+      { id: 'd', emoji: '🎂', text: { vi: 'Một dịp đặc biệt', en: 'A special occasion' } },
     ],
     correctOptionId: 'a',
   },
   {
     id: 'q5',
-    category: '🌿',
+    category: '💬',
     layout: 'image-options',
-    prompt: { vi: 'Thứ nào KHÔNG thuộc nhóm còn lại?', en: "Which one doesn't belong with the rest?" },
+    prompt: { vi: 'Câu nói nào khiến em nhớ nhất?', en: 'Which line do you remember most?' },
     options: [
-      { id: 'a', emoji: '🍎', text: { vi: 'Apple', en: 'Apple' } },
-      { id: 'b', emoji: '🍌', text: { vi: 'Banana', en: 'Banana' } },
-      { id: 'c', emoji: '🍊', text: { vi: 'Orange', en: 'Orange' } },
-      { id: 'd', emoji: '🐘', text: { vi: 'Elephant', en: 'Elephant' } },
+      { id: 'a', emoji: '🍚', text: { vi: '"Ăn cơm chưa?"', en: '"Have you eaten?"' } },
+      { id: 'b', emoji: '🌙', text: { vi: '"Ngủ ngon nha"', en: '"Sleep well"' } },
+      { id: 'c', emoji: '😏', text: { vi: 'Một câu trêu chọc', en: 'A teasing line' } },
+      { id: 'd', emoji: '🤍', text: { vi: 'Một lời hứa nhỏ', en: 'A small promise' } },
     ],
-    correctOptionId: 'd',
+    correctOptionId: 'b',
   },
   {
     id: 'q6',
-    category: '🏛️',
-    layout: 'image-question',
-    prompt: { vi: 'Bạn có nhận ra địa danh này không?', en: 'Do you recognize this landmark?' },
-    image: { src: QUIZ_IMAGES.eiffelTower, fallbackEmoji: '🗼', alt: 'Eiffel Tower' },
-    options: [
-      { id: 'a', text: { vi: 'Paris', en: 'Paris' } },
-      { id: 'b', text: { vi: 'Rome', en: 'Rome' } },
-      { id: 'c', text: { vi: 'London', en: 'London' } },
-      { id: 'd', text: { vi: 'New York', en: 'New York' } },
-    ],
-    correctOptionId: 'a',
-  },
-  {
-    id: 'q7',
-    category: '🧠',
-    layout: 'image-question',
-    prompt: { vi: 'Đại dương nào lớn nhất thế giới?', en: "Which is the world's largest ocean?" },
-    image: { src: QUIZ_IMAGES.earthFromSpace, fallbackEmoji: '🌊', alt: 'Earth from space' },
-    options: [
-      { id: 'a', text: { vi: 'Đại Tây Dương', en: 'Atlantic Ocean' } },
-      { id: 'b', text: { vi: 'Ấn Độ Dương', en: 'Indian Ocean' } },
-      { id: 'c', text: { vi: 'Thái Bình Dương', en: 'Pacific Ocean' } },
-      { id: 'd', text: { vi: 'Bắc Băng Dương', en: 'Arctic Ocean' } },
-    ],
-    correctOptionId: 'c',
-  },
-  {
-    id: 'q8',
-    category: '🎬',
+    category: '❤️',
     layout: 'image-options',
     cinematic: true, // last question — presented with extra flourish, see QuizStage
     prompt: {
-      vi: 'Trong những thứ này, thứ nào có thể nhìn thấy trên bầu trời vào ban đêm?',
-      en: 'Which of these can you actually see in the night sky?',
+      vi: 'Và câu hỏi cuối — em còn nhớ cảm giác lần đầu gặp anh không?',
+      en: 'And the last one — do you remember how it felt, the first time we met?',
     },
     options: [
-      { id: 'a', emoji: '🌙', text: { vi: 'Mặt Trăng', en: 'The Moon' } },
-      { id: 'b', emoji: '🌊', text: { vi: 'Sóng biển', en: 'Ocean waves' } },
-      { id: 'c', emoji: '🌲', text: { vi: 'Cây', en: 'A tree' } },
-      { id: 'd', emoji: '🏠', text: { vi: 'Ngôi nhà', en: 'A house' } },
+      { id: 'a', emoji: '😳', text: { vi: 'Hồi hộp', en: 'Nervous' } },
+      { id: 'b', emoji: '😄', text: { vi: 'Vui', en: 'Happy' } },
+      { id: 'c', emoji: '😌', text: { vi: 'Bình thường thôi', en: 'Just normal' } },
+      { id: 'd', emoji: '🤍', text: { vi: 'Không nhớ rõ, chỉ nhớ là thích', en: "Don't remember exactly, just that I liked it" } },
     ],
-    correctOptionId: 'a',
+    correctOptionId: 'd',
   },
 ]
 
 export const AI_REACTIONS = {
   correct: [
-    { vi: 'Đúng rồi!', en: 'Right!' },
-    { vi: 'Nhanh vậy?', en: 'That fast?' },
-    { vi: 'Chính xác.', en: 'Exactly.' },
-    { vi: 'Bạn biết nhiều đấy.', en: 'You know your stuff.' },
+    { vi: 'Đúng rồi đó!', en: 'That\'s right!' },
+    { vi: 'Em nhớ dai ghê.', en: 'You remember well.' },
+    { vi: 'Chuẩn không cần chỉnh.', en: 'Exactly.' },
+    { vi: 'Giỏi lắm nha.', en: 'Nicely done.' },
   ],
   wrong: [
-    { vi: 'Không phải rồi 😂', en: "Nope 😂" },
-    { vi: 'Suýt nữa.', en: 'So close.' },
-    { vi: 'Không sao.', en: "It's fine." },
-    { vi: 'Ồ, câu này khó hơn một chút.', en: 'Ooh, that one was trickier.' },
+    { vi: 'Sai rồi nha 😌', en: "Nope 😌" },
+    { vi: 'Trớt quớt luôn.', en: 'Way off.' },
+    { vi: 'Gần đúng thôi... nhưng chưa đúng.', en: 'Close... but not quite.' },
+    { vi: 'Thôi, anh cho em qua 😏', en: "Fine, I'll let you slide 😏" },
   ],
   streak: [
-    { vi: 'Được đó.', en: 'Nice.' },
-    { vi: 'Đang vào form rồi.', en: "You're on a roll." },
+    { vi: 'Đỉnh của chóp.', en: 'On fire.' },
+    { vi: 'Nhớ dữ vậy?', en: 'You remember that much?' },
     { vi: 'Ồ...', en: 'Oh...' },
   ],
 }
@@ -159,41 +112,42 @@ export const COMBO_LABELS = {
   2: '🔥 x2',
   3: '🔥 x3',
   4: '🔥 x4',
-  5: '🔥 PERFECT',
+  5: '🔥 x5',
+  6: '🔥 PERFECT',
 }
 
 export const island3Copy = {
   eyebrow: { vi: 'ĐẢO 3', en: 'ISLAND 3' },
-  title: { vi: 'Quiz Arena', en: 'Quiz Arena' },
+  title: { vi: 'Chuyện Của Chúng Ta', en: 'Our Story' },
   aiIntro: [
     { vi: 'Được rồi.', en: 'Alright.' },
-    { vi: 'Đến lượt tôi hỏi bạn vài câu.', en: "It's my turn to ask you a few questions." },
-    { vi: 'Yên tâm.', en: 'Relax.' },
-    { vi: 'Không khó đâu 😏', en: "It's not hard 😏" },
+    { vi: 'Giờ đến lượt anh hỏi em vài câu.', en: "Now it's my turn to ask you a few things." },
+    { vi: 'Không khó đâu.', en: "It's not hard." },
+    { vi: 'Chỉ là... đừng đoán bừa nha 😏', en: "Just... don't just guess randomly 😏" },
   ],
-  aiIntroSecret: { vi: 'À mà này Hiền... đừng đoán bừa nha 😏', en: "Oh, and Hiền... don't just guess randomly 😏" },
+  aiIntroSecret: { vi: 'À mà An Hiền... nhớ kỹ vô nha, anh biết hết đó 😏', en: "Oh, and An Hiền... remember carefully, I'll know 😏" },
   startButton: { vi: 'BẮT ĐẦU', en: 'START' },
   endingLines: [
-    { vi: 'Xong rồi.', en: "That's it." },
-    { vi: 'Không tệ.', en: 'Not bad.' },
+    { vi: 'Xong rồi đó.', en: "That's it." },
+    { vi: 'Em nhớ nhiều hơn anh tưởng.', en: 'You remember more than I thought.' },
   ],
   resultsTitle: { vi: 'HOÀN THÀNH', en: 'COMPLETE' },
   scoreHigh: [
     { vi: 'Ồ...', en: 'Oh...' },
-    { vi: 'Bạn làm tôi bất ngờ đấy.', en: "You actually surprised me." },
+    { vi: 'Em nhớ hết luôn à?', en: 'You remember everything?' },
   ],
-  scoreMid: [{ vi: 'Khá ổn.', en: 'Pretty solid.' }],
+  scoreMid: [{ vi: 'Cũng không tệ.', en: 'Not bad at all.' }],
   scoreLow: [
-    { vi: 'Không sao.', en: "It's okay." },
-    { vi: 'Ít nhất chúng ta đã vui.', en: 'At least we had fun.' },
+    { vi: 'Không sao hết.', en: "It's totally fine." },
+    { vi: 'Quan trọng là mình đang nhớ lại cùng nhau.', en: "What matters is we're remembering it together." },
   ],
-  scoreGeneric: { vi: 'Bạn làm tốt đấy.', en: 'You did well.' },
+  scoreGeneric: { vi: 'Dù gì thì cũng vui mà.', en: 'It was fun either way.' },
   continueButton: { vi: 'ĐI TIẾP', en: 'CONTINUE' },
   island4Lines: [
-    { vi: 'Lần này...', en: 'This time...' },
-    { vi: 'Để tôi thử đoán bạn.', en: 'Let me try to guess you.' },
+    { vi: 'Giờ đổi vai nha.', en: "Let's switch roles now." },
+    { vi: 'Để anh thử đoán về em.', en: 'Let me try to guess about you.' },
   ],
   island4Eyebrow: { vi: 'ĐẢO 4', en: 'ISLAND 4' },
-  island4Title: { vi: 'AI Đoán Bạn', en: 'AI Guesses You' },
+  island4Title: { vi: 'Những Điều Nhỏ Xíu', en: 'Little Things' },
   skipHint: { vi: 'Nhấn để bỏ qua', en: 'Click to skip' },
 }

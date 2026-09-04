@@ -87,7 +87,7 @@ export function RiddlePuzzle({ puzzle, onCorrect }) {
         value={answer}
         onChange={(event) => setAnswer(event.target.value)}
         placeholder={t(uiStrings.answerPlaceholder)}
-        className="w-full rounded-lg border border-ink-900/20 bg-parchment-100 px-4 py-2.5 font-body text-ink-900 placeholder:text-ink-700/50 focus:border-gold-600 focus:outline-none"
+        className="w-full rounded-xl border-2 border-gold-600/30 bg-[#fbf5e6] px-5 py-3.5 font-body text-base sm:text-lg text-ink-900 placeholder:text-ink-700/50 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] transition-all focus:border-gold-600 focus:bg-white focus:outline-none"
       />
 
       <div className="flex items-center justify-between gap-4">

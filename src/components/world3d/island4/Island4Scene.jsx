@@ -218,7 +218,7 @@ export function Island4Scene({ onSolved, secretModeUnlocked = false }) {
     const nextCorrectStreak = outcome === 'ai-correct' ? consecutiveAiCorrect + 1 : 0
     setConsecutiveAiWrong(nextWrongStreak)
     setConsecutiveAiCorrect(nextCorrectStreak)
-    setRoundResults((list) => [...list, { round: roundNumber, outcome, icon: predictionDef.icon }])
+    setRoundResults((list) => [...list, { round: roundNumber, outcome, icon: predictionDef.icon, isTrue }])
     if (outcome === 'ai-correct') setAiScore((s) => s + 1)
     else setPlayerScore((s) => s + 1)
     setReactionLineObjs(pickReactionLines(outcome, nextWrongStreak, nextCorrectStreak))

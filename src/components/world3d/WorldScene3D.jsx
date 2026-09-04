@@ -75,14 +75,29 @@ export function WorldScene3D({
   }, [])
 
   return (
-    <Canvas shadows dpr={[1, 1.5]} gl={{ antialias: true }}>
-      <PerspectiveCamera makeDefault fov={42} near={0.1} far={200} />
+    <Canvas
+      shadows={{ type: THREE.PCFSoftShadowMap }}
+      dpr={[1, 2]}
+      gl={{ antialias: true, alpha: false, powerPreference: 'high-performance' }}
+    >
+      <PerspectiveCamera makeDefault fov={40} near={0.1} far={250} />
       <CameraRig bounds={bounds} />
       <GradientSky sunPosition={SUN_POSITION} />
-      <fog attach="fog" args={['#a8d4e6', 28, 70]} />
-      <hemisphereLight args={['#e8f4f8', '#0e3a47', 0.6]} />
-      <ambientLight intensity={0.6} color="#fff6e5" />
-      <directionalLight position={SUN_POSITION} intensity={1.4} color="#ffe2b3" castShadow />
+      <fog attach="fog" args={['#a8d4e6', 32, 85]} />
+      <hemisphereLight args={['#e8f4f8', '#0c313d', 0.75]} />
+      <ambientLight intensity={0.7} color="#fff6e5" />
+      <directionalLight
+        position={SUN_POSITION}
+        intensity={1.8}
+        color="#ffe2b3"
+        castShadow
+        shadow-mapSize={[2048, 2048]}
+        shadow-camera-left={-30}
+        shadow-camera-right={30}
+        shadow-camera-top={30}
+        shadow-camera-bottom={-30}
+        shadow-bias={-0.00015}
+      />
 
       <Suspense fallback={null}>
         <Ocean3D />
@@ -108,3 +123,4 @@ export function WorldScene3D({
     </Canvas>
   )
 }
+

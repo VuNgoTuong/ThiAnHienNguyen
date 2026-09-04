@@ -110,7 +110,7 @@ export function IslandPage() {
   return (
     <div className="relative flex h-full w-full items-center justify-center p-6">
       <Ocean />
-      <div className={`relative z-10 flex w-full flex-col items-center ${isWideLesson ? 'max-w-4xl sm:max-w-5xl' : 'max-w-2xl'}`}>
+      <div className={`relative z-10 flex w-full flex-col items-center ${isWideLesson ? 'max-w-4xl sm:max-w-5xl' : 'max-w-3xl sm:max-w-4xl'}`}>
         <AnimatePresence mode="wait">
           {step === 'arrival' ? (
             <motion.div key="arrival" {...fadeStep} className="w-full">
@@ -161,9 +161,17 @@ export function IslandPage() {
           {step === 'complete' ? (
             <motion.div key="complete" {...fadeStep} className="w-full">
               <ParchmentPanel className="p-6 text-center">
-                <p className="mb-4 text-ink-900">
-                  {t(island.name)} {t(uiStrings.islandCompleteMessage)}
-                </p>
+                {island.outro?.lines ? (
+                  island.outro.lines.map((line, index) => (
+                    <p key={index} className="mb-2 leading-relaxed text-ink-900/90">
+                      {t(line)}
+                    </p>
+                  ))
+                ) : (
+                  <p className="mb-4 text-ink-900">
+                    {t(island.name)} {t(uiStrings.islandCompleteMessage)}
+                  </p>
+                )}
                 {island.id === 'level-2-mystery' ? (
                   <Button icon={Sparkles} onClick={() => arriveAtIsland('level-3-challenge')} className="mb-3">
                     {t(uiStrings.goToIsland3)}

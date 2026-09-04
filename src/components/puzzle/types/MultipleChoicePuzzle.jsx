@@ -23,8 +23,8 @@ export function MultipleChoicePuzzle({ puzzle, onCorrect }) {
   }
 
   return (
-    <div className="space-y-4">
-      <div className="grid gap-2">
+    <div className="space-y-5">
+      <div className="grid gap-3.5">
         {puzzle.data.options.map((option) => {
           const isSelected = selectedId === option.id
           const isCorrectOption = option.id === puzzle.data.correctOptionId
@@ -37,19 +37,21 @@ export function MultipleChoicePuzzle({ puzzle, onCorrect }) {
               type="button"
               onClick={() => handleSelect(option.id)}
               disabled={status === 'correct'}
+              whileHover={status !== 'correct' ? { scale: 1.01, x: 3 } : undefined}
+              whileTap={status !== 'correct' ? { scale: 0.99 } : undefined}
               animate={showWrong ? { x: [0, -6, 6, -4, 4, 0] } : {}}
               transition={{ duration: 0.4 }}
-              className={`flex items-center justify-between rounded-lg border px-4 py-2.5 text-left font-body text-ink-900 transition-colors ${
+              className={`flex items-center justify-between rounded-xl border-2 px-5 py-4 text-left font-body text-base sm:text-lg font-medium transition-all shadow-sm ${
                 showCorrect
-                  ? 'border-green-600 bg-green-600/10'
+                  ? 'border-emerald-600 bg-emerald-600/15 text-emerald-950 shadow-[0_0_15px_rgba(16,185,129,0.25)]'
                   : showWrong
-                    ? 'border-red-600 bg-red-600/10'
-                    : 'border-ink-900/20 bg-parchment-100 hover:border-gold-600'
+                    ? 'border-red-600 bg-red-600/15 text-red-950 shadow-[0_0_15px_rgba(239,68,68,0.25)]'
+                    : 'border-gold-600/30 bg-[#fbf5e6] text-ink-900 hover:border-gold-600 hover:bg-[#ffffff] hover:shadow-md'
               }`}
             >
               <span>{t(option.text)}</span>
-              {showCorrect ? <Check size={16} className="text-green-700" /> : null}
-              {showWrong ? <X size={16} className="text-red-700" /> : null}
+              {showCorrect ? <Check size={20} className="text-emerald-700 font-bold shrink-0 ml-2" /> : null}
+              {showWrong ? <X size={20} className="text-red-700 font-bold shrink-0 ml-2" /> : null}
             </motion.button>
           )
         })}

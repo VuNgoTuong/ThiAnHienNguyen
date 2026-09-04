@@ -8,9 +8,6 @@ export function getSyllables(word) {
   return normalize(word).split(' ')
 }
 
-const VIETNAMESE_SYLLABLE_REGEX =
-  /^[a-zàáảãạâầấẩẫậăằắẳẵặeèéẻẽẹêềếểễệiìíỉĩịoòóỏõọôồốổỗộơờớởỡợuùúủũụưừứửữựyỳýỷỹỵđ]+$/i
-
 const wordSet = new Set(wordChainDictionary.map((word) => normalize(word)))
 
 const wordsByStartSyllable = wordChainDictionary.reduce((index, rawWord) => {
@@ -21,7 +18,7 @@ const wordsByStartSyllable = wordChainDictionary.reduce((index, rawWord) => {
   return index
 }, {})
 
-// Smart validation: accepts prebuilt dictionary words OR any valid 2-syllable Vietnamese compound word
+// Validation: must be a valid 2-syllable Vietnamese compound word present in dictionary
 export function validateNextWord({ input, requiredStartSyllable, usedWords }) {
   const word = normalize(input)
   const syllables = word.split(' ')
@@ -35,20 +32,8 @@ export function validateNextWord({ input, requiredStartSyllable, usedWords }) {
   if (usedWords.has(word)) {
     return { valid: false, reason: 'used' }
   }
-
-  // Check if each syllable is a valid Vietnamese word/spelling
-  const isValidSyllableSpelling = syllables.every((s) => VIETNAMESE_SYLLABLE_REGEX.test(s))
-
-  if (!wordSet.has(word) && !isValidSyllableSpelling) {
+  if (!wordSet.has(word)) {
     return { valid: false, reason: 'unknown' }
-  }
-
-  // Dynamically register valid new words into dictionary so AI and player can chain further
-  if (!wordSet.has(word) && isValidSyllableSpelling) {
-    wordSet.add(word)
-    const [first] = syllables
-    if (!wordsByStartSyllable[first]) wordsByStartSyllable[first] = []
-    wordsByStartSyllable[first].push(word)
   }
 
   return { valid: true, word }
@@ -63,9 +48,7 @@ function countContinuations(word, usedWords) {
 export function hasAnyCandidate({ requiredStartSyllable, usedWords }) {
   if (!requiredStartSyllable) return true
   const candidates = wordsByStartSyllable[requiredStartSyllable] ?? []
-  if (candidates.some((word) => !usedWords.has(word))) return true
-  // Also return true if the syllable itself is a valid Vietnamese syllable (player can type new words!)
-  return VIETNAMESE_SYLLABLE_REGEX.test(requiredStartSyllable)
+  return candidates.some((word) => !usedWords.has(word))
 }
 
 export function pickAiWord({ requiredStartSyllable, usedWords }) {
@@ -88,3 +71,4 @@ export function pickRandomStartWord() {
   const pool = startableWords.length > 0 ? startableWords : wordChainDictionary.map((word) => normalize(word))
   return pool[Math.floor(Math.random() * pool.length)]
 }
+

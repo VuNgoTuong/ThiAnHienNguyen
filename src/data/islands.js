@@ -18,23 +18,23 @@ export const islands = [
       speaker: GUIDE,
       lines: [
         {
-          vi: 'Chào mừng em tới Đảo Làm Quen! Cùng bắt đầu thử thách nhé.',
-          en: "Welcome to the Isle of Getting Acquainted! Let's begin.",
+          vi: 'Đảo đầu tiên rồi nè. Không có gì to tát đâu — chỉ là nối chữ với anh thôi.',
+          en: "First island. Nothing fancy — just chain words with me.",
         },
       ],
       secretLines: [
         {
-          vi: 'Hiền à? Tên dịu dàng quá. Anh chờ em ở đây nhé!',
-          en: "Hiền? Such a gentle name. Anh will be right here for you!",
+          vi: 'Ê An Hiền, sẵn sàng chưa? Đảo này dễ ợt à kkk!',
+          en: "Hey An Hiền, ready? This island's easy kkk!",
         },
       ],
     },
     discovery: {
-      title: { vi: 'Thử Thách Nối Chữ', en: 'Word Chain Trial' },
+      title: { vi: 'Chúng Ta Bắt Đầu Như Thế Nào?', en: 'How Did We Begin?' },
       story: [
         {
-          vi: 'Nối đúng 10 từ liên tiếp cùng anh để vượt qua đảo 1 nha em.',
-          en: 'Connect 10 words in a row to clear Island 1.',
+          vi: 'Nối đúng 10 từ liên tiếp cùng anh nha. Không cần nghĩ nhiều đâu — cứ để chữ dẫn đường.',
+          en: "Chain 10 words in a row with me. Don't overthink it — just let the words lead the way.",
         },
       ],
     },
@@ -43,18 +43,30 @@ export const islands = [
         id: 'level1-wordchain',
         type: 'word-chain',
         prompt: {
-          vi: 'Nối đúng 10 từ liên tiếp. Mỗi lượt 20 giây.',
+          vi: 'Nối đúng 10 từ liên tiếp. Mỗi lượt có 20 giây.',
           en: 'Connect 10 words in a row. 20 seconds per turn.',
         },
         data: { timeLimitMs: 20000 },
       },
     ],
+    outro: {
+      lines: [
+        {
+          vi: 'Có những cuộc gặp gỡ nhìn thì rất bình thường...',
+          en: 'Some meetings look completely ordinary at first...',
+        },
+        {
+          vi: '...nhưng lại trở thành một phần rất đặc biệt trong cuộc đời mình.',
+          en: '...but end up becoming a very special part of your life.',
+        },
+      ],
+    },
     fragment: {
       id: 'fragment-level1',
       name: { vi: 'Mảnh La Bàn: Khởi Đầu', en: 'Compass Fragment: The Beginning' },
       loreText: {
-        vi: 'Mảnh đầu tiên của la bàn — phần thưởng nhỏ cho công chúa đã dám bắt đầu hành trình này.',
-        en: 'The first fragment of the compass — a little reward for the princess who dared to begin.',
+        vi: 'Mảnh đầu tiên của la bàn — cho ngày mình bắt đầu.',
+        en: 'The first fragment of the compass — for the day we began.',
       },
     },
   },
@@ -68,23 +80,23 @@ export const islands = [
       speaker: GUIDE,
       lines: [
         {
-          vi: 'Cập bến Vịnh Ẩn Giấu rồi! Nhìn hình rồi đoán xem đó là gì nhé.',
-          en: "We've landed at Hidden Cove! Look at each picture and guess what it is.",
+          vi: 'Cập bến Vịnh Ẩn Giấu rồi. Ở đây, em sẽ thử đoán xem anh thật sự thích gì nha.',
+          en: "We've landed at the Hidden Cove. Here, you'll try to guess what I actually like.",
         },
       ],
       secretLines: [
         {
-          vi: 'Đảo này giấu kho báu đó Hiền — cố lên em nhé!',
-          en: "This island hides a treasure Hiền — you've got this!",
+          vi: 'Xem em hiểu anh cỡ nào nha công chúa An Hiền kkk!',
+          en: "Let's see how well you know me, princess An Hiền kkk!",
         },
       ],
     },
     discovery: {
-      title: { vi: 'Vịnh Ẩn Giấu', en: 'The Hidden Cove' },
+      title: { vi: 'Em Hiểu Anh Không?', en: 'Do You Understand Me?' },
       story: [
         {
-          vi: 'Nhìn kỹ từng hình rồi chọn đáp án đúng nhé.',
-          en: 'Look closely at each picture and choose the right answer.',
+          vi: 'Vài câu hỏi nhỏ thôi, không có gì căng thẳng đâu. Cứ chọn theo cảm giác của em.',
+          en: "A few small questions, nothing stressful. Just go with your gut.",
         },
       ],
     },
@@ -93,81 +105,91 @@ export const islands = [
         id: 'level2-hidden-cove',
         type: 'hidden-cove',
         prompt: {
-          vi: 'Nhìn từng hình cho kỹ rồi đoán xem đó là gì nha em.',
-          en: 'Look closely at each picture and guess what it is.',
+          vi: 'Chọn điều em nghĩ đúng nhất về anh nha — sai cũng không sao đâu!',
+          en: "Pick what you think is truest about me — it's okay to get it wrong!",
         },
         data: {
+          wrongReactions: [
+            { vi: 'Hmm... anh sẽ cho em thêm một cơ hội 😏', en: "Hmm... I'll give you one more shot 😏" },
+            { vi: 'Chưa đúng lắm đâu nha.', en: "Not quite yet." },
+            { vi: 'Gần rồi, thử lại xem.', en: "Close — try again." },
+          ],
+          correctReactions: [
+            { vi: 'Đúng rồi. Em hiểu anh ghê.', en: "Right. You really do know me." },
+            { vi: 'Chuẩn luôn đó.', en: "Exactly that." },
+            { vi: 'Ừ, đúng vậy đó em.', en: "Yep, that's it." },
+          ],
           questions: [
             {
               id: 'level2-quiz-1',
-              prompt: { vi: 'Nhìn hình và đoán xem đây là gì:', en: 'Look at the picture and guess what it is:' },
+              prompt: { vi: 'Khi anh mệt, anh thường muốn...', en: 'When I\'m tired, I usually want...' },
               secretPrompt: {
-                vi: 'Nhìn hình và đoán xem đây là gì nha em.',
-                en: "Look at the picture and guess.",
+                vi: 'Đoán xem khi mệt anh thích gì nào công chúa.',
+                en: "Guess what I want when I'm tired.",
               },
-              emoji: '🍌',
+              emoji: '😴',
               effect: 'blur',
               options: [
-                { id: 'apple', text: { vi: 'Táo', en: 'Apple' } },
-                { id: 'banana', text: { vi: 'Chuối', en: 'Banana' } },
-                { id: 'orange', text: { vi: 'Cam', en: 'Orange' } },
-                { id: 'watermelon', text: { vi: 'Dưa hấu', en: 'Watermelon' } },
+                { id: 'coffee', text: { vi: 'Một ly cà phê ☕', en: 'A cup of coffee ☕' } },
+                { id: 'game', text: { vi: 'Chơi game 🎮', en: 'Play a game 🎮' } },
+                { id: 'rest', text: { vi: 'Nằm im một chút 😴', en: 'Just lie down for a bit 😴' } },
+                { id: 'hug', text: { vi: 'Được em ôm 🤗', en: 'Get a hug from you 🤗' } },
               ],
-              correctOptionId: 'banana',
+              correctOptionId: 'rest',
             },
             {
               id: 'level2-quiz-2',
-              prompt: { vi: 'Còn đây là gì nào:', en: 'And this one:' },
+              prompt: { vi: 'Nếu được chọn một buổi hẹn, anh sẽ chọn...', en: 'If I got to pick a date, I\'d choose...' },
               secretPrompt: {
-                vi: 'Đoán xem đây là con gì nha em.',
-                en: 'Guess what this animal is.',
+                vi: 'Đoán xem anh thích đi đâu nha công chúa.',
+                en: "Guess where I'd want to go.",
               },
-              emoji: '🐱',
+              emoji: '🌊',
               effect: 'silhouette',
               options: [
-                { id: 'dog', text: { vi: 'Chó', en: 'Dog' } },
-                { id: 'cat', text: { vi: 'Mèo', en: 'Cat' } },
-                { id: 'chicken', text: { vi: 'Gà', en: 'Chicken' } },
-                { id: 'duck', text: { vi: 'Vịt', en: 'Duck' } },
+                { id: 'sea', text: { vi: 'Đi biển 🌊', en: 'The beach 🌊' } },
+                { id: 'food', text: { vi: 'Đi ăn 🍜', en: 'Get food 🍜' } },
+                { id: 'movie', text: { vi: 'Xem phim 🎬', en: 'Watch a movie 🎬' } },
+                { id: 'night', text: { vi: 'Đi dạo buổi tối 🌃', en: 'A night walk 🌃' } },
               ],
-              correctOptionId: 'cat',
+              correctOptionId: 'sea',
             },
             {
               id: 'level2-quiz-3',
-              prompt: { vi: 'Đoán xem đây là hình gì:', en: "What's this:" },
+              prompt: { vi: 'Điều gì dễ khiến anh vui nhất?', en: 'What makes me happiest, easiest?' },
               secretPrompt: {
-                vi: 'Đoán xem cái gì đây nha em.',
-                en: "Guess what this is.",
+                vi: 'Đoán xem điều gì làm anh vui nha em.',
+                en: 'Guess what makes me happy.',
               },
-              emoji: '⚓',
+              emoji: '😂',
               effect: 'zoom',
               options: [
-                { id: 'compass', text: { vi: 'La Bàn', en: 'Compass' } },
-                { id: 'anchor', text: { vi: 'Mỏ Neo', en: 'Anchor' } },
-                { id: 'wheel', text: { vi: 'Bánh Lái', en: 'Ship Wheel' } },
-                { id: 'sail', text: { vi: 'Cánh Buồm', en: 'Sail' } },
+                { id: 'message', text: { vi: 'Một tin nhắn bất ngờ 💬', en: 'A surprise text 💬' } },
+                { id: 'meal', text: { vi: 'Được ăn món ngon 🍔', en: 'A good meal 🍔' } },
+                { id: 'laugh', text: { vi: 'Em chọc anh cười 😂', en: 'You making me laugh 😂' } },
+                { id: 'hug2', text: { vi: 'Một cái ôm 🤍', en: 'A hug 🤍' } },
               ],
-              correctOptionId: 'anchor',
+              correctOptionId: 'laugh',
             },
             {
               id: 'level2-quiz-4',
               prompt: {
-                vi: 'Nhìn kỹ đi, hình biến mất nhanh lắm đó:',
-                en: 'Look closely — this disappears fast:',
+                vi: 'Nếu có một ngày rảnh trọn vẹn, anh sẽ...',
+                en: 'If I had a whole free day, I\'d...',
               },
               secretPrompt: {
-                vi: 'Chớp mắt là mất hình đó nha em.',
-                en: "Blink and it's gone.",
+                vi: 'Chớp mắt là mất hình đó nha công chúa kkk!',
+                en: "Blink and it's gone, kkk!",
               },
-              emoji: '🌴',
+              emoji: '💛',
               effect: 'flash',
               options: [
-                { id: 'palm', text: { vi: 'Cây Dừa', en: 'Palm Tree' } },
-                { id: 'pine', text: { vi: 'Cây Thông', en: 'Pine Tree' } },
-                { id: 'rose', text: { vi: 'Hoa Hồng', en: 'Rose' } },
-                { id: 'grass', text: { vi: 'Cỏ', en: 'Grass' } },
+                { id: 'sleep', text: { vi: 'Ngủ nướng cả ngày 😪', en: 'Sleep in all day 😪' } },
+                { id: 'outdoor', text: { vi: 'Ra ngoài đổi gió 🚶', en: 'Get out for some air 🚶' } },
+                { id: 'withYou', text: { vi: 'Ở nhà với em 💛', en: 'Stay home with you 💛' } },
+                { id: 'explore', text: { vi: 'Nghe nhạc một mình 🎧', en: 'Listen to music alone 🎧' } },
               ],
-              correctOptionId: 'palm',
+              correctOptionId: 'withYou',
             },
           ],
         },
@@ -177,8 +199,8 @@ export const islands = [
       id: 'fragment-level2',
       name: { vi: 'Mảnh La Bàn II', en: 'Compass Fragment II' },
       loreText: {
-        vi: 'Mảnh thứ hai — phần thưởng cho đôi mắt tinh và những lần đoán đúng.',
-        en: 'The second fragment — a reward for sharp eyes and good guesses.',
+        vi: 'Mảnh thứ hai — cho những lần em đoán trúng anh.',
+        en: 'The second fragment — for the times you guessed me right.',
       },
     },
   },
@@ -191,21 +213,21 @@ export const islands = [
     arrival: {
       speaker: GUIDE,
       lines: [
-        { vi: 'Chào mừng em tới Đảo Thử Thách Level 3!', en: 'Welcome to Level 3 Challenge Isle!' },
+        { vi: 'Đảo thứ ba rồi nè. Lần này tới lượt em nhớ lại chuyện của tụi mình.', en: "Third island. This time, it's your turn to remember us." },
       ],
       secretLines: [
         {
-          vi: 'Nỗ lực lên Hiền nhé, anh tin em!',
-          en: "Keep going Hiền, I believe in you!",
+          vi: 'Cố nhớ nha công chúa An Hiền, anh tin trí nhớ em ngon lắm kkk!',
+          en: "Try to remember, princess An Hiền, I trust that memory of yours kkk!",
         },
       ],
     },
     discovery: {
-      title: { vi: 'Quiz Arena', en: 'Quiz Arena' },
+      title: { vi: 'Chuyện Của Chúng Ta', en: 'Our Story' },
       story: [
         {
-          vi: 'Sẵn sàng bước vào Quiz Arena chưa em?',
-          en: 'Ready to enter the Quiz Arena?',
+          vi: 'Vài câu hỏi nhỏ về những gì tụi mình đã cùng đi qua. Em còn nhớ không?',
+          en: "A few small questions about what we've been through together. Do you still remember?",
         },
       ],
     },
@@ -218,37 +240,37 @@ export const islands = [
     ],
     fragment: {
       id: 'fragment-level3',
-      name: { vi: 'Mảnh La Bàn: Thử Thách', en: 'Compass Fragment: Challenge' },
+      name: { vi: 'Mảnh La Bàn: Kỷ Niệm', en: 'Compass Fragment: Memories' },
       loreText: {
-        vi: 'Một mảnh rèn qua thử thách — càng khó càng đáng giá.',
-        en: 'A fragment forged through struggle — the harder it was, the more it counts.',
+        vi: 'Mảnh la bàn ghép từ những chuyện em còn nhớ về tụi mình.',
+        en: 'A fragment pieced together from what you still remember about us.',
       },
     },
   },
   {
     id: 'level-4-wit',
-    name: { vi: 'Đảo Trí Tuệ', en: 'Isle of Wit' },
+    name: { vi: 'Đảo Những Điều Nhỏ', en: 'Isle of Little Things' },
     level: 4,
     order: 4,
     position: { x: 85, y: 32 },
     arrival: {
       speaker: GUIDE,
       lines: [
-        { vi: 'Chào mừng em tới Đảo Trí Tuệ — nơi AI thử đoán về em!', en: 'Welcome to Isle of Wit — where the AI tries to guess you!' },
+        { vi: 'Đảo cuối trước khi mình về lại rồi nè. Lần này anh thử đoán về em nha.', en: "Last island before we head back. This time, let me guess about you." },
       ],
       secretLines: [
         {
-          vi: 'Cố lên Hiền nhé, anh tin em làm được!',
-          en: "You got this Hiền, I believe in you!",
+          vi: 'Đoán trúng hay trật cũng vui hết á, An Hiền kkk!',
+          en: "Right or wrong, it's all fun, An Hiền kkk!",
         },
       ],
     },
     discovery: {
-      title: { vi: 'AI Room', en: 'The AI Room' },
+      title: { vi: 'Những Điều Nhỏ Xíu', en: 'Little Things' },
       story: [
         {
-          vi: 'Giữa đảo là một căn phòng kính nhỏ, nơi AI Core lặng lẽ phát sáng — lần này, đến lượt nó thử đoán về em.',
-          en: "At the heart of the island sits a small glass room where the AI Core glows quietly — this time, it's the AI's turn to try guessing you.",
+          vi: 'Không có gì to tát đâu — chỉ là những điều nhỏ về em thôi. Anh đoán, em nói đúng hay sai nha.',
+          en: "Nothing big — just little things about you. I'll guess, you tell me right or wrong.",
         },
       ],
     },
@@ -261,10 +283,10 @@ export const islands = [
     ],
     fragment: {
       id: 'fragment-level4',
-      name: { vi: 'Mảnh La Bàn: Trí Tuệ', en: 'Compass Fragment: Wit' },
+      name: { vi: 'Mảnh La Bàn: Những Điều Nhỏ', en: 'Compass Fragment: Little Things' },
       loreText: {
-        vi: 'Mảnh cuối trước chân trời — phần thưởng cho công chúa thông minh nhất mà anh biết.',
-        en: 'The last fragment before the horizon — a reward for the smartest princess anh knows.',
+        vi: 'Mảnh la bàn cuối rồi nè — cho những điều nhỏ mà anh để ý ở em.',
+        en: 'The final fragment — for the little things about you I noticed.',
       },
     },
   },

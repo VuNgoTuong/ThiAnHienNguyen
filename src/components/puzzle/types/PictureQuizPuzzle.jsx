@@ -85,22 +85,35 @@ function PictureFrame({ emoji, effect, wrongCount, solved }) {
   )
 }
 
+const DEFAULT_WRONG_REACTIONS = [{ vi: 'Chưa đúng đâu, thử lại nha.', en: "Not quite — try again." }]
+const DEFAULT_CORRECT_REACTIONS = [{ vi: 'Chính xác!', en: 'Right!' }]
+
 export function PictureQuizPuzzle({ puzzle, onCorrect }) {
   const { t } = useTranslation()
-  const { emoji, effect, options, correctOptionId } = puzzle.data
+  const { emoji, effect, options, correctOptionId, wrongReactions, correctReactions } = puzzle.data
   const [selectedId, setSelectedId] = useState(null)
   const [status, setStatus] = useState('idle') // idle | wrong | correct
   const [wrongCount, setWrongCount] = useState(0)
+  const [reaction, setReaction] = useState(null)
+
+  function pickReaction(pool) {
+    return pool[Math.floor(Math.random() * pool.length)]
+  }
 
   function handleSelect(optionId) {
     if (status === 'correct') return
     setSelectedId(optionId)
     if (optionId === correctOptionId) {
       setStatus('correct')
+      setReaction(pickReaction(correctReactions ?? DEFAULT_CORRECT_REACTIONS))
     } else {
       setStatus('wrong')
       setWrongCount((count) => count + 1)
-      setTimeout(() => setStatus('idle'), 600)
+      setReaction(pickReaction(wrongReactions ?? DEFAULT_WRONG_REACTIONS))
+      setTimeout(() => {
+        setStatus('idle')
+        setReaction(null)
+      }, 900)
     }
   }
 
@@ -108,6 +121,23 @@ export function PictureQuizPuzzle({ puzzle, onCorrect }) {
     <div className="w-full space-y-5">
       {/* 3D Frame Display */}
       <PictureFrame emoji={emoji} effect={effect} wrongCount={wrongCount} solved={status === 'correct'} />
+
+      {/* Reaction line */}
+      <AnimatePresence mode="wait">
+        {reaction ? (
+          <motion.p
+            key={t(reaction)}
+            initial={{ opacity: 0, y: -4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            className={`text-center font-display text-sm font-bold ${
+              status === 'correct' ? 'text-emerald-300' : 'text-amber-300'
+            }`}
+          >
+            {t(reaction)}
+          </motion.p>
+        ) : null}
+      </AnimatePresence>
 
       {/* 2x2 Choice Grid */}
       <div className="grid grid-cols-2 gap-3">
@@ -154,7 +184,7 @@ export function PictureQuizPuzzle({ puzzle, onCorrect }) {
               onClick={onCorrect}
               className="w-full inline-flex items-center justify-center gap-2 rounded-2xl border border-amber-300/60 bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 px-8 py-3.5 font-display text-base font-black text-ink-950 shadow-[0_8px_25px_rgba(245,158,11,0.5)]"
             >
-              <span>Tiếp Tục Chặng Đuôi</span>
+              <span>Câu Tiếp Theo</span>
               <Sparkles size={18} />
             </motion.button>
           </motion.div>

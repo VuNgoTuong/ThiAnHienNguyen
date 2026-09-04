@@ -136,7 +136,16 @@ const baseDictionary = [
   'động vật', 'động cơ', 'động lực', 'động lòng', 'động đất', 'động viên', 'động thái', 'động tĩnh', 'động não',
   'đời sống', 'đời tư', 'đời người', 'đời hoa', 'đời thường', 'đời sau',
 
-  // H / K / L / M / N / P / Q / R / S / T / V / X
+  // G / H / K / L / M / N / P / Q / R / S / T / V / X / Y
+  'gia đình', 'gia sản', 'gia phong', 'gia giáo', 'gia thế', 'gia cảnh', 'gia tăng', 'gia nhập', 'gia giảm',
+  'giá cả', 'giá trị', 'giá thành',
+  'giải trí', 'giải thích', 'giải thưởng', 'giải pháp', 'giải phóng', 'giải tỏa',
+  'giảm giá', 'giảm nhẹ', 'giảm thiểu',
+  'giao thông', 'giao tiếp', 'giao lưu', 'giao dịch', 'giao hưởng', 'giao tranh', 'giao hòa',
+  'giáo dục', 'giáo viên', 'giáo sư', 'giáo án', 'giáo trình', 'giáo lý', 'giáo phái',
+  'gián tiếp', 'gian khổ', 'gian nan', 'gian tráo', 'gian dối', 'gian lận', 'gian xảo', 'gián điệp',
+  'giúp đỡ', 'giữ gìn',
+
   'hạnh phúc', 'hạnh kiểm', 'hạnh ngộ', 'hạ tầng', 'hạ sát',
   'hệ thống', 'hệ sinh', 'hệ lụy', 'hệ tư',
   'họ hàng', 'họ tộc',
@@ -198,19 +207,10 @@ const baseDictionary = [
 
   'xã hội', 'xã giao', 'xã tắc',
   'xuất khẩu', 'xuất bản', 'xuất sắc', 'xuất thân', 'xuất hiện',
+
+  'ý nghĩa', 'ý chí', 'ý thức', 'ý kiến', 'ý định', 'ý niệm',
+  'yêu thương', 'yêu quý', 'yêu mến', 'yêu kiều', 'yêu đời', 'yêu nước',
 ]
 
-// Generate permutations across standard Vietnamese compound prefixes to reach 10,000+ words
-const prefixes = ['nghệ', 'kỹ', 'tư', 'cơ', 'kinh', 'văn', 'chính', 'ngôn', 'triết', 'khoa', 'thiên', 'địa', 'nhân', 'vật', 'hóa', 'sinh', 'địa', 'toán', 'pháp', 'luật', 'quốc', 'bảo', 'tâm', 'an', 'phúc', 'hạnh', 'tương', 'hy', 'ước', 'mơ', 'kỷ', 'rạng', 'chiến', 'vinh', 'rực', 'ngọt', 'dịu', 'nồng', 'say', 'đắm', 'ngất', 'mộng', 'thướt', 'duyen', 'dáng', 'hoa', 'bảo', 'trái', 'tim', 'nụ', 'thịnh', 'vượng', 'phát', 'tươi', 'thắm', 'vũ', 'bao', 'la', 'mênh', 'thăm', 'dồi', 'tràn', 'ấm', 'thái', 'lừng']
-const suffixes = ['thuật', 'sĩ', 'nhân', 'pháp', 'trí', 'lý', 'tường', 'bản', 'sử', 'văn', 'tế', 'hội', 'địa', 'chất', 'thể', 'học', 'tế', 'tài', 'luật', 'quyết', 'định', 'đồ', 'hành', 'trợ', 'lực', 'phúc', 'an', 'lai', 'vọng', 'hẹn', 'mơ', 'niệm', 'rỡ', 'thắng', 'quang', 'rỡ', 'ngào', 'dàng', 'nàn', 'mê', 'đuối', 'ngây', 'mị', 'tha', 'thắm', 'lệ', 'vật', 'tim', 'cười', 'vượng', 'đạt', 'thắm', 'trụ', 'la', 'mông', 'thẳm', 'dào', 'trề', 'áp', 'bình', 'lẫy']
+export const wordChainDictionary = Array.from(new Set(baseDictionary))
 
-const dynamicWords = []
-for (let p of prefixes) {
-  for (let s of suffixes) {
-    if (p !== s) {
-      dynamicWords.push(`${p} ${s}`)
-    }
-  }
-}
-
-export const wordChainDictionary = Array.from(new Set([...baseDictionary, ...dynamicWords]))

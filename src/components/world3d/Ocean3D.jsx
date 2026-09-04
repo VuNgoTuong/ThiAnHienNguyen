@@ -3,7 +3,7 @@ import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import { WORLD_WIDTH, WORLD_DEPTH } from '../../utils/world3dCoords.js'
 
-const SEGMENTS = 96
+const SEGMENTS = 128
 const PLANE_SCALE = 8
 
 export function Ocean3D() {
@@ -17,21 +17,28 @@ export function Ocean3D() {
   const meshRef = useRef(null)
 
   useFrame(({ clock }) => {
+    if (!meshRef.current) return
     const t = clock.getElapsedTime()
     const position = geometry.attributes.position
-    for (let i = 0; i < position.count; i++) {
+    const count = position.count
+
+    for (let i = 0; i < count; i++) {
       const x = basePositions[i * 3]
       const z = basePositions[i * 3 + 2]
+
+      // Organic multi-directional Gerstner/trochoidal wave simulation
+      const wave1 = Math.sin(x * 0.22 + t * 1.3) * 0.28
+      const wave2 = Math.cos(z * 0.26 + t * 1.1) * 0.24
+      const wave3 = Math.sin((x * 0.55 + z * 0.45) + t * 1.8) * 0.12
+      const chop = Math.sin(x * 1.4 - z * 1.2 + t * 2.5) * 0.05
+
+      // Distance falloff to keep horizon smooth
+      const distSq = x * x + z * z
+      const falloff = 1 / (1 + distSq * 0.00012)
       
-      // Multi-directional trochoidal sine waves for realistic, organic ocean swells
-      const wave1 = Math.sin(x * 0.28 + t * 1.1) * 0.26
-      const wave2 = Math.cos(z * 0.32 + t * 0.95) * 0.22
-      const wave3 = Math.sin((x * 0.7 + z * 0.6) + t * 1.6) * 0.1
-      const chop = Math.sin(x * 1.8 - z * 1.5 + t * 2.2) * 0.04
-      
-      const falloff = 1 / (1 + (x * x + z * z) * 0.00018)
       position.setY(i, (wave1 + wave2 + wave3 + chop) * falloff)
     }
+
     position.needsUpdate = true
     geometry.computeVertexNormals()
   })
@@ -39,14 +46,16 @@ export function Ocean3D() {
   return (
     <mesh ref={meshRef} geometry={geometry} receiveShadow position={[0, -0.15, 0]}>
       <meshStandardMaterial
-        color="#0a4666"
-        roughness={0.16}
-        metalness={0.28}
-        envMapIntensity={2.0}
-        emissive="#041d2e"
-        emissiveIntensity={0.2}
+        color="#0b556a"
+        roughness={0.12}
+        metalness={0.4}
+        envMapIntensity={2.5}
+        emissive="#042235"
+        emissiveIntensity={0.35}
+        flatShading={false}
       />
     </mesh>
   )
 }
+
 

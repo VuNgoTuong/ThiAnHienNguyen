@@ -1,4 +1,4 @@
-import { Suspense, useEffect, useRef, useState } from 'react'
+import { Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { PerspectiveCamera, Clouds, Cloud } from '@react-three/drei'
 import gsap from 'gsap'
@@ -12,6 +12,30 @@ import { SceneEffects } from './SceneEffects.jsx'
 import { useShipVoyage } from '../../hooks/useShipVoyage.js'
 
 const SUN_POSITION = [70, 42, -55]
+
+// drei's <Clouds> defaults to fetching its puff texture from a remote CDN
+// (rawcdn.githack.com) — a network hiccup or blocked host there throws
+// during render with nothing to catch it, which used to blank the whole
+// app. <Clouds texture={...}> is loaded through drei's useTexture, which
+// expects a URL string (it hands it to THREE.TextureLoader) — not a
+// ready-made THREE.Texture instance. A data: URL keeps it a string (so
+// useTexture's loader path works normally) while staying fully local, no
+// network request involved.
+function useCloudPuffTextureUrl() {
+  return useMemo(() => {
+    const canvas = document.createElement('canvas')
+    canvas.width = 128
+    canvas.height = 128
+    const ctx = canvas.getContext('2d')
+    const gradient = ctx.createRadialGradient(64, 64, 0, 64, 64, 64)
+    gradient.addColorStop(0, 'rgba(255,255,255,1)')
+    gradient.addColorStop(0.5, 'rgba(255,255,255,0.6)')
+    gradient.addColorStop(1, 'rgba(255,255,255,0)')
+    ctx.fillStyle = gradient
+    ctx.fillRect(0, 0, canvas.width, canvas.height)
+    return canvas.toDataURL()
+  }, [])
+}
 
 const REST = { x: 0, y: 3.2, z: 8, rotX: -0.09, fogNear: 25, fogFar: 160 }
 const START = { x: 0, y: 52, z: 12, rotX: -1.15, rotY: -0.18, fogNear: 35, fogFar: 180 }
@@ -72,6 +96,7 @@ function ArrivingShip({ start }) {
 export function TitleIntroScene({ onSettled }) {
   const [sunMesh, setSunMesh] = useState(null)
   const [diveStarted, setDiveStarted] = useState(false)
+  const cloudTextureUrl = useCloudPuffTextureUrl()
 
   return (
     <Canvas dpr={[1, 1.5]} gl={{ antialias: true }}>
@@ -94,7 +119,7 @@ export function TitleIntroScene({ onSettled }) {
         </mesh>
       </group>
 
-      <Clouds material={undefined} limit={40}>
+      <Clouds material={undefined} texture={cloudTextureUrl} limit={40}>
         <Cloud seed={1} position={[-18, 28, -40]} scale={2.8} opacity={0.75} speed={0.08} bounds={[10, 3, 6]} color="#fffcf5" />
         <Cloud seed={2} position={[16, 34, -55]} scale={3.4} opacity={0.65} speed={0.06} bounds={[12, 3, 6]} color="#fff8ea" />
         <Cloud seed={3} position={[0, 40, -70]} scale={2.5} opacity={0.6} speed={0.07} bounds={[9, 3, 5]} color="#fffcf5" />
