@@ -76,8 +76,13 @@ export function WorldScene3D({
 
   return (
     <Canvas
-      shadows={{ type: THREE.PCFSoftShadowMap }}
-      dpr={[1, 2]}
+      // This is the most-revisited screen in the game (players land here
+      // between every island), so it gets the same dpr cap and default
+      // shadow quality every other scene already uses — soft shadows +
+      // full native-resolution rendering here was meaningfully heavier
+      // than the rest of the app for no visible-at-this-art-style gain.
+      shadows
+      dpr={[1, 1.5]}
       gl={{ antialias: true, alpha: false, powerPreference: 'high-performance' }}
     >
       <PerspectiveCamera makeDefault fov={40} near={0.1} far={250} />
@@ -91,7 +96,7 @@ export function WorldScene3D({
         intensity={1.8}
         color="#ffe2b3"
         castShadow
-        shadow-mapSize={[2048, 2048]}
+        shadow-mapSize={[1024, 1024]}
         shadow-camera-left={-30}
         shadow-camera-right={30}
         shadow-camera-top={30}
