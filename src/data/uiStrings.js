@@ -1,10 +1,10 @@
 export const uiStrings = {
-  gameTitle: { vi: 'Hành Trình Khám Phá', en: 'Voyage of Discovery' },
+  gameTitle: { vi: 'Đi Ra Đảo Chơi Với Anh Đi Em', en: 'Come to the Island with Me' },
   gameSubtitle: {
-    vi: 'Một chuyến phiêu lưu nhỏ — để khám phá người mình yêu.',
-    en: 'A small adventure — to discover the person you love.',
+    vi: '',
+    en: '',
   },
-  newVoyage: { vi: 'Hành Trình Mới', en: 'New Voyage' },
+  newVoyage: { vi: 'Tôi mà sợ anh à?', en: 'I am not afraid of you!' },
   continueVoyage: { vi: 'Tiếp Tục Hành Trình', en: 'Continue Voyage' },
   resetProgress: { vi: 'Đặt lại tiến trình', en: 'Reset progress' },
 
@@ -13,16 +13,16 @@ export const uiStrings = {
   loadingFlavor3: { vi: 'Đang dựng cột buồm...', en: 'Raising the mast...' },
   loadingFlavor4: { vi: 'Đang vẽ lại hải đồ...', en: 'Charting the seas...' },
 
-  nameEntryTitle: { vi: 'Cho anh biết tên công chúa nào', en: "Tell me the princess's name" },
+  nameEntryTitle: { vi: 'nhập đúng tên mới dc vào kkk =)))', en: 'must enter exact name to enter kkk =)))' },
   nameEntrySubtitle: {
-    vi: 'Trước khi lên thuyền, nói cho anh nghe tên em với nha.',
-    en: "Before we set sail, tell me your name.",
+    vi: 'nhập tào lao k có vào dc đâu',
+    en: 'type wrong name cannot enter kkk',
   },
   nameEntryPlaceholder: { vi: 'Nhập tên em vào đây nha...', en: 'Type your name here...' },
   nameEntryButton: { vi: 'Tiếp Tục', en: 'Continue' },
   nameEntryRejected: {
-    vi: 'Hành trình này chỉ dành riêng cho công chúa An Hiền hoy. Người lạ ơi, hẹn gặp lại nha!',
-    en: "This little journey was made just for An Hiền — stranger, maybe another time!",
+    vi: 'xạo ke',
+    en: 'xạo ke',
   },
 
   verifyTitle: { vi: 'Xác Minh Danh Tính', en: 'Identity Check' },
@@ -31,8 +31,8 @@ export const uiStrings = {
 
   greetingTitle: { vi: 'Chào', en: 'Hi' }, // rendered as "{greetingTitle} {playerName}!"
   greetingBody: {
-    vi: 'Chào mừng công chúa tới Hành Trình Khám Phá. Có 5 hòn đảo siêu thú vị đang chờ phía trước rùi đó!',
-    en: 'Welcome to the Voyage of Discovery, princess. Five little islands are waiting up ahead!',
+    vi: 'Đi ra đảo chơi, đừng ở trong phòng nữa em à kkk',
+    en: 'Head out to the islands, stop staying in your room kkk',
   },
 
   secretGreetingTease: {

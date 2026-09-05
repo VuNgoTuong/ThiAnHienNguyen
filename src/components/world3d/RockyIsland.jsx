@@ -203,11 +203,31 @@ function RockBoulder({ position, scale = 1, rotation = 0 }) {
   )
 }
 
+function DynamicRockyShoreSurge() {
+  const foamRef = useRef(null)
+  useFrame(({ clock }) => {
+    if (!foamRef.current) return
+    const t = clock.getElapsedTime()
+    const scale = 1 + Math.sin(t * 2.3) * 0.05
+    foamRef.current.scale.set(scale, scale, 1)
+    foamRef.current.material.opacity = 0.5 + Math.sin(t * 2.3) * 0.25
+  })
+  return (
+    <mesh ref={foamRef} rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.01, 0]}>
+      <ringGeometry args={[1.5, 1.85, 48]} />
+      <meshBasicMaterial color="#ffffff" transparent opacity={0.6} side={THREE.DoubleSide} depthWrite={false} />
+    </mesh>
+  )
+}
+
 export function RockyIsland({ position = [0, 0, 0], scale = 1, rotation = [0, 0, 0] }) {
   const mountainGeo = useMountainGeometry()
 
   return (
     <group position={position} scale={scale} rotation={rotation}>
+      {/* Dynamic Sea Waves Crashing into Rocky Coast */}
+      <DynamicRockyShoreSurge />
+
       {/* Sandy Shore Base Skirt */}
       <mesh position={[0, -0.06, 0]} castShadow receiveShadow>
         <cylinderGeometry args={[1.35, 1.72, 0.28, 36]} />

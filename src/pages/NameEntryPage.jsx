@@ -45,8 +45,14 @@ export function NameEntryPage() {
           <h1 className="mb-3 font-display text-3xl font-bold tracking-wide text-ink-900 sm:text-4xl">
             {t(uiStrings.nameEntryTitle)}
           </h1>
-          <div className="mx-auto mb-5 h-0.5 w-16 bg-gold-600/40" />
-          <p className="mb-8 font-serif text-lg sm:text-xl text-ink-700 italic">{t(uiStrings.nameEntrySubtitle)}</p>
+          {t(uiStrings.nameEntrySubtitle) ? (
+            <>
+              <div className="mx-auto mb-5 h-0.5 w-16 bg-gold-600/40" />
+              <p className="mb-8 font-serif text-lg sm:text-xl text-ink-700 italic whitespace-pre-line">{t(uiStrings.nameEntrySubtitle)}</p>
+            </>
+          ) : (
+            <div className="mb-8" />
+          )}
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="relative">
               <input

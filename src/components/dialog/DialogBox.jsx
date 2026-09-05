@@ -33,7 +33,7 @@ export function DialogBox({ speaker, lines, onComplete }) {
       as="button"
       type="button"
       onClick={handleAdvance}
-      className="block w-full max-w-2xl cursor-pointer p-6 text-left"
+      className="mx-auto block w-full max-w-2xl cursor-pointer p-6 text-left"
     >
       {speaker ? (
         <p className="mb-3 font-display text-xs font-bold tracking-widest text-gold-700 uppercase">{t(speaker)}</p>

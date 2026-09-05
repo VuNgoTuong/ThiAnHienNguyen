@@ -39,10 +39,10 @@ export function FinalIslandPage() {
   return (
     <div className="relative flex h-full w-full items-center justify-center p-6">
       <Ocean />
-      <div className="relative z-10 w-full max-w-2xl">
+      <div className="relative z-10 flex w-full flex-col items-center mx-auto max-w-2xl">
         <AnimatePresence mode="wait">
           {step === 'arrival' ? (
-            <motion.div key="arrival" {...fadeStep}>
+            <motion.div key="arrival" {...fadeStep} className="flex w-full justify-center">
               <DialogBox
                 speaker={finalIsland.arrival.speaker}
                 lines={arrivalLines}

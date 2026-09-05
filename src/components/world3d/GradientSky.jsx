@@ -1,8 +1,6 @@
 import { useMemo } from 'react'
 import * as THREE from 'three'
 
-// Atmospheric sky shader with smooth Rayleigh scattering, horizon haze,
-// and warm sun halo gradient for a painterly, natural sky.
 const VERTEX_SHADER = `
   varying vec3 vWorldPosition;
   varying vec3 vSunVector;
@@ -29,7 +27,7 @@ const FRAGMENT_SHADER = `
     vec3 dir = normalize(vWorldPosition);
     float h = max(dir.y, 0.0);
     
-    // Vertical atmospheric color gradient
+    // Smooth vertical atmospheric color gradient (bright sunny tropical sky)
     vec3 skyBase = mix(horizonColor, topColor, pow(h, exponent));
     if (dir.y < 0.0) {
       skyBase = mix(horizonColor, bottomColor, pow(max(-dir.y, 0.0), 0.5));
@@ -37,20 +35,19 @@ const FRAGMENT_SHADER = `
 
     // Sun atmospheric halo
     float cosTheta = max(dot(dir, vSunVector), 0.0);
-    float sunGlow = pow(cosTheta, 32.0) * 0.45 + pow(cosTheta, 4.0) * 0.2;
+    float sunGlow = pow(cosTheta, 24.0) * 0.5 + pow(cosTheta, 3.5) * 0.25;
     vec3 finalColor = skyBase + sunColor * sunGlow;
 
-    // Convert from linear to sRGB for rendering
     gl_FragColor = vec4(pow(finalColor, vec3(1.0 / 2.2)), 1.0);
   }
 `
 
 export function GradientSky({
-  topColor = '#124373',
-  horizonColor = '#fde5b6',
-  bottomColor = '#0c2d4a',
-  sunColor = '#ffdfa9',
-  exponent = 0.55,
+  topColor = '#0284c7',
+  horizonColor = '#e0f2fe',
+  bottomColor = '#0369a1',
+  sunColor = '#fff7ed',
+  exponent = 0.45,
   radius = 160,
   sunPosition = [70, 42, -55],
 }) {
@@ -81,4 +78,3 @@ export function GradientSky({
     </mesh>
   )
 }
-

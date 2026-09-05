@@ -22,10 +22,10 @@ export function EndingPage() {
   return (
     <div className="relative flex h-full w-full items-center justify-center p-6">
       <Ocean />
-      <div className="relative z-10 w-full max-w-2xl">
+      <div className="relative z-10 flex w-full flex-col items-center mx-auto max-w-2xl">
         <AnimatePresence mode="wait">
           {step === 'dialog' ? (
-            <motion.div key="ending-dialog" {...fadeStep}>
+            <motion.div key="ending-dialog" {...fadeStep} className="flex w-full justify-center">
               <DialogBox
                 speaker={finalIsland.ending.speaker}
                 lines={finalIsland.ending.lines}

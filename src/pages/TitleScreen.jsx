@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Compass, Play, RotateCcw } from 'lucide-react'
+import { Compass, Play } from 'lucide-react'
 import { useGame, useTranslation } from '../hooks/useGame.js'
 import { Button } from '../components/ui/Button.jsx'
 import { LanguageToggle } from '../components/ui/LanguageToggle.jsx'
@@ -93,7 +93,7 @@ function LoadingOverlay({ progress }) {
 }
 
 export function TitleScreen() {
-  const { startNewGame, loadSave, resetGame } = useGame()
+  const { startNewGame, loadSave } = useGame()
   const { t } = useTranslation()
   const [saveExists] = useState(() => hasSave())
   const [stage, setStage] = useState('loading') // 'loading' | 'intro' | 'ready'
@@ -134,11 +134,6 @@ export function TitleScreen() {
   function handleContinue() {
     const saved = loadGame()
     if (saved) loadSave(saved)
-  }
-
-  function handleReset() {
-    clearGame()
-    resetGame()
   }
 
   return (
@@ -203,13 +198,22 @@ export function TitleScreen() {
 
           {/* Title & Subtitle */}
           <motion.div variants={STAGGER_ITEM} className="flex flex-col items-center gap-3">
-            <h1 className="bg-gradient-to-r from-parchment-100 via-gold-300 to-parchment-100 bg-clip-text font-display text-3xl font-bold tracking-wider text-transparent drop-shadow-[0_4px_16px_rgba(0,0,0,0.9)] sm:text-4xl">
-              {t(uiStrings.gameTitle)}
+            <h1 className="text-center font-display text-3xl font-bold tracking-wider sm:text-4xl leading-snug">
+              <span className="bg-gradient-to-r from-parchment-100 via-gold-300 to-parchment-100 bg-clip-text text-transparent drop-shadow-[0_4px_16px_rgba(0,0,0,0.9)]">
+                {t(uiStrings.gameTitle)}
+              </span>
+              <span className="ml-2 inline-block align-baseline text-pink-400 drop-shadow-[0_0_15px_rgba(244,114,182,0.95)] animate-pulse select-none">
+                💕
+              </span>
             </h1>
-            <div className="h-0.5 w-16 bg-gradient-to-r from-transparent via-gold-400/60 to-transparent" />
-            <p className="max-w-md font-serif text-base text-parchment-200/90 italic leading-relaxed sm:text-lg">
-              {t(uiStrings.gameSubtitle)}
-            </p>
+            {t(uiStrings.gameSubtitle) ? (
+              <>
+                <div className="h-0.5 w-16 bg-gradient-to-r from-transparent via-gold-400/60 to-transparent" />
+                <p className="max-w-md font-serif text-base text-parchment-200/90 italic leading-relaxed sm:text-lg">
+                  {t(uiStrings.gameSubtitle)}
+                </p>
+              </>
+            ) : null}
           </motion.div>
 
           {/* Action Buttons */}
@@ -219,18 +223,9 @@ export function TitleScreen() {
             </Button>
 
             {saveExists ? (
-              <>
-                <Button icon={Compass} variant="ghost" onClick={handleContinue} className="w-full sm:w-auto min-w-[220px]">
-                  {t(uiStrings.continueVoyage)}
-                </Button>
-                <button
-                  type="button"
-                  onClick={handleReset}
-                  className="mt-2 flex items-center gap-1.5 font-body text-xs tracking-wider text-parchment-200/50 uppercase transition-all duration-200 hover:text-gold-300 hover:drop-shadow-[0_0_8px_rgba(232,195,104,0.4)]"
-                >
-                  <RotateCcw size={13} /> {t(uiStrings.resetProgress)}
-                </button>
-              </>
+              <Button icon={Compass} variant="ghost" onClick={handleContinue} className="w-full sm:w-auto min-w-[220px]">
+                {t(uiStrings.continueVoyage)}
+              </Button>
             ) : null}
           </motion.div>
         </motion.div>
