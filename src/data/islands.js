@@ -11,7 +11,7 @@ const GUIDE = { vi: 'Người Dẫn Đường', en: 'The Guide' }
 export const islands = [
   {
     id: 'level-1-outset',
-    name: { vi: 'Đảo Làm Quen', en: 'Isle of Getting Acquainted' },
+    name: { vi: 'Làm Quen Sương Sương', en: 'Getting Acquainted' },
     level: 1,
     order: 1,
     position: { x: 14, y: 78 },
@@ -31,11 +31,11 @@ export const islands = [
       ],
     },
     discovery: {
-      title: { vi: 'Chúng Ta Bắt Đầu Như Thế Nào?', en: 'How Did We Begin?' },
+      title: { vi: 'Mở Màn Nhẹ Nhàng', en: 'A Gentle Warm-up' },
       story: [
         {
-          vi: 'Nối đúng 10 từ liên tiếp cùng anh nha. Không cần nghĩ nhiều đâu — cứ để chữ dẫn đường.',
-          en: "Chain 10 words in a row with me. Don't overthink it — just let the words lead the way.",
+          vi: 'Nối từ 10 lần liên tiếp là phá đảo này rùi nè. Dễ ợt à kkk!',
+          en: 'Chain 10 words in a row to clear this island. Easy peasy kkk!',
         },
       ],
     },
@@ -73,7 +73,7 @@ export const islands = [
   },
   {
     id: 'level-2-mystery',
-    name: { vi: 'Những Điều Nhỏ', en: 'Little Things' },
+    name: { vi: 'Gu Của Em', en: 'Your Tastes' },
     level: 2,
     order: 2,
     position: { x: 38, y: 45 },
@@ -135,7 +135,7 @@ export const islands = [
   },
   {
     id: 'level-3-challenge',
-    name: { vi: 'Đảo Thử Thách', en: 'Isle of Challenge' },
+    name: { vi: 'Chuyện Hai Đứa', en: 'Our Story' },
     level: 3,
     order: 3,
     position: { x: 65, y: 62 },
@@ -178,7 +178,7 @@ export const islands = [
   },
   {
     id: 'level-4-wit',
-    name: { vi: 'Đảo Những Điều Nhỏ', en: 'Isle of Little Things' },
+    name: { vi: 'Bắt Bài Tính Cách', en: 'Personality Guesses' },
     level: 4,
     order: 4,
     position: { x: 85, y: 32 },

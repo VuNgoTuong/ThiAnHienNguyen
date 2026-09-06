@@ -119,17 +119,19 @@ export function IslandPage() {
           ) : null}
 
           {step === 'discovery' ? (
-            <motion.div key="discovery" {...fadeStep} className="w-full">
-              <ParchmentPanel className="p-6">
-                <h2 className="mb-3 font-display text-xl text-ink-900">{t(island.discovery.title)}</h2>
+            <motion.div key="discovery" {...fadeStep} className="flex w-full justify-center">
+              <ParchmentPanel className="w-full max-w-xl p-8 text-center sm:p-10">
+                <h2 className="mb-4 font-display text-2xl font-bold text-ink-900">{t(island.discovery.title)}</h2>
                 {island.discovery.story.map((paragraph, index) => (
-                  <p key={index} className="mb-2 leading-relaxed text-ink-900/90">
+                  <p key={index} className="mb-3 font-serif text-lg leading-relaxed text-ink-900/90">
                     {t(paragraph)}
                   </p>
                 ))}
-                <Button className="mt-4" onClick={() => setStep('lesson')}>
-                  {t(uiStrings.continueLabel)}
-                </Button>
+                <div className="mt-6 flex justify-center">
+                  <Button onClick={() => setStep('lesson')}>
+                    {t(uiStrings.continueLabel)}
+                  </Button>
+                </div>
               </ParchmentPanel>
             </motion.div>
           ) : null}
@@ -155,48 +157,52 @@ export function IslandPage() {
           ) : null}
 
           {step === 'complete' ? (
-            <motion.div key="complete" {...fadeStep} className="w-full">
-              <ParchmentPanel className="p-6 text-center">
+            <motion.div key="complete" {...fadeStep} className="flex w-full justify-center">
+              <ParchmentPanel className="w-full max-w-xl p-8 text-center sm:p-10">
                 {island.outro?.lines ? (
                   island.outro.lines.map((line, index) => (
-                    <p key={index} className="mb-2 leading-relaxed text-ink-900/90">
+                    <p key={index} className="mb-3 font-serif text-lg leading-relaxed text-ink-900/90 sm:text-xl">
                       {t(line)}
                     </p>
                   ))
                 ) : (
-                  <p className="mb-4 text-ink-900">
+                  <p className="mb-4 font-serif text-lg leading-relaxed text-ink-900">
                     {t(island.name)} {t(uiStrings.islandCompleteMessage)}
                   </p>
                 )}
-                {island.id === 'level-2-mystery' ? (
-                  <Button icon={Sparkles} onClick={() => arriveAtIsland('level-3-challenge')} className="mb-3">
-                    {t(uiStrings.goToIsland3)}
+                <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
+                  {island.id === 'level-2-mystery' ? (
+                    <Button icon={Sparkles} onClick={() => arriveAtIsland('level-3-challenge')}>
+                      {t(uiStrings.goToIsland3)}
+                    </Button>
+                  ) : null}
+                  {island.id === 'level-3-challenge' ? (
+                    <Button icon={Sparkles} onClick={() => arriveAtIsland('level-4-wit')}>
+                      {t(uiStrings.goToIsland4)}
+                    </Button>
+                  ) : null}
+                  <Button
+                    icon={Anchor}
+                    variant={island.id === 'level-2-mystery' || island.id === 'level-3-challenge' ? 'ghost' : 'primary'}
+                    onClick={handleReturnToMap}
+                  >
+                    {t(uiStrings.returnToShip)}
                   </Button>
-                ) : null}
-                {island.id === 'level-3-challenge' ? (
-                  <Button icon={Sparkles} onClick={() => arriveAtIsland('level-4-wit')} className="mb-3">
-                    {t(uiStrings.goToIsland4)}
-                  </Button>
-                ) : null}
-                <Button
-                  icon={Anchor}
-                  variant={island.id === 'level-2-mystery' || island.id === 'level-3-challenge' ? 'ghost' : 'primary'}
-                  onClick={handleReturnToMap}
-                >
-                  {t(uiStrings.returnToShip)}
-                </Button>
+                </div>
               </ParchmentPanel>
             </motion.div>
           ) : null}
 
           {step === 'revisit' ? (
-            <motion.div key="revisit" {...fadeStep} className="w-full">
-              <ParchmentPanel className="p-6 text-center">
-                <h2 className="mb-2 font-display text-lg text-ink-900">{t(island.discovery.title)}</h2>
-                <p className="mb-4 text-sm text-ink-700">{t(uiStrings.islandRevisitMessage)}</p>
-                <Button icon={Anchor} onClick={handleReturnToMap}>
-                  {t(uiStrings.returnToShip)}
-                </Button>
+            <motion.div key="revisit" {...fadeStep} className="flex w-full justify-center">
+              <ParchmentPanel className="w-full max-w-xl p-8 text-center sm:p-10">
+                <h2 className="mb-3 font-display text-xl font-bold text-ink-900">{t(island.discovery.title)}</h2>
+                <p className="mb-6 font-serif text-base text-ink-700">{t(uiStrings.islandRevisitMessage)}</p>
+                <div className="flex justify-center">
+                  <Button icon={Anchor} onClick={handleReturnToMap}>
+                    {t(uiStrings.returnToShip)}
+                  </Button>
+                </div>
               </ParchmentPanel>
             </motion.div>
           ) : null}
