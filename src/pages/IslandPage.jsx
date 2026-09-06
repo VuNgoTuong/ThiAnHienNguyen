@@ -70,14 +70,10 @@ export function IslandPage() {
       ? island.arrival.secretLines
       : island.arrival.lines
 
-  if (step === 'lesson' && currentLesson.type === 'hidden-cove') {
+  if (step === 'lesson' && currentLesson.type === 'little-things') {
     return (
       <div className="relative h-full w-full">
-        <HiddenCoveScene
-          lesson={currentLesson}
-          onSolved={handleLessonSolved}
-          secretModeUnlocked={state.secretModeUnlocked}
-        />
+        <HiddenCoveScene lesson={currentLesson} onSolved={handleLessonSolved} />
         <FragmentRevealModal fragment={revealedFragment} onContinue={handleFragmentContinue} />
       </div>
     )

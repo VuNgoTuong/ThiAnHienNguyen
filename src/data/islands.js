@@ -4,6 +4,7 @@
 // — so the engine never has to special-case "islands with many lessons".
 
 import { quizQuestions } from './quizAssets.js'
+import { island2Content } from './island2Content.js'
 
 const GUIDE = { vi: 'Người Dẫn Đường', en: 'The Guide' }
 
@@ -72,7 +73,7 @@ export const islands = [
   },
   {
     id: 'level-2-mystery',
-    name: { vi: 'Vịnh Ẩn Giấu', en: 'The Hidden Cove' },
+    name: { vi: 'Những Điều Nhỏ', en: 'Little Things' },
     level: 2,
     order: 2,
     position: { x: 38, y: 45 },
@@ -80,127 +81,55 @@ export const islands = [
       speaker: GUIDE,
       lines: [
         {
-          vi: 'Cập bến Vịnh Ẩn Giấu rồi. Ở đây, em sẽ thử đoán xem anh thật sự thích gì nha.',
-          en: "We've landed at the Hidden Cove. Here, you'll try to guess what I actually like.",
+          vi: 'Đảo thứ hai rồi. Ở đây không có gì phải tìm cả.',
+          en: "Second island. There's nothing to search for here.",
         },
       ],
       secretLines: [
         {
-          vi: 'Xem em hiểu anh cỡ nào nha công chúa An Hiền kkk!',
-          en: "Let's see how well you know me, princess An Hiền kkk!",
+          vi: 'Cứ thong thả, An Hiền — không có gì phải vội đâu.',
+          en: 'Take it slow, An Hiền — no rush at all.',
         },
       ],
     },
     discovery: {
-      title: { vi: 'Em Hiểu Anh Không?', en: 'Do You Understand Me?' },
+      title: { vi: 'Những Điều Nhỏ', en: 'Little Things' },
       story: [
         {
-          vi: 'Vài câu hỏi nhỏ thôi, không có gì căng thẳng đâu. Cứ chọn theo cảm giác của em.',
-          en: "A few small questions, nothing stressful. Just go with your gut.",
+          vi: 'Không có câu hỏi khó, không có điểm số.',
+          en: 'No hard questions here. No score.',
+        },
+        {
+          vi: 'Chỉ là những lựa chọn nhỏ, để hiểu thêm một chút.',
+          en: 'Just small choices, to get to know a little more.',
         },
       ],
     },
     lessons: [
       {
         id: 'level2-hidden-cove',
-        type: 'hidden-cove',
+        type: 'little-things',
         prompt: {
-          vi: 'Chọn điều em nghĩ đúng nhất về anh nha — sai cũng không sao đâu!',
-          en: "Pick what you think is truest about me — it's okay to get it wrong!",
+          vi: 'Chọn theo cảm giác của em thôi.',
+          en: 'Just go with your gut.',
         },
-        data: {
-          wrongReactions: [
-            { vi: 'Hmm... anh sẽ cho em thêm một cơ hội 😏', en: "Hmm... I'll give you one more shot 😏" },
-            { vi: 'Chưa đúng lắm đâu nha.', en: "Not quite yet." },
-            { vi: 'Gần rồi, thử lại xem.', en: "Close — try again." },
-          ],
-          correctReactions: [
-            { vi: 'Đúng rồi. Em hiểu anh ghê.', en: "Right. You really do know me." },
-            { vi: 'Chuẩn luôn đó.', en: "Exactly that." },
-            { vi: 'Ừ, đúng vậy đó em.', en: "Yep, that's it." },
-          ],
-          questions: [
-            {
-              id: 'level2-quiz-1',
-              prompt: { vi: 'Khi anh mệt, anh thường muốn...', en: 'When I\'m tired, I usually want...' },
-              secretPrompt: {
-                vi: 'Đoán xem khi mệt anh thích gì nào công chúa.',
-                en: "Guess what I want when I'm tired.",
-              },
-              emoji: '😴',
-              effect: 'blur',
-              options: [
-                { id: 'coffee', text: { vi: 'Một ly cà phê ☕', en: 'A cup of coffee ☕' } },
-                { id: 'game', text: { vi: 'Chơi game 🎮', en: 'Play a game 🎮' } },
-                { id: 'rest', text: { vi: 'Nằm im một chút 😴', en: 'Just lie down for a bit 😴' } },
-                { id: 'hug', text: { vi: 'Được em ôm 🤗', en: 'Get a hug from you 🤗' } },
-              ],
-              correctOptionId: 'rest',
-            },
-            {
-              id: 'level2-quiz-2',
-              prompt: { vi: 'Nếu được chọn một buổi hẹn, anh sẽ chọn...', en: 'If I got to pick a date, I\'d choose...' },
-              secretPrompt: {
-                vi: 'Đoán xem anh thích đi đâu nha công chúa.',
-                en: "Guess where I'd want to go.",
-              },
-              emoji: '🌊',
-              effect: 'silhouette',
-              options: [
-                { id: 'sea', text: { vi: 'Đi biển 🌊', en: 'The beach 🌊' } },
-                { id: 'food', text: { vi: 'Đi ăn 🍜', en: 'Get food 🍜' } },
-                { id: 'movie', text: { vi: 'Xem phim 🎬', en: 'Watch a movie 🎬' } },
-                { id: 'night', text: { vi: 'Đi dạo buổi tối 🌃', en: 'A night walk 🌃' } },
-              ],
-              correctOptionId: 'sea',
-            },
-            {
-              id: 'level2-quiz-3',
-              prompt: { vi: 'Điều gì dễ khiến anh vui nhất?', en: 'What makes me happiest, easiest?' },
-              secretPrompt: {
-                vi: 'Đoán xem điều gì làm anh vui nha em.',
-                en: 'Guess what makes me happy.',
-              },
-              emoji: '😂',
-              effect: 'zoom',
-              options: [
-                { id: 'message', text: { vi: 'Một tin nhắn bất ngờ 💬', en: 'A surprise text 💬' } },
-                { id: 'meal', text: { vi: 'Được ăn món ngon 🍔', en: 'A good meal 🍔' } },
-                { id: 'laugh', text: { vi: 'Em chọc anh cười 😂', en: 'You making me laugh 😂' } },
-                { id: 'hug2', text: { vi: 'Một cái ôm 🤍', en: 'A hug 🤍' } },
-              ],
-              correctOptionId: 'laugh',
-            },
-            {
-              id: 'level2-quiz-4',
-              prompt: {
-                vi: 'Nếu có một ngày rảnh trọn vẹn, anh sẽ...',
-                en: 'If I had a whole free day, I\'d...',
-              },
-              secretPrompt: {
-                vi: 'Chớp mắt là mất hình đó nha công chúa kkk!',
-                en: "Blink and it's gone, kkk!",
-              },
-              emoji: '💛',
-              effect: 'flash',
-              options: [
-                { id: 'sleep', text: { vi: 'Ngủ nướng cả ngày 😪', en: 'Sleep in all day 😪' } },
-                { id: 'outdoor', text: { vi: 'Ra ngoài đổi gió 🚶', en: 'Get out for some air 🚶' } },
-                { id: 'withYou', text: { vi: 'Ở nhà với em 💛', en: 'Stay home with you 💛' } },
-                { id: 'explore', text: { vi: 'Nghe nhạc một mình 🎧', en: 'Listen to music alone 🎧' } },
-              ],
-              correctOptionId: 'withYou',
-            },
-          ],
-        },
+        data: island2Content,
       },
     ],
+    outro: {
+      lines: [
+        {
+          vi: 'Những điều nhỏ, để dành cho lần sau kể tiếp.',
+          en: 'Little things — saved for another time.',
+        },
+      ],
+    },
     fragment: {
       id: 'fragment-level2',
       name: { vi: 'Mảnh La Bàn II', en: 'Compass Fragment II' },
       loreText: {
-        vi: 'Mảnh thứ hai — cho những lần em đoán trúng anh.',
-        en: 'The second fragment — for the times you guessed me right.',
+        vi: 'Mảnh thứ hai — cho những điều nhỏ vừa được biết thêm.',
+        en: 'The second fragment — for the little things just discovered.',
       },
     },
   },

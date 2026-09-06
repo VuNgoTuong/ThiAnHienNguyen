@@ -73,22 +73,6 @@ export const uiStrings = {
     en: '{count}/{total} pieces. {remaining} more to find.',
   },
 
-  // Hidden Cove (Island 2) exploration scene
-  hiddenCoveEyebrow: { vi: 'Đảo II', en: 'Island II' },
-  hiddenCoveSubtitle: {
-    vi: 'Có những điều dễ tìm thấy hơn khi ta không cố tìm.',
-    en: "Some things are easier to find when you're not looking for them.",
-  },
-  hiddenCoveJournalTitle: { vi: 'Nhật Ký', en: 'Journal' },
-  hiddenCoveCluesFound: { vi: 'Dấu vết đã tìm thấy', en: 'Traces found' },
-  hiddenCoveInvestigate: { vi: 'Khám phá', en: 'Investigate' },
-  hiddenCoveOpenChest: { vi: 'Mở rương', en: 'Open the chest' },
-  hiddenCoveExitHint: { vi: 'Quay lại thuyền', en: 'Return to the ship' },
-  hiddenCoveExploreHint: {
-    vi: 'Chạm vào những gì công chúa thấy quanh vịnh để khám phá nha.',
-    en: 'Click on the things you see around the cove to explore.',
-  },
-
   answerPlaceholder: { vi: 'Nhập câu trả lời...', en: 'Type your answer...' },
   answerButton: { vi: 'Trả Lời', en: 'Answer' },
   openAnswerPlaceholder: { vi: 'Nghĩ gì thì gõ đó...', en: 'Whatever comes to mind...' },
@@ -135,6 +119,9 @@ export const uiStrings = {
     en: "The next part... we'll write together.",
   },
   playAgain: { vi: 'Xem Lại Từ Đầu', en: 'Watch It Again' },
+
+  // Island 2 — "Những Điều Nhỏ" chapter caption ("{partLabel} 1/4")
+  littleThingsPart: { vi: 'Phần', en: 'Part' },
 
   sailingTo: { vi: 'Đang chèo thuyền tới', en: 'Sailing to' },
   skip: { vi: 'Bỏ Qua', en: 'Skip' },
