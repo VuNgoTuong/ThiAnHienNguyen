@@ -18,8 +18,7 @@ const wordsByStartSyllable = wordChainDictionary.reduce((index, rawWord) => {
   return index
 }, {})
 
-// `requiredStartSyllable` of null/undefined means any dictionary word is
-// accepted (used for the "AI is stuck, start fresh" recovery move).
+// Validation: must be a valid 2-syllable Vietnamese compound word present in dictionary
 export function validateNextWord({ input, requiredStartSyllable, usedWords }) {
   const word = normalize(input)
   const syllables = word.split(' ')
@@ -36,6 +35,7 @@ export function validateNextWord({ input, requiredStartSyllable, usedWords }) {
   if (!wordSet.has(word)) {
     return { valid: false, reason: 'unknown' }
   }
+
   return { valid: true, word }
 }
 
@@ -45,17 +45,12 @@ function countContinuations(word, usedWords) {
   return candidates.filter((candidate) => !usedWords.has(candidate)).length
 }
 
-// Used to proactively detect a dead syllable (no unused word starts with
-// it) so the UI can switch to a free move *before* the player wastes
-// guesses on something that was never going to work.
 export function hasAnyCandidate({ requiredStartSyllable, usedWords }) {
   if (!requiredStartSyllable) return true
-  return (wordsByStartSyllable[requiredStartSyllable] ?? []).some((word) => !usedWords.has(word))
+  const candidates = wordsByStartSyllable[requiredStartSyllable] ?? []
+  return candidates.some((word) => !usedWords.has(word))
 }
 
-// "Smart" heuristic: among valid unused words, prefer the one that leaves
-// the player the FEWEST (but still nonzero, when possible) further options —
-// applies real pressure without ever intentionally choosing a dead end.
 export function pickAiWord({ requiredStartSyllable, usedWords }) {
   const candidates = (wordsByStartSyllable[requiredStartSyllable] ?? []).filter((word) => !usedWords.has(word))
   if (candidates.length === 0) return null
@@ -65,5 +60,15 @@ export function pickAiWord({ requiredStartSyllable, usedWords }) {
     .sort((a, b) => a.followups - b.followups)
 
   const withFollowups = ranked.filter((entry) => entry.followups > 0)
-  return (withFollowups[0] ?? ranked[0]).word
+  return (withFollowups[Math.floor(Math.random() * Math.min(3, withFollowups.length))] ?? ranked[0]).word
 }
+
+const startableWords = wordChainDictionary
+  .map((word) => normalize(word))
+  .filter((word) => hasAnyCandidate({ requiredStartSyllable: getSyllables(word)[1], usedWords: new Set([word]) }))
+
+export function pickRandomStartWord() {
+  const pool = startableWords.length > 0 ? startableWords : wordChainDictionary.map((word) => normalize(word))
+  return pool[Math.floor(Math.random() * pool.length)]
+}
+

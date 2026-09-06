@@ -1,9 +1,6 @@
 import { useCallback, useRef, useState } from 'react'
 import gsap from 'gsap'
 
-// Animates the ship's map position from one island to another with a GSAP
-// tween (rather than Framer Motion) so the voyage can use an eased timeline
-// independent of React re-renders driving it frame-by-frame.
 export function useShipVoyage() {
   const [position, setPosition] = useState(null)
   const [bearing, setBearing] = useState(0)

@@ -1,5 +1,5 @@
-// The Final Island (Level 5) unlocks once every Compass Fragment has been
-// collected.
+// Đảo cuối cùng (Level 5) mở khi người chơi thu thập đủ tất cả Mảnh La Bàn.
+// Không có câu đố ở đây — chỉ là một khoảng lặng để nhìn lại cả hành trình.
 
 const GUIDE = { vi: 'Người Dẫn Đường', en: 'The Guide' }
 
@@ -8,63 +8,67 @@ export const finalIsland = {
   name: { vi: 'Chân Trời Cuối Cùng', en: 'The Final Horizon' },
   level: 5,
   position: { x: 50, y: 12 },
+
   arrival: {
     speaker: GUIDE,
     lines: [
+      { vi: 'Bốn hòn đảo rồi đó em.', en: 'Four islands down.' },
       {
-        vi: 'Bạn đã vượt qua cả 4 hòn đảo. Chỉ còn một thử thách cuối cùng.',
-        en: "You've conquered all 4 islands. Just one final trial remains.",
+        vi: 'Giờ mình dừng lại một chút, nhìn lại cả chặng đường nha.',
+        en: "Now let's stop for a moment and look back at the whole way here.",
       },
-      { vi: 'Hãy sắp xếp lại hành trình của chính bạn.', en: 'Put your own journey back in order.' },
     ],
+
     secretLines: [
       {
-        vi: 'Đi được đến đây rồi cơ à, Hiền? Thật sự tôi hơi bất ngờ đấy — theo kiểu bất ngờ tốt thôi nhé.',
-        en: "Made it all the way here, Hiền? Honestly a bit surprised — the good kind of surprised, I promise.",
+        vi: 'Đi tới tận đây rồi à, An Hiền? Ở lại thêm một chút với anh nha.',
+        en: 'Made it all the way here, An Hiền? Stay with me a little longer.',
       },
     ],
   },
+
   discovery: {
-    title: { vi: 'Hành Trình Của Bạn', en: 'Your Journey' },
+    title: { vi: 'Hành Trình Của Chúng Ta', en: 'Our Journey' },
     story: [
-      {
-        vi: 'Từng mảnh la bàn bạn thu thập được giờ đây đã hội tụ. Chỉ cần sắp xếp đúng thứ tự để hoàn tất.',
-        en: 'Every compass fragment you collected has now come together. Just put them in the right order to finish.',
-      },
+      { vi: 'Không có câu đố nào ở đây cả.', en: "There's no puzzle here." },
+      { vi: 'Chỉ là những gì em đã cho anh thấy trên đường đi thôi.', en: "Just what you've shown me along the way." },
     ],
   },
-  lessons: [
-    {
-      id: 'level5-sequence',
-      type: 'sequence',
-      prompt: { vi: 'Sắp xếp lại đúng thứ tự các hòn đảo bạn đã đi qua:', en: "Arrange the islands you've visited in the right order:" },
-      secretPrompt: {
-        vi: 'Sắp xếp lại đúng thứ tự các hòn đảo — nếu Hiền làm sai, tôi sẽ không để yên đâu đấy nhé:',
-        en: "Arrange the islands in the right order — get it wrong, Hiền, and I will never let you hear the end of it:",
-      },
-      data: {
-        items: [
-          { id: 's1', label: { vi: 'Đảo Khởi Hành', en: 'Isle of Beginnings' } },
-          { id: 's2', label: { vi: 'Đảo Bí Ẩn', en: 'Isle of Mystery' } },
-          { id: 's3', label: { vi: 'Đảo Thử Thách', en: 'Isle of Challenge' } },
-          { id: 's4', label: { vi: 'Đảo Trí Tuệ', en: 'Isle of Wit' } },
-        ],
-        correctOrder: ['s1', 's2', 's3', 's4'],
-      },
+
+  // The recap step (see FinalIslandPage) plays these back in order: an
+  // opening line, then one sentence per Island 4 round the player actually
+  // answered (built from island4Predictions.js's ROUND_DEFS[].recap), a
+  // fallback for when there's no Island 4 data to draw from, and a closing
+  // line about Island 3's memory quiz.
+  recap: {
+    intro: { vi: 'Anh nhớ nè...', en: 'I remember...' },
+    fallbackLine: {
+      vi: 'Em đã đi qua từng đảo một, không bỏ lại điều gì.',
+      en: 'You went through every island, without skipping a thing.',
     },
-  ],
+    closingLine: {
+      vi: 'Và em vẫn nhớ những chuyện nhỏ của chúng ta.',
+      en: 'And you still remember the little things about us.',
+    },
+  },
+
   ending: {
     speaker: GUIDE,
     lines: [
-      { vi: 'Chúc mừng bạn đã hoàn thành hành trình!', en: "Congratulations — you've completed the journey!" },
       {
-        vi: 'Bạn đã vượt qua mọi thử thách bằng chính sự kiên trì và thông minh của mình.',
-        en: 'You conquered every trial with your own persistence and wit.',
+        vi: 'Có lẽ đây không phải là chuyến đi để tìm một nơi nào đó.',
+        en: 'Maybe this was never a journey to find some place.',
       },
+      { vi: 'Mà là chuyến đi để nhận ra...', en: 'But a journey to realize...' },
       {
-        vi: 'Chiếc La Bàn Khám Phá giờ đã trọn vẹn. Hẹn gặp lại ở hành trình tiếp theo!',
-        en: 'The Compass of Discovery is whole once more. See you on the next voyage!',
+        vi: 'người mình muốn đi cùng quan trọng hơn nơi mình sẽ đến.',
+        en: "that who you want beside you matters more than where you're going.",
       },
     ],
+    heartLine: {
+      vi: '❤️ Và anh vẫn muốn tiếp tục chuyến đi này cùng em.',
+      en: '❤️ And I still want to keep going on this journey with you.',
+    },
+    continueButton: { vi: 'TIẾP TỤC HÀNH TRÌNH', en: 'CONTINUE THE JOURNEY' },
   },
 }

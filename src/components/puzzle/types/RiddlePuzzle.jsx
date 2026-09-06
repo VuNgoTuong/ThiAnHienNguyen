@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import { Lightbulb, SkipForward } from 'lucide-react'
 import { Button } from '../../ui/Button.jsx'
@@ -23,6 +23,37 @@ export function RiddlePuzzle({ puzzle, onCorrect }) {
   const [shake, setShake] = useState(0)
   const hintsRevealed = Math.min(attempts, puzzle.data.hints.length)
 
+  // 10s per attempt by default. Running out of time does NOT pass the
+  // riddle through — it counts as a failed attempt (same as a wrong
+  // guess: reveals a hint, shakes the input) and the clock just restarts.
+  // Only an actually-correct answer, or the explicit skip link, finishes
+  // this lesson.
+  const timeLimitMs = puzzle.data.timeLimitMs ?? 10000
+  const [timeLeft, setTimeLeft] = useState(timeLimitMs)
+  const intervalRef = useRef(null)
+
+  useEffect(() => {
+    let startedAt = Date.now()
+    intervalRef.current = setInterval(() => {
+      const remaining = timeLimitMs - (Date.now() - startedAt)
+      if (remaining <= 0) {
+        setAttempts((count) => count + 1)
+        setShake((n) => n + 1)
+        startedAt = Date.now()
+        setTimeLeft(timeLimitMs)
+      } else {
+        setTimeLeft(remaining)
+      }
+    }, 100)
+    return () => clearInterval(intervalRef.current)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [timeLimitMs])
+
+  function finish() {
+    clearInterval(intervalRef.current)
+    onCorrect()
+  }
+
   function handleSubmit(event) {
     event.preventDefault()
     if (answer.trim().length === 0) return
@@ -31,15 +62,24 @@ export function RiddlePuzzle({ puzzle, onCorrect }) {
     const isCorrect = puzzle.data.acceptedAnswers.some((accepted) => normalize(accepted) === normalized)
 
     if (isCorrect) {
-      onCorrect()
+      finish()
       return
     }
     setAttempts((count) => count + 1)
     setShake((n) => n + 1)
   }
 
+  const progress = Math.max(0, timeLeft / timeLimitMs)
+
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="h-1.5 w-full overflow-hidden rounded-full bg-ink-900/10">
+        <div
+          className={`h-full transition-[width] ${progress < 0.25 ? 'bg-red-600' : 'bg-gold-600'}`}
+          style={{ width: `${progress * 100}%` }}
+        />
+      </div>
+
       <motion.input
         key={shake}
         animate={shake > 0 ? { x: [0, -8, 8, -6, 6, 0] } : {}}
@@ -47,7 +87,7 @@ export function RiddlePuzzle({ puzzle, onCorrect }) {
         value={answer}
         onChange={(event) => setAnswer(event.target.value)}
         placeholder={t(uiStrings.answerPlaceholder)}
-        className="w-full rounded-lg border border-ink-900/20 bg-parchment-100 px-4 py-2.5 font-body text-ink-900 placeholder:text-ink-700/50 focus:border-gold-600 focus:outline-none"
+        className="w-full rounded-xl border-2 border-gold-600/30 bg-[#fbf5e6] px-5 py-3.5 font-body text-base sm:text-lg text-ink-900 placeholder:text-ink-700/50 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] transition-all focus:border-gold-600 focus:bg-white focus:outline-none"
       />
 
       <div className="flex items-center justify-between gap-4">
@@ -73,7 +113,7 @@ export function RiddlePuzzle({ puzzle, onCorrect }) {
       <div className="flex justify-end border-t border-ink-900/10 pt-3">
         <button
           type="button"
-          onClick={onCorrect}
+          onClick={finish}
           className="flex items-center gap-1.5 text-xs text-ink-700/60 transition-colors hover:text-ink-900 hover:underline"
         >
           <SkipForward size={12} />

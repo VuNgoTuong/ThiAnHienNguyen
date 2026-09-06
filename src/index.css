@@ -1,37 +1,43 @@
 @import "tailwindcss";
 
 @theme {
-  --font-display: "Cinzel", "Georgia", serif;
-  --font-body: "Crimson Text", "Georgia", serif;
+  --font-display: "Be Vietnam Pro", "Montserrat", sans-serif;
+  --font-serif: "Lora", Georgia, serif;
+  --font-body: "Plus Jakarta Sans", "Be Vietnam Pro", sans-serif;
 
-  --color-ocean-950: #050d18;
-  --color-ocean-900: #081a2c;
-  --color-ocean-800: #0d2842;
-  --color-ocean-700: #133a5c;
-  --color-ocean-600: #1a4f78;
-  --color-ocean-500: #1f6690;
+  --color-ocean-950: #040a14;
+  --color-ocean-900: #071626;
+  --color-ocean-800: #0c233b;
+  --color-ocean-700: #113452;
+  --color-ocean-600: #17476e;
+  --color-ocean-500: #1e5c8a;
 
   --color-teal-500: #1c8a8a;
   --color-teal-400: #2fb0ab;
 
-  --color-parchment-100: #faf3df;
-  --color-parchment-200: #f2e6c4;
-  --color-parchment-300: #e6d3a3;
+  --color-parchment-100: #fefcf3;
+  --color-parchment-200: #f7eed2;
+  --color-parchment-300: #eddba5;
 
+  --color-gold-300: #f7e096;
   --color-gold-400: #e8c368;
   --color-gold-500: #d3a24a;
   --color-gold-600: #b3812f;
+  --color-gold-700: #8c601f;
 
-  --color-ink-900: #2a1e10;
-  --color-ink-700: #4a3820;
+  --color-ink-900: #221608;
+  --color-ink-700: #423018;
 
-  --shadow-parchment: 0 12px 30px -12px rgb(0 0 0 / 0.6);
+  --shadow-parchment: 0 20px 50px rgba(0, 0, 0, 0.65), 0 0 30px rgba(179, 129, 47, 0.15);
 
   --animate-drift-slow: drift 26s linear infinite;
   --animate-drift-medium: drift 16s linear infinite;
   --animate-drift-fast: drift 10s linear infinite reverse;
   --animate-bob: bob 3.2s ease-in-out infinite;
   --animate-twinkle: twinkle 3.6s ease-in-out infinite;
+  --animate-spin-slow: spin-slow 8s linear infinite;
+  --animate-shimmer: shimmer 3s ease-in-out infinite;
+  --animate-pulse-glow: pulse-glow 3s ease-in-out infinite;
 }
 
 @keyframes drift {
@@ -53,6 +59,12 @@
   }
 }
 
+@keyframes spin-slow {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 @keyframes twinkle {
   0%,
   100% {
@@ -60,6 +72,27 @@
   }
   50% {
     opacity: 0.9;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.06);
   }
 }
 

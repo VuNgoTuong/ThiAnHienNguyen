@@ -15,18 +15,27 @@ export function Route3D({ islands, finalIsland, finalUnlocked }) {
   return (
     <>
       {points.length > 1 ? (
-        <Line points={points} color="#f2e6c4" transparent opacity={0.25} lineWidth={1} dashed dashSize={0.3} gapSize={0.25} />
+        <Line
+          points={points}
+          color="#f3cf73"
+          transparent
+          opacity={0.45}
+          lineWidth={2.2}
+          dashed
+          dashSize={0.4}
+          gapSize={0.3}
+        />
       ) : null}
       {finalUnlocked && last ? (
         <Line
           points={[toPoint(last.position), toPoint(finalIsland.position)]}
-          color="#e8c368"
+          color="#f3cf73"
           transparent
-          opacity={0.7}
-          lineWidth={1.4}
+          opacity={0.85}
+          lineWidth={2.8}
           dashed
-          dashSize={0.3}
-          gapSize={0.25}
+          dashSize={0.4}
+          gapSize={0.3}
         />
       ) : null}
     </>

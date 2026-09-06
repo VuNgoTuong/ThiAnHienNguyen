@@ -13,7 +13,7 @@ export function SceneEffects({ sunMesh }) {
     <EffectComposer multisampling={0}>
       <Bloom intensity={0.3} luminanceThreshold={0.85} luminanceSmoothing={0.15} radius={0.4} />
       {sunMesh ? <GodRays sun={sunMesh} exposure={0.16} decay={0.88} density={0.85} weight={0.3} samples={40} blur /> : null}
-      <Vignette eskil={false} offset={0.15} darkness={0.6} />
+      <Vignette eskil={false} offset={0.32} darkness={0.35} />
     </EffectComposer>
   )
 }

@@ -6,12 +6,14 @@ import { Ocean3D } from './Ocean3D.jsx'
 import { Island3D } from './Island3D.jsx'
 import { Ship3D } from './Ship3D.jsx'
 import { Route3D } from './Route3D.jsx'
+import { GradientSky } from './GradientSky.jsx'
 import { SceneEffects } from './SceneEffects.jsx'
 import { percentToWorld3D } from '../../utils/world3dCoords.js'
 import { START_POSITION } from '../../utils/islandLogic.js'
 
 const ELEVATION_DEG = 52 // camera pitch above the ocean plane
 const FRAME_MARGIN = 1.3 // headroom around the island field so nothing touches the viewport edge
+const SUN_POSITION = [40, 80, 30]
 
 // Frames the camera so every island + the ship's starting anchorage fits on
 // screen, instead of a fixed position tuned for one particular window size.
@@ -59,9 +61,6 @@ export function WorldScene3D({
   shipPosition,
   shipBearing,
 }) {
-  // Bounds cover every island, the Final Island (even while still locked, so
-  // the camera never has to jump when it unlocks), and the ship's starting
-  // anchorage — the full set of points that can ever appear on the map.
   const bounds = useMemo(() => {
     const points = [...islands.map((island) => island.position), finalIsland.position, START_POSITION].map(
       ({ x, y }) => percentToWorld3D(x, y),
@@ -72,18 +71,38 @@ export function WorldScene3D({
       minZ: Math.min(...points.map((p) => p.z)),
       maxZ: Math.max(...points.map((p) => p.z)),
     }
-    // islands/finalIsland are static data — this only ever needs to run once.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
-    <Canvas shadows dpr={[1, 1.5]} gl={{ antialias: true }}>
-      <PerspectiveCamera makeDefault fov={42} near={0.1} far={200} />
+    <Canvas
+      // This is the most-revisited screen in the game (players land here
+      // between every island), so it gets the same dpr cap and default
+      // shadow quality every other scene already uses — soft shadows +
+      // full native-resolution rendering here was meaningfully heavier
+      // than the rest of the app for no visible-at-this-art-style gain.
+      shadows
+      dpr={[1, 1.5]}
+      gl={{ antialias: true, alpha: false, powerPreference: 'high-performance' }}
+    >
+      <PerspectiveCamera makeDefault fov={40} near={0.1} far={250} />
       <CameraRig bounds={bounds} />
-      <color attach="background" args={['#bfe0ee']} />
-      <fog attach="fog" args={['#bfe0ee', 26, 65]} />
-      <ambientLight intensity={0.75} color="#fff8ec" />
-      <directionalLight position={[8, 16, 6]} intensity={1.2} color="#fff4d9" castShadow />
+      <GradientSky sunPosition={SUN_POSITION} />
+      <fog attach="fog" args={['#a8d4e6', 32, 85]} />
+      <hemisphereLight args={['#e8f4f8', '#0c313d', 0.75]} />
+      <ambientLight intensity={0.7} color="#fff6e5" />
+      <directionalLight
+        position={SUN_POSITION}
+        intensity={1.8}
+        color="#ffe2b3"
+        castShadow
+        shadow-mapSize={[1024, 1024]}
+        shadow-camera-left={-30}
+        shadow-camera-right={30}
+        shadow-camera-top={30}
+        shadow-camera-bottom={-30}
+        shadow-bias={-0.00015}
+      />
 
       <Suspense fallback={null}>
         <Ocean3D />
@@ -109,3 +128,4 @@ export function WorldScene3D({
     </Canvas>
   )
 }
+

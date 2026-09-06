@@ -1,34 +1,47 @@
-import { Suspense, useEffect, useRef, useState } from 'react'
-import { Canvas } from '@react-three/fiber'
-import { PerspectiveCamera, Sky, Clouds, Cloud } from '@react-three/drei'
+import { Suspense, useEffect, useMemo, useRef, useState } from 'react'
+import { Canvas, useFrame } from '@react-three/fiber'
+import { PerspectiveCamera, Clouds, Cloud } from '@react-three/drei'
 import gsap from 'gsap'
 import { Ocean3D } from './Ocean3D.jsx'
 import { Ship3D } from './Ship3D.jsx'
 import { Birds } from './Birds.jsx'
 import { PalmIsland } from './PalmIsland.jsx'
+import { ParadiseIsland } from './ParadiseIsland.jsx'
+import { GradientSky } from './GradientSky.jsx'
 import { SceneEffects } from './SceneEffects.jsx'
 import { useShipVoyage } from '../../hooks/useShipVoyage.js'
 
 const SUN_POSITION = [70, 42, -55]
 
-// Matches OceanBackdrop.jsx's resting "deck view" pose exactly, so the
-// instant this intro settles, the scene looks identical to the ocean
-// backdrop used on every other screen — no visual hand-off jump.
-const REST = { x: 0, y: 3.2, z: 8, rotX: -0.09, fogNear: 30, fogFar: 150 }
-// Three waypoints instead of one straight tween: a high establishing shot,
-// a swooping mid-point (with lateral drift so it isn't a plain vertical
-// drop), then a decelerating settle into REST — reads as a scripted camera
-// move rather than a slider animating from A to B.
-const START = { x: 0, y: 52, z: 12, rotX: -1.15, rotY: -0.18, fogNear: 45, fogFar: 170 }
-const MID = { x: 22, y: 26, z: 36, rotX: -0.78, rotY: -0.06, fogNear: 35, fogFar: 120 }
+function useCloudPuffTextureUrl() {
+  return useMemo(() => {
+    const canvas = document.createElement('canvas')
+    canvas.width = 128
+    canvas.height = 128
+    const ctx = canvas.getContext('2d')
+    const gradient = ctx.createRadialGradient(64, 64, 0, 64, 64, 64)
+    gradient.addColorStop(0, 'rgba(255,255,255,1)')
+    gradient.addColorStop(0.5, 'rgba(255,255,255,0.6)')
+    gradient.addColorStop(1, 'rgba(255,255,255,0)')
+    ctx.fillStyle = gradient
+    ctx.fillRect(0, 0, canvas.width, canvas.height)
+    return canvas.toDataURL()
+  }, [])
+}
 
-const HOLD_S = 0.6 // establishing-shot pause before the camera starts moving
-const DIVE_S = 1.7 // START -> MID
-const SETTLE_S = 1.8 // MID -> REST — the ship's sail duration is matched to this
+// Cinematic drone flight trajectory keyframes over tropical sea
+const START = { x: -2, y: 18, z: 22, rotX: -0.42, rotY: 0.04, fogNear: 30, fogFar: 160 }
+const MID = { x: 2, y: 10, z: 15, rotX: -0.22, rotY: -0.02, fogNear: 25, fogFar: 160 }
+const REST = { x: 0, y: 3.2, z: 8.5, rotX: -0.09, rotY: 0, fogNear: 25, fogFar: 160 }
+
+const HOLD_S = 0.5
+const DIVE_S = 1.9
+const SETTLE_S = 1.9
 
 function IntroCamera({ onSettled, onDiveStart }) {
   const cameraRef = useRef(null)
   const fogRef = useRef(null)
+  const isSettledRef = useRef(false)
 
   useEffect(() => {
     if (!cameraRef.current || !fogRef.current) return
@@ -39,39 +52,47 @@ function IntroCamera({ onSettled, onDiveStart }) {
     fog.near = START.fogNear
     fog.far = START.fogFar
 
-    const timeline = gsap.timeline({ delay: HOLD_S, onComplete: () => onSettled?.() })
+    const timeline = gsap.timeline({
+      delay: HOLD_S,
+      onComplete: () => {
+        isSettledRef.current = true
+        onSettled?.()
+      },
+    })
+
     timeline
       .call(() => onDiveStart?.())
-      .to(camera.position, { x: MID.x, y: MID.y, z: MID.z, duration: DIVE_S, ease: 'power1.in' }, 0)
-      .to(camera.rotation, { x: MID.rotX, y: MID.rotY, duration: DIVE_S, ease: 'power1.in' }, 0)
-      .to(fog, { near: MID.fogNear, far: MID.fogFar, duration: DIVE_S, ease: 'power1.in' }, 0)
-      .to(camera.position, { x: REST.x, y: REST.y, z: REST.z, duration: SETTLE_S, ease: 'power3.out' }, DIVE_S)
-      .to(camera.rotation, { x: REST.rotX, y: 0, duration: SETTLE_S, ease: 'power3.out' }, DIVE_S)
-      .to(fog, { near: REST.fogNear, far: REST.fogFar, duration: SETTLE_S, ease: 'power3.out' }, DIVE_S)
+      .to(camera.position, { x: MID.x, y: MID.y, z: MID.z, duration: DIVE_S, ease: 'sine.inOut' }, 0)
+      .to(camera.rotation, { x: MID.rotX, y: MID.rotY, duration: DIVE_S, ease: 'sine.inOut' }, 0)
+      .to(fog, { near: MID.fogNear, far: MID.fogFar, duration: DIVE_S, ease: 'sine.inOut' }, 0)
+      .to(camera.position, { x: REST.x, y: REST.y, z: REST.z, duration: SETTLE_S, ease: 'power2.out' }, DIVE_S)
+      .to(camera.rotation, { x: REST.rotX, y: REST.rotY, duration: SETTLE_S, ease: 'power2.out' }, DIVE_S)
+      .to(fog, { near: REST.fogNear, far: REST.fogFar, duration: SETTLE_S, ease: 'power2.out' }, DIVE_S)
 
     return () => timeline.kill()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  useFrame(({ clock }) => {
+    if (!cameraRef.current || !isSettledRef.current) return
+    const t = clock.getElapsedTime()
+    cameraRef.current.position.y = REST.y + Math.sin(t * 0.7) * 0.12
+    cameraRef.current.rotation.z = Math.sin(t * 0.5) * 0.008
+  })
+
   return (
     <>
-      <fog ref={fogRef} attach="fog" args={['#bfe0ee', START.fogNear, START.fogFar]} />
+      <fog ref={fogRef} attach="fog" args={['#bae6fd', START.fogNear, START.fogFar]} />
       <PerspectiveCamera ref={cameraRef} makeDefault fov={55} near={0.1} far={260} />
     </>
   )
 }
 
-// A ship sailing into frame during the settle beat — arrives right as the
-// camera lands, so the reveal isn't just empty water.
 function ArrivingShip({ start }) {
   const { position, bearing, sailTo } = useShipVoyage()
 
   useEffect(() => {
     if (!start) return
-    // Lands off to the right and still in front of the REST camera (z must
-    // stay well under the camera's own z=8, or it ends up beside/behind it
-    // and out of frame) — clear of the centered title column, fully inside
-    // the frame edges (not cropped).
     sailTo({ x: 92, y: 78 }, { x: 63, y: 50 })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [start])
@@ -81,32 +102,52 @@ function ArrivingShip({ start }) {
 }
 
 export function TitleIntroScene({ onSettled }) {
-  // A state setter as the ref callback (not useRef) — GodRays needs the
-  // *mounted* mesh instance, and only a state update forces SceneEffects to
-  // re-render once that mesh actually exists (a plain ref wouldn't).
   const [sunMesh, setSunMesh] = useState(null)
   const [diveStarted, setDiveStarted] = useState(false)
+  const cloudTextureUrl = useCloudPuffTextureUrl()
 
   return (
-    <Canvas dpr={[1, 1.5]} gl={{ antialias: true }}>
-      <Sky sunPosition={SUN_POSITION} distance={450000} turbidity={2} rayleigh={2.2} mieCoefficient={0.003} mieDirectionalG={0.8} />
+    <Canvas shadows dpr={[1, 1.5]} gl={{ antialias: true, alpha: false, powerPreference: 'high-performance' }}>
+      <GradientSky sunPosition={SUN_POSITION} topColor="#0284c7" horizonColor="#e0f2fe" sunColor="#fff7ed" />
       <IntroCamera onSettled={onSettled} onDiveStart={() => setDiveStarted(true)} />
-      <ambientLight intensity={0.8} color="#fff8ec" />
-      <directionalLight position={SUN_POSITION} intensity={1.3} color="#fff4d9" />
-      <pointLight position={[0, 6, -4]} intensity={0.2} color="#fff0c8" distance={10} />
-      <mesh ref={setSunMesh} position={SUN_POSITION}>
-        <sphereGeometry args={[3.6, 16, 16]} />
-        <meshBasicMaterial color="#fffbe8" />
-      </mesh>
+      <hemisphereLight args={['#e8f4f8', '#0e3a47', 0.7]} />
+      <ambientLight intensity={0.65} color="#fff6e5" />
+      <directionalLight
+        position={SUN_POSITION}
+        intensity={1.8}
+        color="#fffae5"
+        castShadow
+        shadow-mapSize={[1024, 1024]}
+        shadow-camera-left={-25}
+        shadow-camera-right={25}
+        shadow-camera-top={25}
+        shadow-camera-bottom={-25}
+        shadow-bias={-0.00015}
+      />
+      <pointLight position={[-8, 4, -8]} intensity={0.8} color="#ffe585" distance={15} />
 
-      <Clouds material={undefined} limit={40}>
-        <Cloud seed={1} position={[-18, 28, -40]} scale={2.6} opacity={0.7} speed={0.08} bounds={[10, 3, 6]} />
-        <Cloud seed={2} position={[16, 34, -55]} scale={3.2} opacity={0.6} speed={0.06} bounds={[12, 3, 6]} />
-        <Cloud seed={3} position={[0, 40, -70]} scale={2.2} opacity={0.55} speed={0.07} bounds={[9, 3, 5]} />
+      {/* Sun Mesh with Glowing Corona */}
+      <group position={SUN_POSITION}>
+        <mesh ref={setSunMesh}>
+          <sphereGeometry args={[4.2, 24, 24]} />
+          <meshBasicMaterial color="#fffbe6" />
+        </mesh>
+        <mesh>
+          <sphereGeometry args={[6.5, 16, 16]} />
+          <meshBasicMaterial color="#ffeab3" transparent opacity={0.35} />
+        </mesh>
+      </group>
+
+      <Clouds material={undefined} texture={cloudTextureUrl} limit={40}>
+        <Cloud seed={1} position={[-18, 28, -40]} scale={2.8} opacity={0.8} speed={0.08} bounds={[10, 3, 6]} color="#ffffff" />
+        <Cloud seed={2} position={[16, 34, -55]} scale={3.4} opacity={0.7} speed={0.06} bounds={[12, 3, 6]} color="#ffffff" />
+        <Cloud seed={3} position={[0, 40, -70]} scale={2.5} opacity={0.65} speed={0.07} bounds={[9, 3, 5]} color="#ffffff" />
       </Clouds>
 
       <Birds />
-      <PalmIsland position={[-13, 0, -18]} scale={1.4} />
+
+      {/* Photorealistic Grand Volcanic Paradise Island */}
+      <ParadiseIsland position={[-7.8, -0.05, -11.5]} scale={1.95} rotation={[0, 0.42, 0]} />
       <PalmIsland position={[15, 0, -24]} scale={1.1} />
 
       <Suspense fallback={null}>

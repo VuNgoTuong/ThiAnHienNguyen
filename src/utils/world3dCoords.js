@@ -1,6 +1,3 @@
-// Islands/ship keep their existing 0-100 percent coordinates (see
-// data/islands.js) — this is the only place that remaps them into the 3D
-// scene's world space, so the unlock/voyage logic never has to know 3D exists.
 export const WORLD_WIDTH = 24
 export const WORLD_DEPTH = 24
 

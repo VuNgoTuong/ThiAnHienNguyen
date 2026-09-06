@@ -29,18 +29,18 @@ export function Modal({ isOpen, onClose, title, children }) {
             exit={{ opacity: 0, y: 16, scale: 0.97 }}
             transition={{ type: 'spring', stiffness: 260, damping: 24 }}
             onClick={(event) => event.stopPropagation()}
-            className="w-full max-w-lg"
+            className="w-full max-w-2xl"
           >
-            <ParchmentPanel className="max-h-[80vh] overflow-y-auto p-6">
-              <div className="mb-4 flex items-start justify-between gap-4">
-                <h2 className="font-display text-xl text-ink-900">{title}</h2>
+            <ParchmentPanel className="max-h-[85vh] overflow-y-auto p-8 sm:p-10">
+              <div className="mb-5 flex items-start justify-between gap-4">
+                <h2 className="font-display text-2xl font-semibold text-ink-900">{title}</h2>
                 <button
                   type="button"
                   onClick={onClose}
                   aria-label="Close"
-                  className="rounded-full p-1 text-ink-700 transition-colors hover:bg-ink-900/10 hover:text-ink-900"
+                  className="rounded-full p-1.5 text-ink-700 transition-colors hover:bg-ink-900/10 hover:text-ink-900"
                 >
-                  <X size={20} />
+                  <X size={22} />
                 </button>
               </div>
               {children}

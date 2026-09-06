@@ -14,11 +14,14 @@ export const initialState = {
   visitedIslandIds: [],
   solvedPuzzleIds: [],
   collectedFragmentIds: [],
+  discoveredClueIds: [], // generic per-island exploration clues (e.g. Hidden Cove) — not tied to any one island
   unlockedAchievementIds: [],
   lastUnlockedAchievementIds: [], // transient — drives the achievement toast, cleared once shown
   finalIslandUnlocked: false,
   endingSeen: false,
   secretModeUnlocked: false, // derived from playerName on every action, see deriveComputed()
+  island3Result: null, // { score, total, avgAnswerTimeMs, firstOptionPicks, imageCorrect, imageTotal, worldCorrect, worldTotal, animalCorrect, animalTotal } — feeds Island 4's prediction engine
+  island4Result: null, // { aiScore, playerScore, rounds: [{ round, outcome }] } — set once Island 4's "AI guesses you" game finishes
 }
 
 function addUnique(list, value) {
@@ -86,6 +89,15 @@ export const useGameStore = create((set) => ({
     set((s) => ({
       state: deriveComputed({ ...s.state, collectedFragmentIds: addUnique(s.state.collectedFragmentIds, fragmentId) }),
     })),
+
+  discoverClue: (clueId) =>
+    set((s) => ({
+      state: deriveComputed({ ...s.state, discoveredClueIds: addUnique(s.state.discoveredClueIds, clueId) }),
+    })),
+
+  recordIsland3Result: (island3Result) => set((s) => ({ state: deriveComputed({ ...s.state, island3Result }) })),
+
+  recordIsland4Result: (island4Result) => set((s) => ({ state: deriveComputed({ ...s.state, island4Result }) })),
 
   seeEnding: () => set((s) => ({ state: deriveComputed({ ...s.state, scene: 'ending', endingSeen: true }) })),
 

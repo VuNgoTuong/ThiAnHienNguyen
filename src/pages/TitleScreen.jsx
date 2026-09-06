@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Compass, Play, RotateCcw } from 'lucide-react'
+import { Compass, Play } from 'lucide-react'
 import { useGame, useTranslation } from '../hooks/useGame.js'
 import { Button } from '../components/ui/Button.jsx'
 import { LanguageToggle } from '../components/ui/LanguageToggle.jsx'
+import { FullscreenToggle } from '../components/ui/FullscreenToggle.jsx'
 import { hasSave, loadGame, clearGame } from '../utils/saveSystem.js'
 import { uiStrings } from '../data/uiStrings.js'
 
@@ -92,7 +93,7 @@ function LoadingOverlay({ progress }) {
 }
 
 export function TitleScreen() {
-  const { startNewGame, loadSave, resetGame } = useGame()
+  const { startNewGame, loadSave } = useGame()
   const { t } = useTranslation()
   const [saveExists] = useState(() => hasSave())
   const [stage, setStage] = useState('loading') // 'loading' | 'intro' | 'ready'
@@ -135,11 +136,6 @@ export function TitleScreen() {
     if (saved) loadSave(saved)
   }
 
-  function handleReset() {
-    clearGame()
-    resetGame()
-  }
-
   return (
     <div className="relative flex h-full w-full items-center justify-center overflow-hidden bg-gradient-to-b from-ocean-950 via-ocean-900 to-ocean-800">
       {IntroScene ? (
@@ -154,7 +150,7 @@ export function TitleScreen() {
         // without flattening the rest of the scene into a dark box.
         <div
           className="pointer-events-none absolute inset-0 z-[5]"
-          style={{ background: 'radial-gradient(ellipse 60% 65% at 50% 42%, rgba(5,13,24,0.72) 0%, rgba(5,13,24,0.15) 55%, rgba(5,13,24,0) 75%)' }}
+          style={{ background: 'radial-gradient(ellipse 60% 65% at 50% 42%, rgba(5,13,24,0.4) 0%, rgba(5,13,24,0.1) 55%, rgba(5,13,24,0) 75%)' }}
         />
       ) : null}
 
@@ -162,12 +158,14 @@ export function TitleScreen() {
 
       {stage === 'ready' ? (
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.4 }}
-          className="absolute top-4 right-4 z-10"
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="absolute top-5 right-5 z-20 flex items-center gap-2 rounded-full border border-gold-400/30 bg-ocean-950/70 p-1.5 backdrop-blur-md shadow-[0_8px_30px_rgba(0,0,0,0.6)]"
         >
-          <LanguageToggle />
+          <FullscreenToggle className="border-0 bg-transparent shadow-none hover:bg-gold-500/15" />
+          <div className="h-4 w-px bg-gold-400/20" />
+          <LanguageToggle className="border-0 bg-transparent shadow-none" />
         </motion.div>
       ) : null}
 
@@ -176,38 +174,58 @@ export function TitleScreen() {
           initial="hidden"
           animate="visible"
           variants={STAGGER_CONTAINER}
-          className="relative z-10 flex flex-col items-center gap-6 px-6 text-center"
+          className="relative z-10 mx-4 flex w-full max-w-lg flex-col items-center gap-7 rounded-3xl border border-gold-400/35 bg-ocean-950/50 p-8 text-center backdrop-blur-md shadow-[0_30px_90px_rgba(0,0,0,0.85)] outline outline-1 outline-gold-400/15 -outline-offset-8 sm:p-12"
         >
+          {/* Subtle glowing corner flares */}
+          <span className="pointer-events-none absolute top-3 left-3 h-2 w-2 rounded-full border border-gold-400/40" />
+          <span className="pointer-events-none absolute top-3 right-3 h-2 w-2 rounded-full border border-gold-400/40" />
+          <span className="pointer-events-none absolute bottom-3 left-3 h-2 w-2 rounded-full border border-gold-400/40" />
+          <span className="pointer-events-none absolute bottom-3 right-3 h-2 w-2 rounded-full border border-gold-400/40" />
+
+          {/* Glowing Hero Compass Badge */}
           <motion.div
             variants={STAGGER_ITEM}
-            initial={{ opacity: 0, rotate: -540 }}
-            animate={{ opacity: 1, rotate: 0 }}
-            transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
-            className="drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)]"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+            className="relative"
           >
-            <Compass size={40} className="text-gold-400" />
+            <div className="absolute inset-0 -m-3 animate-pulse rounded-full bg-gold-400/25 blur-lg" />
+            <div className="relative flex items-center justify-center rounded-full border border-gold-400/50 bg-gradient-to-br from-gold-500/20 via-gold-400/10 to-transparent p-4 shadow-[0_0_25px_rgba(232,195,104,0.35)]">
+              <Compass size={38} strokeWidth={1.6} className="text-gold-400 drop-shadow-[0_0_10px_rgba(232,195,104,0.8)]" />
+            </div>
           </motion.div>
-          <motion.div variants={STAGGER_ITEM} className="drop-shadow-[0_2px_10px_rgba(0,0,0,0.75)]">
-            <h1 className="font-display text-4xl text-parchment-100 sm:text-5xl">{t(uiStrings.gameTitle)}</h1>
-            <p className="mt-3 max-w-md font-body text-lg text-parchment-200/90">{t(uiStrings.gameSubtitle)}</p>
+
+          {/* Title & Subtitle */}
+          <motion.div variants={STAGGER_ITEM} className="flex flex-col items-center gap-3">
+            <h1 className="text-center font-display text-3xl font-bold tracking-wider sm:text-4xl leading-snug">
+              <span className="bg-gradient-to-r from-parchment-100 via-gold-300 to-parchment-100 bg-clip-text text-transparent drop-shadow-[0_4px_16px_rgba(0,0,0,0.9)]">
+                {t(uiStrings.gameTitle)}
+              </span>
+              <span className="ml-2 inline-block align-baseline text-pink-400 drop-shadow-[0_0_15px_rgba(244,114,182,0.95)] animate-pulse select-none">
+                💕
+              </span>
+            </h1>
+            {t(uiStrings.gameSubtitle) ? (
+              <>
+                <div className="h-0.5 w-16 bg-gradient-to-r from-transparent via-gold-400/60 to-transparent" />
+                <p className="max-w-md font-serif text-base text-parchment-200/90 italic leading-relaxed sm:text-lg">
+                  {t(uiStrings.gameSubtitle)}
+                </p>
+              </>
+            ) : null}
           </motion.div>
-          <motion.div variants={STAGGER_ITEM} className="mt-4 flex flex-col items-center gap-3">
-            <Button icon={Play} onClick={handleNewVoyage}>
+
+          {/* Action Buttons */}
+          <motion.div variants={STAGGER_ITEM} className="mt-2 flex w-full flex-col items-center gap-3.5 sm:w-auto">
+            <Button icon={Play} onClick={handleNewVoyage} className="w-full sm:w-auto min-w-[220px]">
               {t(uiStrings.newVoyage)}
             </Button>
+
             {saveExists ? (
-              <>
-                <Button icon={Compass} variant="ghost" onClick={handleContinue}>
-                  {t(uiStrings.continueVoyage)}
-                </Button>
-                <button
-                  type="button"
-                  onClick={handleReset}
-                  className="mt-1 flex items-center gap-1 text-xs text-parchment-200/50 transition-colors hover:text-parchment-200"
-                >
-                  <RotateCcw size={12} /> {t(uiStrings.resetProgress)}
-                </button>
-              </>
+              <Button icon={Compass} variant="ghost" onClick={handleContinue} className="w-full sm:w-auto min-w-[220px]">
+                {t(uiStrings.continueVoyage)}
+              </Button>
             ) : null}
           </motion.div>
         </motion.div>
@@ -215,3 +233,4 @@ export function TitleScreen() {
     </div>
   )
 }
+

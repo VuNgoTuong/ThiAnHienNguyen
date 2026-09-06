@@ -2,15 +2,12 @@ import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Check, X } from 'lucide-react'
 import { useGame, useTranslation } from '../hooks/useGame.js'
-import { Button } from '../components/ui/Button.jsx'
 import { ParchmentPanel } from '../components/ui/ParchmentPanel.jsx'
 import { Ocean } from '../components/world/Ocean.jsx'
 import { uiStrings } from '../data/uiStrings.js'
 import { fadeStep } from '../utils/motionPresets.js'
 
-// Two objectively-correct-answer questions (retry on a wrong pick, same
-// shake+reset UX as MultipleChoicePuzzle), then one just-for-fun question
-// with no wrong answer — both replies get a warm response either way.
+// Single verification question before setting sail
 const QUESTIONS = [
   {
     id: 'birthday',
@@ -22,19 +19,9 @@ const QUESTIONS = [
       { id: 'c', label: { vi: '09/11/2003', en: '09/11/2003' } },
     ],
   },
-  {
-    id: 'numerology',
-    prompt: uiStrings.verifyNumerologyQuestion,
-    correctId: 'b',
-    options: [
-      { id: 'a', label: { vi: 'Số 7', en: 'Number 7' } },
-      { id: 'b', label: { vi: 'Số 3', en: 'Number 3' } },
-      { id: 'c', label: { vi: 'Số 5', en: 'Number 5' } },
-    ],
-  },
 ]
 
-function QuizQuestion({ question, onCorrect }) {
+function QuizQuestion({ question, onCorrect, onWrong }) {
   const { t } = useTranslation()
   const [selected, setSelected] = useState(null)
   const [status, setStatus] = useState('idle') // idle | wrong | correct
@@ -47,15 +34,17 @@ function QuizQuestion({ question, onCorrect }) {
       setTimeout(onCorrect, 650)
     } else {
       setStatus('wrong')
-      setTimeout(() => setStatus('idle'), 500)
+      setTimeout(() => onWrong?.(), 500)
     }
   }
 
   return (
     <>
-      <h2 className="mb-1 font-display text-xs tracking-wide text-gold-600">{t(uiStrings.verifyTitle)}</h2>
-      <p className="mb-5 font-body text-lg text-ink-900 italic">{t(question.prompt)}</p>
-      <div className="grid gap-2">
+      <h2 className="mb-3 font-display text-sm tracking-widest text-gold-700 uppercase font-semibold">
+        {t(uiStrings.verifyTitle)}
+      </h2>
+      <p className="mb-8 font-serif text-2xl font-medium text-ink-900 italic leading-snug">{t(question.prompt)}</p>
+      <div className="grid gap-4">
         {question.options.map((option) => {
           const isSelected = selected === option.id
           const showCorrect = status === 'correct' && isSelected
@@ -66,19 +55,21 @@ function QuizQuestion({ question, onCorrect }) {
               type="button"
               onClick={() => handleSelect(option.id)}
               disabled={status === 'correct'}
-              animate={showWrong ? { x: [0, -6, 6, -4, 4, 0] } : {}}
+              whileHover={status !== 'correct' ? { scale: 1.02, x: 3 } : undefined}
+              whileTap={status !== 'correct' ? { scale: 0.98 } : undefined}
+              animate={showWrong ? { x: [0, -8, 8, -6, 6, 0] } : {}}
               transition={{ duration: 0.4 }}
-              className={`flex items-center justify-between rounded-lg border px-4 py-2.5 text-left font-body text-ink-900 transition-colors ${
+              className={`flex items-center justify-between rounded-2xl border-2 px-6 py-4.5 text-left font-body text-lg font-semibold transition-all duration-200 shadow-md ${
                 showCorrect
-                  ? 'border-green-600 bg-green-600/10'
+                  ? 'border-emerald-600 bg-emerald-500/20 text-emerald-950 shadow-[0_0_20px_rgba(16,185,129,0.35)]'
                   : showWrong
-                    ? 'border-red-600 bg-red-600/10'
-                    : 'border-ink-900/20 bg-parchment-100 hover:border-gold-600'
+                    ? 'border-red-600 bg-red-500/20 text-red-950 shadow-[0_0_20px_rgba(239,68,68,0.35)]'
+                    : 'border-gold-600/35 bg-[#fbf5e6] text-ink-900 hover:border-gold-600 hover:bg-[#ffffff] hover:shadow-lg'
               }`}
             >
               <span>{t(option.label)}</span>
-              {showCorrect ? <Check size={16} className="text-green-700" /> : null}
-              {showWrong ? <X size={16} className="text-red-700" /> : null}
+              {showCorrect ? <Check size={22} className="text-emerald-700 font-bold shrink-0 ml-2" /> : null}
+              {showWrong ? <X size={22} className="text-red-700 font-bold shrink-0 ml-2" /> : null}
             </motion.button>
           )
         })}
@@ -87,59 +78,42 @@ function QuizQuestion({ question, onCorrect }) {
   )
 }
 
-function RelationshipQuestion({ onDone }) {
-  const { t } = useTranslation()
-  const [answer, setAnswer] = useState(null)
+export function VerifyIdentityPage() {
+  const { setScene } = useGame()
+  const [step, setStep] = useState(0)
+  // Bumped on every wrong answer so the key below always changes — even a
+  // miss on question 1 remounts QuizQuestion and replays the entrance, which
+  // reads as "starting over" rather than a no-op.
+  const [attempt, setAttempt] = useState(0)
 
-  function handleAnswer(value) {
-    setAnswer(value)
-    setTimeout(onDone, 1600)
+  function handleCorrect() {
+    if (step < QUESTIONS.length - 1) {
+      setStep((s) => s + 1)
+    } else {
+      setScene('greeting')
+    }
+  }
+
+  // A wrong answer on any question sends the whole quiz back to question 1
+  function handleWrong() {
+    setStep(0)
+    setAttempt((a) => a + 1)
   }
 
   return (
-    <>
-      <h2 className="mb-1 font-display text-xs tracking-wide text-gold-600">{t(uiStrings.verifyTitle)}</h2>
-      <p className="mb-5 font-body text-lg text-ink-900 italic">{t(uiStrings.verifyRelationshipQuestion)}</p>
-      {answer ? (
-        <p className="font-body text-ink-700">
-          {t(answer === 'yes' ? uiStrings.verifyRelationshipYesResponse : uiStrings.verifyRelationshipNoResponse)}
-        </p>
-      ) : (
-        <div className="grid grid-cols-2 gap-2">
-          <Button variant="ghost" onClick={() => handleAnswer('yes')}>
-            {t(uiStrings.verifyRelationshipYes)}
-          </Button>
-          <Button variant="ghost" onClick={() => handleAnswer('no')}>
-            {t(uiStrings.verifyRelationshipNo)}
-          </Button>
-        </div>
-      )}
-    </>
-  )
-}
-
-export function VerifyIdentityPage() {
-  const { setScene } = useGame()
-  const [step, setStep] = useState(0) // 0..QUESTIONS.length-1 = quiz, QUESTIONS.length = relationship question
-
-  return (
-    <div className="relative flex h-full w-full items-center justify-center p-6">
+    <div className="relative flex h-full w-full items-center justify-center p-6 sm:p-8">
       <Ocean />
       <div
         className="pointer-events-none absolute inset-0 z-[5]"
         style={{
-          background: 'radial-gradient(ellipse 60% 65% at 50% 50%, rgba(5,13,24,0.7) 0%, rgba(5,13,24,0.15) 55%, rgba(5,13,24,0) 75%)',
+          background: 'radial-gradient(ellipse 60% 65% at 50% 50%, rgba(5,13,24,0.4) 0%, rgba(5,13,24,0.1) 55%, rgba(5,13,24,0) 75%)',
         }}
       />
-      <div className="relative z-10 w-full max-w-md">
+      <div className="relative z-10 w-full max-w-xl sm:max-w-2xl">
         <AnimatePresence mode="wait">
-          <motion.div key={step} {...fadeStep}>
-            <ParchmentPanel className="p-8 text-center">
-              {step < QUESTIONS.length ? (
-                <QuizQuestion question={QUESTIONS[step]} onCorrect={() => setStep((s) => s + 1)} />
-              ) : (
-                <RelationshipQuestion onDone={() => setScene('greeting')} />
-              )}
+          <motion.div key={`${step}-${attempt}`} {...fadeStep}>
+            <ParchmentPanel className="p-8 sm:p-12 text-center">
+              <QuizQuestion question={QUESTIONS[step]} onCorrect={handleCorrect} onWrong={handleWrong} />
             </ParchmentPanel>
           </motion.div>
         </AnimatePresence>
