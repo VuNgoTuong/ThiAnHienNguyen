@@ -174,13 +174,13 @@ export function TitleScreen() {
           initial="hidden"
           animate="visible"
           variants={STAGGER_CONTAINER}
-          className="relative z-10 mx-4 flex w-full max-w-lg flex-col items-center gap-7 rounded-3xl border border-gold-400/35 bg-ocean-950/50 p-8 text-center backdrop-blur-md shadow-[0_30px_90px_rgba(0,0,0,0.85)] outline outline-1 outline-gold-400/15 -outline-offset-8 sm:p-12"
+          className="relative z-10 mx-4 flex w-full max-w-lg flex-col items-center gap-7 rounded-3xl border-2 border-rose-300/70 bg-gradient-to-b from-white/92 via-rose-50/92 to-pink-100/92 p-8 text-center shadow-parchment backdrop-blur-md outline outline-1 outline-rose-300/30 -outline-offset-8 sm:p-12"
         >
-          {/* Subtle glowing corner flares */}
-          <span className="pointer-events-none absolute top-3 left-3 h-2 w-2 rounded-full border border-gold-400/40" />
-          <span className="pointer-events-none absolute top-3 right-3 h-2 w-2 rounded-full border border-gold-400/40" />
-          <span className="pointer-events-none absolute bottom-3 left-3 h-2 w-2 rounded-full border border-gold-400/40" />
-          <span className="pointer-events-none absolute bottom-3 right-3 h-2 w-2 rounded-full border border-gold-400/40" />
+          {/* Subtle glowing corner flares — gold trim on the blush card */}
+          <span className="pointer-events-none absolute top-3 left-3 h-2 w-2 rounded-full border border-gold-500/60" />
+          <span className="pointer-events-none absolute top-3 right-3 h-2 w-2 rounded-full border border-gold-500/60" />
+          <span className="pointer-events-none absolute bottom-3 left-3 h-2 w-2 rounded-full border border-gold-500/60" />
+          <span className="pointer-events-none absolute bottom-3 right-3 h-2 w-2 rounded-full border border-gold-500/60" />
 
           {/* Glowing Hero Compass Badge */}
           <motion.div
@@ -190,26 +190,26 @@ export function TitleScreen() {
             transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
             className="relative"
           >
-            <div className="absolute inset-0 -m-3 animate-pulse rounded-full bg-gold-400/25 blur-lg" />
-            <div className="relative flex items-center justify-center rounded-full border border-gold-400/50 bg-gradient-to-br from-gold-500/20 via-gold-400/10 to-transparent p-4 shadow-[0_0_25px_rgba(232,195,104,0.35)]">
-              <Compass size={38} strokeWidth={1.6} className="text-gold-400 drop-shadow-[0_0_10px_rgba(232,195,104,0.8)]" />
+            <div className="absolute inset-0 -m-3 animate-pulse rounded-full bg-rose-300/35 blur-lg" />
+            <div className="relative flex items-center justify-center rounded-full border border-gold-500/60 bg-gradient-to-br from-gold-300/40 via-gold-200/20 to-transparent p-4 shadow-[0_0_25px_rgba(232,195,104,0.35)]">
+              <Compass size={38} strokeWidth={1.6} className="text-gold-600 drop-shadow-[0_0_10px_rgba(232,195,104,0.5)]" />
             </div>
           </motion.div>
 
           {/* Title & Subtitle */}
           <motion.div variants={STAGGER_ITEM} className="flex flex-col items-center gap-3">
             <h1 className="text-center font-display text-3xl font-bold tracking-wider sm:text-4xl leading-snug">
-              <span className="bg-gradient-to-r from-parchment-100 via-gold-300 to-parchment-100 bg-clip-text text-transparent drop-shadow-[0_4px_16px_rgba(0,0,0,0.9)]">
+              <span className="bg-gradient-to-r from-rose-800 via-gold-600 to-rose-800 bg-clip-text text-transparent drop-shadow-[0_2px_6px_rgba(244,114,182,0.25)]">
                 {t(uiStrings.gameTitle)}
               </span>
-              <span className="ml-2 inline-block align-baseline text-pink-400 drop-shadow-[0_0_15px_rgba(244,114,182,0.95)] animate-pulse select-none">
+              <span className="ml-2 inline-block align-baseline text-pink-400 drop-shadow-[0_0_15px_rgba(244,114,182,0.7)] animate-pulse select-none">
                 💕
               </span>
             </h1>
             {t(uiStrings.gameSubtitle) ? (
               <>
-                <div className="h-0.5 w-16 bg-gradient-to-r from-transparent via-gold-400/60 to-transparent" />
-                <p className="max-w-md font-serif text-base text-parchment-200/90 italic leading-relaxed sm:text-lg">
+                <div className="h-0.5 w-16 bg-gradient-to-r from-transparent via-gold-500/60 to-transparent" />
+                <p className="max-w-md font-serif text-base text-rose-950/75 italic leading-relaxed sm:text-lg">
                   {t(uiStrings.gameSubtitle)}
                 </p>
               </>

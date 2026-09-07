@@ -387,6 +387,13 @@ function VolcanoCaldera() {
   )
 }
 
+// A slightly darker shade of the same hue, for the base canopy sphere in
+// each foliage cluster — cheap way to fake a little shading depth without
+// an actual light-facing calculation.
+function darkenHex(hex) {
+  return new THREE.Color(hex).multiplyScalar(0.72)
+}
+
 function RainforestFoliage() {
   const treeClusters = useMemo(() => {
     return [
@@ -398,6 +405,24 @@ function RainforestFoliage() {
       { pos: [-1.4, 0.52, -0.5], scale: 0.85, color: '#16a34a' },
       { pos: [0.3, 1.25, 0.9], scale: 0.65, color: '#14532d' },
       { pos: [-0.4, 1.18, -0.8], scale: 0.7, color: '#166534' },
+      // Original 8 clusters all sit within radius ~1.8 of the summit, so the
+      // wide outer grass slopes (out toward the ~4.6-radius coastline) had
+      // nothing on them at all — the "bare hillside" look. These fill that
+      // ring in, spread across the full circle at a lower, gentler height.
+      { pos: [2.6, 0.32, 0.4], scale: 0.8, color: '#22c55e' },
+      { pos: [-2.7, 0.28, 0.6], scale: 0.75, color: '#16a34a' },
+      { pos: [2.3, 0.35, -1.6], scale: 0.7, color: '#15803d' },
+      { pos: [-2.2, 0.4, -1.9], scale: 0.85, color: '#22c55e' },
+      { pos: [1.3, 0.22, 2.3], scale: 0.65, color: '#166534' },
+      { pos: [-1.5, 0.2, 2.4], scale: 0.7, color: '#16a34a' },
+      { pos: [0.6, 0.18, -2.8], scale: 0.75, color: '#15803d' },
+      { pos: [-0.7, 0.16, -2.7], scale: 0.65, color: '#22c55e' },
+      { pos: [3.2, 0.15, -0.7], scale: 0.6, color: '#166534' },
+      { pos: [-3.1, 0.14, 1.5], scale: 0.65, color: '#16a34a' },
+      { pos: [2.4, 0.2, 2.4], scale: 0.7, color: '#22c55e' },
+      { pos: [-2.5, 0.18, -1.2], scale: 0.75, color: '#15803d' },
+      { pos: [0.9, 0.15, 3.3], scale: 0.6, color: '#16a34a' },
+      { pos: [-0.6, 0.14, -3.4], scale: 0.65, color: '#166534' },
     ]
   }, [])
 
@@ -405,16 +430,64 @@ function RainforestFoliage() {
     <group>
       {treeClusters.map((t, idx) => (
         <group key={idx} position={t.pos} scale={t.scale}>
-          <mesh position={[0, 0.18, 0]} castShadow receiveShadow>
-            <dodecahedronGeometry args={[0.32, 1]} />
-            <meshStandardMaterial color={t.color} roughness={0.8} />
+          {/* Short trunk so the canopy reads as "a tree standing on the
+              ground" instead of a shape floating in the grass. */}
+          <mesh position={[0, 0.09, 0]} castShadow>
+            <cylinderGeometry args={[0.035, 0.05, 0.2, 6]} />
+            <meshStandardMaterial color="#5b4630" roughness={0.9} />
           </mesh>
-          <mesh position={[0.1, 0.28, -0.08]} scale={0.75} castShadow receiveShadow>
-            <dodecahedronGeometry args={[0.26, 1]} />
-            <meshStandardMaterial color={t.color} roughness={0.8} />
+          {/* Canopy: three overlapping *smooth* spheres (not the low-poly
+              dodecahedrons this replaced — those had ~12 flat pentagonal
+              faces and read as angular rocks, not foliage) at staggered
+              sizes/offsets for a fuller, more organic silhouette, plus a
+              darker undertone sphere for a little shading depth. */}
+          <mesh position={[0, 0.34, 0]} castShadow receiveShadow>
+            <sphereGeometry args={[0.24, 12, 10]} />
+            <meshStandardMaterial color={darkenHex(t.color)} roughness={0.85} />
+          </mesh>
+          <mesh position={[0.14, 0.4, -0.08]} scale={0.8} castShadow receiveShadow>
+            <sphereGeometry args={[0.24, 10, 8]} />
+            <meshStandardMaterial color={t.color} roughness={0.75} />
+          </mesh>
+          <mesh position={[-0.1, 0.44, 0.1]} scale={0.65} castShadow receiveShadow>
+            <sphereGeometry args={[0.24, 10, 8]} />
+            <meshStandardMaterial color={t.color} roughness={0.75} />
           </mesh>
         </group>
       ))}
+    </group>
+  )
+}
+
+// Small bright flower clusters scattered along the grass — cheap (a handful
+// of tiny spheres, no shaders) but they read as color/life at a glance in a
+// way the terrain's vertex-color greens alone don't, and the pink/coral/
+// yellow palette ties this island in with the rest of the game's "sweet,
+// pastel" motifs (see Ship3D's cheese-boat palette).
+const FLOWER_COLORS = ['#f472b6', '#fb7185', '#fde047', '#f9a8d4']
+
+function FlowerCluster({ position, scale = 1 }) {
+  const petals = useMemo(
+    () =>
+      Array.from({ length: 4 }, (_, i) => ({
+        offset: [Math.cos((i / 4) * Math.PI * 2) * 0.06, 0, Math.sin((i / 4) * Math.PI * 2) * 0.06],
+        color: FLOWER_COLORS[i % FLOWER_COLORS.length],
+      })),
+    [],
+  )
+
+  return (
+    <group position={position} scale={scale}>
+      {petals.map((p, i) => (
+        <mesh key={i} position={p.offset} castShadow>
+          <sphereGeometry args={[0.05, 8, 8]} />
+          <meshStandardMaterial color={p.color} roughness={0.5} />
+        </mesh>
+      ))}
+      <mesh position={[0, 0.02, 0]}>
+        <sphereGeometry args={[0.035, 8, 8]} />
+        <meshStandardMaterial color="#fef08a" roughness={0.4} />
+      </mesh>
     </group>
   )
 }
@@ -453,6 +526,33 @@ export function ParadiseIsland({ position = [0, 0, 0], scale = 1, rotation = [0,
       <PalmTree position={[2.0, 0.24, -1.4]} scale={0.85} lean={0.08} />
       <PalmTree position={[-1.6, 0.28, -1.6]} scale={0.75} lean={-0.12} />
       <PalmTree position={[0.3, 0.65, -2.0]} scale={0.7} lean={0.05} />
+      {/* Same coast-hugging spread as the added RainforestFoliage clusters —
+          the original 5 palms all sat close to the summit too. Kept at the
+          same modest scale as the original five (a first pass scaled these
+          up to read better from the title camera's distance, but palm
+          fronds are thin curved strips — bigger just meant "more visibly a
+          thin stick," not "more convincing." The round foliage clusters and
+          flower bursts carry the "read from far away" job instead now.) */}
+      <PalmTree position={[3.1, 0.14, 0.9]} scale={0.7} lean={0.18} />
+      <PalmTree position={[-3.0, 0.12, -0.5]} scale={0.75} lean={-0.15} />
+      <PalmTree position={[1.5, 0.16, 3.0]} scale={0.65} lean={0.1} />
+      <PalmTree position={[-1.4, 0.14, 3.1]} scale={0.7} lean={-0.08} />
+      <PalmTree position={[0.5, 0.13, -3.3]} scale={0.65} lean={0.12} />
+
+      {/* Bursts of tropical flowers along the grass — the strongest "read
+          from a distance" element here since pink/yellow pops hard against
+          green, unlike the foliage clusters which are close in hue to the
+          terrain's own grass vertex colors. */}
+      <FlowerCluster position={[2.1, 0.34, 1.9]} scale={1.6} />
+      <FlowerCluster position={[-2.3, 0.3, 1.6]} scale={1.5} />
+      <FlowerCluster position={[1.9, 0.28, -2.3]} scale={1.4} />
+      <FlowerCluster position={[-1.8, 0.25, -2.4]} scale={1.5} />
+      <FlowerCluster position={[0.9, 0.85, 1.5]} scale={1.3} />
+      <FlowerCluster position={[-0.8, 0.7, -1.6]} scale={1.4} />
+      <FlowerCluster position={[3.4, 0.14, 1.6]} scale={1.3} />
+      <FlowerCluster position={[-3.3, 0.14, -1.1]} scale={1.3} />
+      <FlowerCluster position={[0.2, 0.16, 3.4]} scale={1.2} />
+      <FlowerCluster position={[-0.3, 0.12, -3.5]} scale={1.2} />
 
       {/* Coastal Volcanic Reef Boulders */}
       <CoastalReefRock position={[2.6, 0.08, 1.8]} scale={1.1} rotation={0.4} />

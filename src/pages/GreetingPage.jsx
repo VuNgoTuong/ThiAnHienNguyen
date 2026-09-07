@@ -20,28 +20,28 @@ export function GreetingPage() {
         initial={{ opacity: 0, y: 20, scale: 0.96 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className="relative z-10 mx-4 flex w-full max-w-lg flex-col items-center gap-7 rounded-3xl border border-gold-400/35 bg-ocean-950/60 p-8 text-center backdrop-blur-md shadow-[0_30px_90px_rgba(0,0,0,0.85)] outline outline-1 outline-gold-400/15 -outline-offset-8 sm:p-12"
+        className="relative z-10 mx-4 flex w-full max-w-lg flex-col items-center gap-7 rounded-3xl border-2 border-rose-300/70 bg-gradient-to-b from-white/92 via-rose-50/92 to-pink-100/92 p-8 text-center shadow-parchment backdrop-blur-md outline outline-1 outline-rose-300/30 -outline-offset-8 sm:p-12"
       >
-        {/* Subtle glowing corner flares */}
-        <span className="pointer-events-none absolute top-3 left-3 h-2 w-2 rounded-full border border-gold-400/40" />
-        <span className="pointer-events-none absolute top-3 right-3 h-2 w-2 rounded-full border border-gold-400/40" />
-        <span className="pointer-events-none absolute bottom-3 left-3 h-2 w-2 rounded-full border border-gold-400/40" />
-        <span className="pointer-events-none absolute bottom-3 right-3 h-2 w-2 rounded-full border border-gold-400/40" />
+        {/* Subtle glowing corner flares — gold trim on the blush card */}
+        <span className="pointer-events-none absolute top-3 left-3 h-2 w-2 rounded-full border border-gold-500/60" />
+        <span className="pointer-events-none absolute top-3 right-3 h-2 w-2 rounded-full border border-gold-500/60" />
+        <span className="pointer-events-none absolute bottom-3 left-3 h-2 w-2 rounded-full border border-gold-500/60" />
+        <span className="pointer-events-none absolute bottom-3 right-3 h-2 w-2 rounded-full border border-gold-500/60" />
 
         <motion.div
           animate={{ rotate: [0, 8, -8, 0] }}
           transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
-          className="relative flex items-center justify-center rounded-full border border-gold-400/50 bg-gradient-to-br from-gold-500/20 via-gold-400/10 to-transparent p-4 shadow-[0_0_25px_rgba(232,195,104,0.35)]"
+          className="relative flex items-center justify-center rounded-full border border-gold-500/60 bg-gradient-to-br from-gold-300/40 via-gold-200/20 to-transparent p-4 shadow-[0_0_25px_rgba(232,195,104,0.35)]"
         >
-          <Compass size={40} className="text-gold-400 drop-shadow-[0_0_10px_rgba(232,195,104,0.8)]" />
+          <Compass size={40} className="text-gold-600 drop-shadow-[0_0_10px_rgba(232,195,104,0.5)]" />
         </motion.div>
 
         <div className="flex flex-col items-center gap-3">
-          <h1 className="bg-gradient-to-r from-parchment-100 via-gold-300 to-parchment-100 bg-clip-text font-display text-3xl font-bold tracking-wide text-transparent drop-shadow-[0_4px_16px_rgba(0,0,0,0.9)] sm:text-4xl">
+          <h1 className="bg-gradient-to-r from-rose-800 via-gold-600 to-rose-800 bg-clip-text font-display text-3xl font-bold tracking-wide text-transparent drop-shadow-[0_2px_6px_rgba(244,114,182,0.25)] sm:text-4xl">
             {t(uiStrings.greetingTitle)} {state.playerName}!
           </h1>
-          <div className="h-0.5 w-16 bg-gradient-to-r from-transparent via-gold-400/60 to-transparent" />
-          <p className="max-w-md font-serif text-lg text-parchment-200/90 italic leading-relaxed sm:text-xl">
+          <div className="h-0.5 w-16 bg-gradient-to-r from-transparent via-gold-500/60 to-transparent" />
+          <p className="max-w-md font-serif text-lg text-rose-950/75 italic leading-relaxed sm:text-xl">
             {t(uiStrings.greetingBody)}
           </p>
         </div>

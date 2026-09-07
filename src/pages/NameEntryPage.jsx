@@ -47,7 +47,7 @@ export function NameEntryPage() {
           </h1>
           {t(uiStrings.nameEntrySubtitle) ? (
             <>
-              <div className="mx-auto mb-5 h-0.5 w-16 bg-gold-600/40" />
+              <div className="mx-auto mb-5 h-0.5 w-16 bg-gradient-to-r from-transparent via-rose-400/60 to-transparent" />
               <p className="mb-8 font-serif text-lg sm:text-xl text-ink-700 italic whitespace-pre-line">{t(uiStrings.nameEntrySubtitle)}</p>
             </>
           ) : (
@@ -60,7 +60,7 @@ export function NameEntryPage() {
                 value={name}
                 onChange={handleChange}
                 placeholder={t(uiStrings.nameEntryPlaceholder)}
-                className="w-full rounded-2xl border-2 border-gold-600/40 bg-[#fbf5e6] px-6 py-4 text-center font-body text-xl font-medium text-ink-900 placeholder:text-ink-700/40 shadow-[inset_0_2px_6px_rgba(0,0,0,0.1)] transition-all focus:border-gold-600 focus:bg-[#ffffff] focus:ring-4 focus:ring-gold-500/25 focus:outline-none"
+                className="w-full rounded-2xl border-2 border-rose-300/60 bg-[#fdf6f8] px-6 py-4 text-center font-body text-xl font-medium text-ink-900 placeholder:text-rose-400/50 shadow-[inset_0_2px_6px_rgba(0,0,0,0.1)] transition-all focus:border-rose-400 focus:bg-white focus:ring-4 focus:ring-rose-300/30 focus:outline-none"
               />
             </div>
             <Button type="submit" icon={ArrowRight} disabled={!name.trim()} className="w-full py-4 text-lg rounded-2xl shadow-lg">
