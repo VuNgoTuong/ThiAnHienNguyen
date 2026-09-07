@@ -1,7 +1,6 @@
 import { useMemo, useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
-import { PalmTree } from './PalmIsland.jsx'
 
 function smoothstep(min, max, value) {
   const x = Math.max(0, Math.min(1, (value - min) / (max - min)))
@@ -394,6 +393,50 @@ function darkenHex(hex) {
   return new THREE.Color(hex).multiplyScalar(0.72)
 }
 
+// Replaces the old thin-frond PalmTree here — that model's fronds are
+// narrow extruded blades that read fine as a tiny world-map marker but as
+// spindly sticks at any size where they're actually visible up close. This
+// is a full round canopy (four overlapping spheres, staggered sizes/shades)
+// on a short trunk — the same "layered spheres" technique already proven
+// out on the RainforestFoliage clusters above, just scaled up to read as a
+// standalone tree rather than a low bush.
+function LushTree({ position = [0, 0, 0], scale = 1, lean = 0 }) {
+  const canopyRef = useRef(null)
+
+  useFrame(({ clock }) => {
+    if (!canopyRef.current) return
+    const t = clock.getElapsedTime()
+    canopyRef.current.rotation.z = lean * 0.4 + Math.sin(t * 1.3 + position[0] * 2) * 0.035
+  })
+
+  return (
+    <group position={position} scale={scale}>
+      <mesh position={[0, 0.26, 0]} rotation={[0, 0, lean]} castShadow>
+        <cylinderGeometry args={[0.045, 0.075, 0.52, 8]} />
+        <meshStandardMaterial color="#6b4a2e" roughness={0.9} />
+      </mesh>
+      <group ref={canopyRef} position={[lean * 0.18, 0.56, 0]}>
+        <mesh castShadow receiveShadow>
+          <sphereGeometry args={[0.3, 14, 12]} />
+          <meshStandardMaterial color="#1f8a3f" roughness={0.85} />
+        </mesh>
+        <mesh position={[0.17, 0.11, -0.1]} scale={0.78} castShadow receiveShadow>
+          <sphereGeometry args={[0.3, 12, 10]} />
+          <meshStandardMaterial color="#28a34c" roughness={0.8} />
+        </mesh>
+        <mesh position={[-0.15, 0.08, 0.13]} scale={0.72} castShadow receiveShadow>
+          <sphereGeometry args={[0.3, 12, 10]} />
+          <meshStandardMaterial color="#22c55e" roughness={0.8} />
+        </mesh>
+        <mesh position={[0.02, 0.22, 0.1]} scale={0.55} castShadow receiveShadow>
+          <sphereGeometry args={[0.3, 10, 8]} />
+          <meshStandardMaterial color="#34d066" roughness={0.75} />
+        </mesh>
+      </group>
+    </group>
+  )
+}
+
 function RainforestFoliage() {
   const treeClusters = useMemo(() => {
     return [
@@ -520,24 +563,19 @@ export function ParadiseIsland({ position = [0, 0, 0], scale = 1, rotation = [0,
       {/* Active Volcanic Crater Magma Lake & Glowing Light */}
       <VolcanoCaldera />
 
-      {/* Realistic Tropical Palms along lower beach slopes */}
-      <PalmTree position={[1.8, 0.32, 1.4]} scale={0.9} lean={0.12} />
-      <PalmTree position={[-1.9, 0.28, 1.1]} scale={0.8} lean={-0.1} />
-      <PalmTree position={[2.0, 0.24, -1.4]} scale={0.85} lean={0.08} />
-      <PalmTree position={[-1.6, 0.28, -1.6]} scale={0.75} lean={-0.12} />
-      <PalmTree position={[0.3, 0.65, -2.0]} scale={0.7} lean={0.05} />
-      {/* Same coast-hugging spread as the added RainforestFoliage clusters —
-          the original 5 palms all sat close to the summit too. Kept at the
-          same modest scale as the original five (a first pass scaled these
-          up to read better from the title camera's distance, but palm
-          fronds are thin curved strips — bigger just meant "more visibly a
-          thin stick," not "more convincing." The round foliage clusters and
-          flower bursts carry the "read from far away" job instead now.) */}
-      <PalmTree position={[3.1, 0.14, 0.9]} scale={0.7} lean={0.18} />
-      <PalmTree position={[-3.0, 0.12, -0.5]} scale={0.75} lean={-0.15} />
-      <PalmTree position={[1.5, 0.16, 3.0]} scale={0.65} lean={0.1} />
-      <PalmTree position={[-1.4, 0.14, 3.1]} scale={0.7} lean={-0.08} />
-      <PalmTree position={[0.5, 0.13, -3.3]} scale={0.65} lean={0.12} />
+      {/* Lush round-canopy trees along the beach slopes and coastline —
+          full trees, not thin palm sticks. */}
+      <LushTree position={[1.8, 0.32, 1.4]} scale={1.15} lean={0.12} />
+      <LushTree position={[-1.9, 0.28, 1.1]} scale={1} lean={-0.1} />
+      <LushTree position={[2.0, 0.24, -1.4]} scale={1.05} lean={0.08} />
+      <LushTree position={[-1.6, 0.28, -1.6]} scale={0.95} lean={-0.12} />
+      <LushTree position={[0.3, 0.65, -2.0]} scale={0.9} lean={0.05} />
+      {/* Coast-hugging spread — the first five all sit close to the summit. */}
+      <LushTree position={[3.1, 0.14, 0.9]} scale={0.9} lean={0.18} />
+      <LushTree position={[-3.0, 0.12, -0.5]} scale={0.95} lean={-0.15} />
+      <LushTree position={[1.5, 0.16, 3.0]} scale={0.85} lean={0.1} />
+      <LushTree position={[-1.4, 0.14, 3.1]} scale={0.9} lean={-0.08} />
+      <LushTree position={[0.5, 0.13, -3.3]} scale={0.85} lean={0.12} />
 
       {/* Bursts of tropical flowers along the grass — the strongest "read
           from a distance" element here since pink/yellow pops hard against
