@@ -255,13 +255,51 @@ export function WordChainLesson({ puzzle, onCorrect }) {
   const streak = playerCorrectCount
 
   return (
-    <div className="w-full space-y-5">
+    <div className="relative w-full space-y-5">
       {/* This card floats over the plain (bright) Ocean backdrop rather than
-          a custom dark 3D scene like Island 2-4, so it carries its own dark,
-          gold-trimmed "logbook" framing — the same corner-dot/gold-border/
-          shadow-parchment motif as ParchmentPanel, just in a dark finish so
-          the chat log underneath it stays legible. */}
-      <div className="relative overflow-hidden rounded-[2rem] border-2 border-gold-600/40 bg-gradient-to-b from-ocean-900/95 via-ocean-950/97 to-ocean-950 p-6 shadow-parchment outline outline-1 outline-gold-500/15 -outline-offset-8 backdrop-blur-xl sm:p-8">
+          a custom dark 3D scene like Island 2-4 — that backdrop is shared
+          with several other screens (name entry, verify, greeting, ending)
+          so it can't be recolored just for this lesson. A soft breathing
+          glow behind the card (instead) gives it the same "the card is the
+          stage" weight Island 2's full-bleed scene gets for free. */}
+      <div className="pointer-events-none absolute inset-x-0 -top-8 -bottom-8 -z-10 flex items-center justify-center">
+        <div className="animate-pulse-glow h-full w-[94%] rounded-[3rem] bg-gradient-to-b from-gold-400/20 via-gold-400/8 to-transparent blur-3xl" />
+        <div className="absolute inset-x-8 top-1/3 h-2/3 rounded-[3rem] bg-teal-500/10 blur-3xl" />
+      </div>
+
+      {/* Eyebrow + prompt — same "small tracked-out label above a serif
+          italic line" convention Island 2's chapter captions use, now
+          rendered here instead of on PuzzleEngine's light parchment sheet
+          (see PuzzleEngine.jsx's word-chain bypass). Drop-shadowed since it
+          now sits directly over the bright ocean, not a cream panel. */}
+      <motion.div
+        initial={{ opacity: 0, y: -8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="mb-1 flex flex-col items-center gap-1.5 text-center"
+      >
+        <span className="font-display text-[11px] font-semibold tracking-[0.3em] text-gold-200 uppercase drop-shadow-[0_2px_6px_rgba(0,0,0,0.6)]">
+          Nối Từ
+        </span>
+        <p className="font-serif text-lg text-parchment-100 italic drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)] sm:text-xl">
+          {t(puzzle.prompt)}
+        </p>
+      </motion.div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 18, scale: 0.97 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.6, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
+        className="relative overflow-hidden rounded-[2rem] border-2 border-gold-600/40 bg-gradient-to-b from-ocean-900/95 via-ocean-950/97 to-ocean-950 p-6 shadow-parchment outline outline-1 outline-gold-500/15 -outline-offset-8 backdrop-blur-xl sm:p-8"
+      >
+        {/* A thin, continuously sweeping highlight along the top edge — the
+            same shimmer keyframe Button's primary variant uses on hover,
+            just always-on and confined to a hairline so it reads as light
+            glinting off a metal trim rather than a loading indicator. */}
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-[2px] overflow-hidden">
+          <div className="animate-shimmer h-full w-full bg-[length:200%_100%] bg-gradient-to-r from-transparent via-gold-200 to-transparent" />
+        </div>
+
         {/* Decorative corner accent markers — same motif as ParchmentPanel */}
         <span className="pointer-events-none absolute top-3 left-3 h-2 w-2 rounded-full border border-gold-400/50" />
         <span className="pointer-events-none absolute top-3 right-3 h-2 w-2 rounded-full border border-gold-400/50" />
@@ -411,7 +449,7 @@ export function WordChainLesson({ puzzle, onCorrect }) {
             </motion.div>
           ) : null}
         </AnimatePresence>
-      </div>
+      </motion.div>
 
       {/* Progress dots */}
       <div className="flex items-center justify-center gap-2">

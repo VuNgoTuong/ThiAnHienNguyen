@@ -106,7 +106,7 @@ export function IslandPage() {
   return (
     <div className="relative flex h-full w-full items-center justify-center p-6">
       <Ocean />
-      <div className={`relative z-10 flex w-full flex-col items-center mx-auto ${isWideLesson ? 'max-w-4xl sm:max-w-5xl' : 'max-w-3xl sm:max-w-4xl'}`}>
+      <div className={`relative z-10 flex w-full flex-col items-center mx-auto ${isWideLesson ? 'max-w-5xl sm:max-w-6xl' : 'max-w-3xl sm:max-w-4xl'}`}>
         <AnimatePresence mode="wait">
           {step === 'arrival' ? (
             <motion.div key="arrival" {...fadeStep} className="flex w-full justify-center">
