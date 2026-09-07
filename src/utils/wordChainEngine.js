@@ -72,3 +72,20 @@ export function pickRandomStartWord() {
   return pool[Math.floor(Math.random() * pool.length)]
 }
 
+// Fallback for the AI's turn when `pickAiWord` comes up empty. No dictionary
+// this size stays densely connected for every single syllable, so a real
+// opponent — not just this one — occasionally has nothing that continues
+// the exact chain. Rather than surrendering there, it throws in a fresh
+// word instead (same relief valve the player already gets via `freeMove`
+// in WordChainLesson.jsx), preferring one that itself has continuations so
+// the chain doesn't just die again next turn. `victory: 'ai-stuck'` is then
+// reserved for the genuine, rare case: no unused word left anywhere.
+export function pickAiFreeWord(usedWords) {
+  const openPool = startableWords.filter((word) => !usedWords.has(word))
+  if (openPool.length > 0) return openPool[Math.floor(Math.random() * openPool.length)]
+
+  const anyPool = wordChainDictionary.map((word) => normalize(word)).filter((word) => !usedWords.has(word))
+  if (anyPool.length === 0) return null
+  return anyPool[Math.floor(Math.random() * anyPool.length)]
+}
+

@@ -58,8 +58,7 @@ export function WorldScene3D({
   isUnlocked,
   isSolved,
   onSelectIsland,
-  shipPosition,
-  shipBearing,
+  shipRef,
 }) {
   const bounds = useMemo(() => {
     const points = [...islands.map((island) => island.position), finalIsland.position, START_POSITION].map(
@@ -122,7 +121,7 @@ export function WorldScene3D({
           <Island3D island={finalIsland} unlocked solved={false} isFinal onClick={() => onSelectIsland(finalIsland)} />
         ) : null}
 
-        <Ship3D position={shipPosition} bearing={shipBearing} />
+        <Ship3D shipRef={shipRef} />
       </Suspense>
       <SceneEffects />
     </Canvas>

@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Bot, Crown, Flame, Send, Sparkles, User, Compass, RefreshCw } from 'lucide-react'
+import { AlertCircle, Bot, Crown, Flame, Send, Sparkles, User, Compass, RefreshCw } from 'lucide-react'
 import { useTranslation } from '../../../hooks/useGame.js'
 import { uiStrings } from '../../../data/uiStrings.js'
 import { Button } from '../../ui/Button.jsx'
-import { getSyllables, validateNextWord, pickAiWord, hasAnyCandidate, pickRandomStartWord } from '../../../utils/wordChainEngine.js'
+import { getSyllables, validateNextWord, pickAiWord, pickAiFreeWord, hasAnyCandidate, pickRandomStartWord } from '../../../utils/wordChainEngine.js'
 
 const TARGET_CORRECT = 10
 const AI_THINK_DELAY_MS = 650
@@ -21,22 +22,27 @@ const ERROR_KEYS = {
 }
 
 // Compass-ring timer — same visual language as ProgressRing elsewhere (a
-// single gold arc), just swapping to red once time is running low.
+// single gold arc), just swapping to red once time is running low. A soft
+// glow disc sits behind it so it reads as a little brass instrument rather
+// than a flat progress bar.
 function RadialTimerRing({ progress, seconds, timerLow }) {
-  const radius = 22
+  const radius = 24
   const circumference = 2 * Math.PI * radius
   const strokeDashoffset = circumference - progress * circumference
 
   return (
     <div className="relative flex items-center justify-center">
-      <svg className="h-12 w-12 -rotate-90 transform">
-        <circle cx="24" cy="24" r={radius} stroke="currentColor" strokeWidth="3" className="text-gold-400/15" fill="transparent" />
+      <div
+        className={`absolute inset-0 rounded-full blur-md transition-colors duration-300 ${timerLow ? 'bg-red-500/25' : 'bg-gold-400/20'}`}
+      />
+      <svg className="relative h-14 w-14 -rotate-90 transform">
+        <circle cx="28" cy="28" r={radius} stroke="currentColor" strokeWidth="3" className="text-white/10" fill="transparent" />
         <motion.circle
-          cx="24"
-          cy="24"
+          cx="28"
+          cy="28"
           r={radius}
           stroke="currentColor"
-          strokeWidth="3"
+          strokeWidth="3.5"
           strokeDasharray={circumference}
           strokeDashoffset={strokeDashoffset}
           strokeLinecap="round"
@@ -45,7 +51,7 @@ function RadialTimerRing({ progress, seconds, timerLow }) {
         />
       </svg>
       <div className="absolute flex items-center justify-center">
-        <span className={`font-display text-xs font-bold ${timerLow ? 'text-red-400' : 'text-gold-300'}`}>{seconds}s</span>
+        <span className={`font-display text-xs font-bold ${timerLow ? 'text-red-300' : 'text-gold-200'}`}>{seconds}s</span>
       </div>
     </div>
   )
@@ -57,14 +63,17 @@ function ChatBubble({ entry }) {
 
   if (isStart) {
     return (
-      <motion.div
-        layout
-        initial={{ opacity: 0, scale: 0.94, y: -6 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        className="flex items-center gap-2 self-center rounded-full border border-gold-400/40 bg-gold-400/10 px-5 py-2 text-sm font-display font-semibold text-gold-300 backdrop-blur-md"
-      >
-        <Compass size={15} className="text-gold-400" />
-        <span>Từ mới: <strong className="text-parchment-100">{entry.word}</strong></span>
+      <motion.div layout initial={{ opacity: 0, scale: 0.94, y: -6 }} animate={{ opacity: 1, scale: 1, y: 0 }} className="relative self-center">
+        {/* Glow lives on its own layer behind the text, not as a box-shadow
+            on the text's own element — a large blurred box-shadow sharing a
+            paint layer with text tends to soften the text itself too
+            (visible as slightly smeared glyphs, worse on scaled/transformed
+            elements like this one). */}
+        <div className="pointer-events-none absolute inset-0 rounded-full bg-gold-400/25 blur-lg" />
+        <div className="relative flex items-center gap-2 rounded-full border border-gold-400/40 bg-gradient-to-r from-gold-400/15 via-gold-400/10 to-gold-400/15 px-5 py-2 text-sm font-display font-semibold text-gold-300 backdrop-blur-md">
+          <Compass size={15} className="text-gold-400" />
+          <span>Từ mới: <strong className="text-parchment-100">{entry.word}</strong></span>
+        </div>
       </motion.div>
     )
   }
@@ -82,7 +91,9 @@ function ChatBubble({ entry }) {
     >
       <span
         className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ring-1 ${
-          isPlayer ? 'bg-gold-400/20 text-gold-300 ring-gold-400/40' : 'bg-teal-500/20 text-teal-300 ring-teal-400/40'
+          isPlayer
+            ? 'bg-gradient-to-br from-gold-300 to-gold-400 text-ink-900 ring-gold-300/60 shadow-[0_2px_10px_-2px_rgba(232,195,104,0.7)]'
+            : 'bg-teal-500/20 text-teal-300 ring-teal-400/40'
         }`}
       >
         <Icon size={16} />
@@ -91,16 +102,16 @@ function ChatBubble({ entry }) {
       <div
         className={`rounded-2xl px-5 py-3 font-display text-base font-semibold sm:text-lg ${
           isPlayer
-            ? 'rounded-br-sm border border-gold-400/50 bg-gold-400 text-ink-900'
-            : 'rounded-bl-sm border border-teal-400/40 bg-white/10 text-parchment-100 backdrop-blur-md'
+            ? 'rounded-br-sm border border-gold-300/60 bg-gradient-to-br from-gold-300 to-gold-400 text-ink-900 shadow-[0_4px_16px_-4px_rgba(232,195,104,0.5)]'
+            : 'rounded-bl-sm border border-teal-400/30 bg-white/10 text-parchment-100 backdrop-blur-md'
         }`}
       >
         {syllables.length === 2 ? (
           <span className="flex items-center gap-1.5">
             <span>{syllables[0]}</span>
             <span
-              className={`rounded-md px-2 py-0.5 text-sm ${
-                isPlayer ? 'bg-ink-900/15 text-ink-900' : 'bg-teal-400/20 text-teal-200'
+              className={`rounded-md px-2 py-0.5 text-sm font-bold ${
+                isPlayer ? 'bg-white/50 text-ink-900' : 'bg-teal-400/20 text-teal-200'
               }`}
             >
               {syllables[1]}
@@ -167,6 +178,12 @@ export function WordChainLesson({ puzzle, onCorrect }) {
     return () => clearTimeout(timeout)
   }, [victory])
 
+  useEffect(() => {
+    if (!error) return
+    const timeout = setTimeout(() => setError(null), 2600)
+    return () => clearTimeout(timeout)
+  }, [error])
+
   function handleSwapWord() {
     if (aiThinking || victory || swapsLeft <= 0) return
     setSwapsLeft((prev) => prev - 1)
@@ -211,14 +228,23 @@ export function WordChainLesson({ puzzle, onCorrect }) {
     const nextRequired = getSyllables(result.word)[1]
 
     setTimeout(() => {
-      const aiWord = pickAiWord({ requiredStartSyllable: nextRequired, usedWords: nextUsed })
       setAiThinking(false)
+      const aiWord = pickAiWord({ requiredStartSyllable: nextRequired, usedWords: nextUsed })
       if (aiWord) {
         setChain((current) => [...current, { word: aiWord, by: 'ai' }])
-      } else {
-        clearInterval(intervalRef.current)
-        setVictory('ai-stuck')
+        return
       }
+
+      // No word continues this exact chain — same relief valve the player
+      // gets via `freeMove`: throw in a fresh word rather than surrender.
+      const freeWord = pickAiFreeWord(nextUsed)
+      if (freeWord) {
+        setChain((current) => [...current, { word: freeWord, by: 'start' }])
+        return
+      }
+
+      clearInterval(intervalRef.current)
+      setVictory('ai-stuck')
     }, AI_THINK_DELAY_MS)
   }
 
@@ -229,18 +255,64 @@ export function WordChainLesson({ puzzle, onCorrect }) {
   const streak = playerCorrectCount
 
   return (
-    <div className="w-full space-y-5">
+    <div className="relative w-full space-y-5">
       {/* This card floats over the plain (bright) Ocean backdrop rather than
-          a custom dark 3D scene like Island 2-4, so — unlike those — it
-          needs a solidly dark backing, not a light 10%-opacity glass tint,
-          to stay legible. */}
-      <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-ocean-950/92 p-6 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.75)] backdrop-blur-xl sm:p-8">
-        <div className="pointer-events-none absolute -top-16 right-0 h-48 w-48 rounded-full bg-gold-400/10 blur-3xl" />
+          a custom dark 3D scene like Island 2-4 — that backdrop is shared
+          with several other screens (name entry, verify, greeting, ending)
+          so it can't be recolored just for this lesson. A soft breathing
+          glow behind the card (instead) gives it the same "the card is the
+          stage" weight Island 2's full-bleed scene gets for free. */}
+      <div className="pointer-events-none absolute inset-x-0 -top-8 -bottom-8 -z-10 flex items-center justify-center">
+        <div className="animate-pulse-glow h-full w-[94%] rounded-[3rem] bg-gradient-to-b from-gold-400/20 via-gold-400/8 to-transparent blur-3xl" />
+        <div className="absolute inset-x-8 top-1/3 h-2/3 rounded-[3rem] bg-teal-500/10 blur-3xl" />
+      </div>
+
+      {/* Eyebrow + prompt — same "small tracked-out label above a serif
+          italic line" convention Island 2's chapter captions use, now
+          rendered here instead of on PuzzleEngine's light parchment sheet
+          (see PuzzleEngine.jsx's word-chain bypass). Drop-shadowed since it
+          now sits directly over the bright ocean, not a cream panel. */}
+      <motion.div
+        initial={{ opacity: 0, y: -8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="mb-1 flex flex-col items-center gap-1.5 text-center"
+      >
+        <span className="font-display text-[11px] font-semibold tracking-[0.3em] text-gold-200 uppercase drop-shadow-[0_2px_6px_rgba(0,0,0,0.6)]">
+          Nối Từ
+        </span>
+        <p className="font-serif text-lg text-parchment-100 italic drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)] sm:text-xl">
+          {t(puzzle.prompt)}
+        </p>
+      </motion.div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 18, scale: 0.97 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.6, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
+        className="relative overflow-hidden rounded-[2rem] border-2 border-gold-600/40 bg-gradient-to-b from-ocean-900/95 via-ocean-950/97 to-ocean-950 p-6 shadow-parchment outline outline-1 outline-gold-500/15 -outline-offset-8 backdrop-blur-xl sm:p-8"
+      >
+        {/* A thin, continuously sweeping highlight along the top edge — the
+            same shimmer keyframe Button's primary variant uses on hover,
+            just always-on and confined to a hairline so it reads as light
+            glinting off a metal trim rather than a loading indicator. */}
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-[2px] overflow-hidden">
+          <div className="animate-shimmer h-full w-full bg-[length:200%_100%] bg-gradient-to-r from-transparent via-gold-200 to-transparent" />
+        </div>
+
+        {/* Decorative corner accent markers — same motif as ParchmentPanel */}
+        <span className="pointer-events-none absolute top-3 left-3 h-2 w-2 rounded-full border border-gold-400/50" />
+        <span className="pointer-events-none absolute top-3 right-3 h-2 w-2 rounded-full border border-gold-400/50" />
+        <span className="pointer-events-none absolute bottom-3 left-3 h-2 w-2 rounded-full border border-gold-400/50" />
+        <span className="pointer-events-none absolute bottom-3 right-3 h-2 w-2 rounded-full border border-gold-400/50" />
+
+        <div className="pointer-events-none absolute -top-16 right-0 h-56 w-56 rounded-full bg-gold-400/10 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-20 -left-10 h-48 w-48 rounded-full bg-teal-400/10 blur-3xl" />
 
         {/* Header: streak + progress on the left, timer ring on the right */}
-        <div className="relative mb-5 flex items-center justify-between border-b border-white/10 pb-4">
+        <div className="relative mb-5 flex items-center justify-between gap-3 pb-4">
           <div className="flex items-center gap-2.5">
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gold-400/20 text-gold-300 ring-1 ring-gold-400/40">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gold-400/20 text-gold-300 ring-1 ring-gold-400/40 shadow-[0_0_14px_-4px_rgba(232,195,104,0.6)]">
               <User size={16} />
             </span>
             <p className="font-display text-sm font-semibold text-parchment-100">
@@ -265,6 +337,7 @@ export function WordChainLesson({ puzzle, onCorrect }) {
             <RadialTimerRing progress={timerProgress} seconds={secondsLeft} timerLow={timerLow} />
           ) : null}
         </div>
+        <div className="relative -mt-5 mb-5 h-px w-full bg-gradient-to-r from-transparent via-gold-500/30 to-transparent" />
 
         {/* Chain History Log */}
         <div className="relative flex min-h-[15rem] flex-col gap-3 sm:min-h-[17rem]">
@@ -274,27 +347,38 @@ export function WordChainLesson({ puzzle, onCorrect }) {
             ))}
           </AnimatePresence>
           {aiThinking ? (
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="self-start pl-12 text-xs italic text-teal-300/80"
+            <motion.div
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="flex items-center gap-2.5 self-start"
             >
-              Anh đang nghĩ từ tiếp theo...
-            </motion.p>
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-teal-500/20 text-teal-300 ring-1 ring-teal-400/40">
+                <Bot size={16} />
+              </span>
+              <span className="flex items-center gap-1 rounded-2xl rounded-bl-sm border border-teal-400/30 bg-white/10 px-4 py-3 backdrop-blur-md">
+                {[0, 1, 2].map((dot) => (
+                  <motion.span
+                    key={dot}
+                    className="h-1.5 w-1.5 rounded-full bg-teal-300/80"
+                    animate={{ opacity: [0.3, 1, 0.3], y: [0, -3, 0] }}
+                    transition={{ duration: 0.9, repeat: Infinity, delay: dot * 0.15 }}
+                  />
+                ))}
+              </span>
+            </motion.div>
           ) : null}
         </div>
 
         {/* Syllable Target Display & Swap Word Pill */}
-        <div className="relative mt-5 flex flex-col items-center gap-3 border-t border-white/10 pt-5">
+        <div className="relative mt-5 flex flex-col items-center gap-3 pt-5">
+          <div className="absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-gold-500/30 to-transparent" />
           {freeMove ? (
-            <motion.span
-              key="free"
-              initial={{ opacity: 0, scale: 0.96 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="rounded-full border border-teal-400/40 bg-teal-500/10 px-6 py-2.5 text-center font-display text-sm font-semibold text-teal-300"
-            >
-              Anh hết từ nối — em chọn từ tự do nhé!
-            </motion.span>
+            <motion.div key="free" initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} className="relative">
+              <div className="pointer-events-none absolute inset-0 rounded-2xl bg-teal-400/20 blur-lg" />
+              <div className="relative rounded-2xl border border-teal-400/40 bg-teal-500/10 px-6 py-2.5 text-center font-display text-sm font-semibold text-teal-300">
+                Anh hết từ nối — em chọn từ tự do nhé!
+              </div>
+            </motion.div>
           ) : (
             <>
               <span className="font-display text-xs font-semibold tracking-[0.25em] text-parchment-200/50 uppercase">
@@ -307,12 +391,16 @@ export function WordChainLesson({ puzzle, onCorrect }) {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.9 }}
                   transition={{ type: 'spring', stiffness: 420, damping: 24 }}
-                  className="relative flex items-center gap-2.5 rounded-2xl border border-gold-400/50 bg-gold-400/10 px-8 py-2.5"
+                  className="relative"
                 >
-                  <Sparkles size={16} className="text-gold-400" />
-                  <span className="font-display text-2xl font-bold tracking-wide text-gold-300 sm:text-3xl">
-                    {requiredStartSyllable}
-                  </span>
+                  <div className="pointer-events-none absolute inset-0 rounded-2xl bg-gold-400/30 blur-lg" />
+                  <div className="relative flex items-center gap-2.5 rounded-2xl border border-gold-400/60 bg-gradient-to-b from-gold-400/15 to-gold-400/5 px-9 py-3">
+                    <span className="pointer-events-none absolute inset-0 rounded-2xl border border-gold-300/20" />
+                    <Sparkles size={16} className="text-gold-400" />
+                    <span className="font-display text-2xl font-bold tracking-wide text-gold-200 sm:text-3xl">
+                      {requiredStartSyllable}
+                    </span>
+                  </div>
                 </motion.div>
               </AnimatePresence>
 
@@ -336,22 +424,32 @@ export function WordChainLesson({ puzzle, onCorrect }) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="absolute inset-0 z-30 flex flex-col items-center justify-center gap-4 bg-ocean-950/90 backdrop-blur-xl"
+              className="absolute inset-0 z-30 flex flex-col items-center justify-center gap-4 bg-ocean-950/92 backdrop-blur-xl"
             >
+              <span className="pointer-events-none absolute top-4 left-4 h-2 w-2 rounded-full border border-gold-400/50" />
+              <span className="pointer-events-none absolute top-4 right-4 h-2 w-2 rounded-full border border-gold-400/50" />
+              <span className="pointer-events-none absolute bottom-4 left-4 h-2 w-2 rounded-full border border-gold-400/50" />
+              <span className="pointer-events-none absolute bottom-4 right-4 h-2 w-2 rounded-full border border-gold-400/50" />
+              <div className="pointer-events-none absolute h-40 w-40 rounded-full bg-gold-400/20 blur-3xl" />
+
               <motion.div
-                initial={{ scale: 0.4, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                className="flex h-16 w-16 items-center justify-center rounded-full border border-gold-400/60 bg-gold-400/15 text-gold-300"
+                initial={{ scale: 0.4, opacity: 0, rotate: -20 }}
+                animate={{ scale: 1, opacity: 1, rotate: 0 }}
+                transition={{ type: 'spring', stiffness: 260, damping: 18 }}
+                className="relative flex h-20 w-20 items-center justify-center"
               >
-                <Crown size={30} />
+                <div className="pointer-events-none absolute inset-0 rounded-full bg-gold-400/30 blur-xl" />
+                <div className="relative flex h-20 w-20 items-center justify-center rounded-full border-2 border-gold-400/70 bg-gradient-to-b from-gold-400/25 to-gold-400/5 text-gold-300">
+                  <Crown size={34} />
+                </div>
               </motion.div>
-              <p className="px-6 text-center font-display text-xl font-bold text-parchment-100 sm:text-2xl">
+              <p className="relative px-6 text-center font-display text-xl font-bold text-parchment-100 sm:text-2xl">
                 {victory === 'ai-stuck' ? 'Anh không thể nối tiếp — em giỏi quá!' : 'Xuất sắc! Đã hoàn thành 10 từ nối liên tiếp!'}
               </p>
             </motion.div>
           ) : null}
         </AnimatePresence>
-      </div>
+      </motion.div>
 
       {/* Progress dots */}
       <div className="flex items-center justify-center gap-2">
@@ -362,7 +460,9 @@ export function WordChainLesson({ puzzle, onCorrect }) {
               key={index}
               animate={index === playerCorrectCount - 1 ? { scale: [0.6, 1.3, 1] } : { scale: 1 }}
               transition={{ duration: 0.3 }}
-              className={`h-1.5 w-6 rounded-full transition-colors ${lit ? 'bg-gold-400' : 'bg-white/10'}`}
+              className={`h-1.5 w-6 rounded-full transition-colors ${
+                lit ? 'bg-gradient-to-r from-gold-300 to-gold-500 shadow-[0_0_8px_-1px_rgba(232,195,104,0.7)]' : 'bg-white/10'
+              }`}
             />
           )
         })}
@@ -375,7 +475,7 @@ export function WordChainLesson({ puzzle, onCorrect }) {
           onChange={(event) => setInput(event.target.value)}
           placeholder={t(uiStrings.wordChainInputPlaceholder)}
           disabled={aiThinking || Boolean(victory)}
-          className="flex-1 rounded-2xl border border-white/10 bg-ocean-950/80 px-5 py-3.5 font-display text-base text-parchment-100 placeholder:text-parchment-200/40 backdrop-blur-md transition-colors focus:border-gold-400/60 focus:outline-none focus:ring-2 focus:ring-gold-400/30 disabled:opacity-60"
+          className="flex-1 rounded-2xl border border-gold-600/15 bg-ocean-950/80 px-5 py-3.5 font-display text-base text-parchment-100 placeholder:text-parchment-200/40 backdrop-blur-md transition-colors focus:border-gold-400/60 focus:outline-none focus:ring-2 focus:ring-gold-400/30 disabled:opacity-60"
         />
         <Button
           type="submit"
@@ -387,11 +487,36 @@ export function WordChainLesson({ puzzle, onCorrect }) {
         </Button>
       </form>
 
-      {error ? (
-        <motion.p initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} className="text-center font-display text-sm font-semibold text-red-400">
-          {t(uiStrings[ERROR_KEYS[error]])}
-        </motion.p>
-      ) : null}
+      {/* Error toast — same dark-glass card as AchievementToast, auto-
+          dismissing rather than sitting parked in the layout below the
+          input. Rendered through a portal straight into <body>: this
+          component sits inside IslandPage's animated `motion.div`
+          (fadeStep), and framer-motion always sets an explicit `transform`
+          on that wrapper (even for a no-op like y: 0) — which makes it a
+          `position: fixed` containing block *and* a new stacking context.
+          Without the portal the toast would be trapped inside that
+          wrapper's box instead of the real viewport, landing underneath
+          the HUD instead of above it regardless of z-index. Positioned
+          below `top-20` to clear the HUD's own top-0 row entirely. */}
+      {createPortal(
+        <div className="pointer-events-none fixed inset-x-0 top-20 z-[60] flex justify-center px-4">
+          <AnimatePresence>
+            {error ? (
+              <motion.div
+                key={error}
+                initial={{ opacity: 0, y: -16, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -16, scale: 0.95 }}
+                className="shadow-parchment flex items-center gap-3 rounded-xl border border-red-400/40 bg-ocean-900/95 px-4 py-3"
+              >
+                <AlertCircle size={20} className="shrink-0 text-red-400" />
+                <p className="font-display text-sm text-parchment-100">{t(uiStrings[ERROR_KEYS[error]])}</p>
+              </motion.div>
+            ) : null}
+          </AnimatePresence>
+        </div>,
+        document.body,
+      )}
     </div>
   )
 }

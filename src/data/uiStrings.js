@@ -1,5 +1,5 @@
 export const uiStrings = {
-  gameTitle: { vi: 'Đi Ra Đảo Chơi Với Anh Đi Em', en: 'Come to the Island with Me' },
+  gameTitle: { vi: 'Ra Đảo Một Chuyến?', en: 'Trip to the Island?' },
   gameSubtitle: {
     vi: '',
     en: '',
@@ -26,7 +26,7 @@ export const uiStrings = {
   },
 
   verifyTitle: { vi: 'Xác Minh Danh Tính', en: 'Identity Check' },
-  verifyBirthdayQuestion: { vi: 'Có đúng là công chúa An Hiền không nè? Sinh nhật em ngày mấy vậy?', en: "Really you, An Hiền? What's your birthday?" },
+  verifyBirthdayQuestion: { vi: 'Xác nhận lại ngày sinh nhật cái nè:', en: 'Confirm your birthday real quick:' },
   verifyNumerologyQuestion: { vi: 'Thần số học của em là số mấy vậy?', en: "What's your numerology number?" },
 
   greetingTitle: { vi: 'Chào', en: 'Hi' }, // rendered as "{greetingTitle} {playerName}!"
