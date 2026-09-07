@@ -22,9 +22,9 @@ const ERROR_KEYS = {
 }
 
 // Compass-ring timer — same visual language as ProgressRing elsewhere (a
-// single gold arc), just swapping to red once time is running low. A soft
-// glow disc sits behind it so it reads as a little brass instrument rather
-// than a flat progress bar.
+// single rose arc), just swapping to red once time is running low. A soft
+// glow disc sits behind it so it reads as a little jeweled instrument
+// rather than a flat progress bar.
 function RadialTimerRing({ progress, seconds, timerLow }) {
   const radius = 24
   const circumference = 2 * Math.PI * radius
@@ -33,10 +33,10 @@ function RadialTimerRing({ progress, seconds, timerLow }) {
   return (
     <div className="relative flex items-center justify-center">
       <div
-        className={`absolute inset-0 rounded-full blur-md transition-colors duration-300 ${timerLow ? 'bg-red-500/25' : 'bg-gold-400/20'}`}
+        className={`absolute inset-0 rounded-full blur-md transition-colors duration-300 ${timerLow ? 'bg-red-400/25' : 'bg-rose-300/35'}`}
       />
       <svg className="relative h-14 w-14 -rotate-90 transform">
-        <circle cx="28" cy="28" r={radius} stroke="currentColor" strokeWidth="3" className="text-white/10" fill="transparent" />
+        <circle cx="28" cy="28" r={radius} stroke="currentColor" strokeWidth="3" className="text-rose-900/10" fill="transparent" />
         <motion.circle
           cx="28"
           cy="28"
@@ -46,12 +46,12 @@ function RadialTimerRing({ progress, seconds, timerLow }) {
           strokeDasharray={circumference}
           strokeDashoffset={strokeDashoffset}
           strokeLinecap="round"
-          className={`transition-colors duration-200 ${timerLow ? 'text-red-400' : 'text-gold-400'}`}
+          className={`transition-colors duration-200 ${timerLow ? 'text-red-500' : 'text-rose-500'}`}
           fill="transparent"
         />
       </svg>
       <div className="absolute flex items-center justify-center">
-        <span className={`font-display text-xs font-bold ${timerLow ? 'text-red-300' : 'text-gold-200'}`}>{seconds}s</span>
+        <span className={`font-display text-xs font-bold ${timerLow ? 'text-red-600' : 'text-rose-700'}`}>{seconds}s</span>
       </div>
     </div>
   )
@@ -70,9 +70,9 @@ function ChatBubble({ entry }) {
             (visible as slightly smeared glyphs, worse on scaled/transformed
             elements like this one). */}
         <div className="pointer-events-none absolute inset-0 rounded-full bg-gold-400/25 blur-lg" />
-        <div className="relative flex items-center gap-2 rounded-full border border-gold-400/40 bg-gradient-to-r from-gold-400/15 via-gold-400/10 to-gold-400/15 px-5 py-2 text-sm font-display font-semibold text-gold-300 backdrop-blur-md">
-          <Compass size={15} className="text-gold-400" />
-          <span>Từ mới: <strong className="text-parchment-100">{entry.word}</strong></span>
+        <div className="relative flex items-center gap-2 rounded-full border border-gold-500/50 bg-gradient-to-r from-gold-200/60 via-gold-100/50 to-gold-200/60 px-5 py-2 text-sm font-display font-semibold text-gold-700 backdrop-blur-md">
+          <Compass size={15} className="text-gold-600" />
+          <span>Từ mới: <strong className="text-rose-900">{entry.word}</strong></span>
         </div>
       </motion.div>
     )
@@ -92,8 +92,8 @@ function ChatBubble({ entry }) {
       <span
         className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ring-1 ${
           isPlayer
-            ? 'bg-gradient-to-br from-gold-300 to-gold-400 text-ink-900 ring-gold-300/60 shadow-[0_2px_10px_-2px_rgba(232,195,104,0.7)]'
-            : 'bg-teal-500/20 text-teal-300 ring-teal-400/40'
+            ? 'bg-gradient-to-br from-rose-300 to-pink-400 text-rose-950 ring-rose-300/70 shadow-[0_2px_10px_-2px_rgba(244,114,182,0.6)]'
+            : 'bg-violet-100 text-violet-500 ring-violet-300/70'
         }`}
       >
         <Icon size={16} />
@@ -102,8 +102,8 @@ function ChatBubble({ entry }) {
       <div
         className={`rounded-2xl px-5 py-3 font-display text-base font-semibold sm:text-lg ${
           isPlayer
-            ? 'rounded-br-sm border border-gold-300/60 bg-gradient-to-br from-gold-300 to-gold-400 text-ink-900 shadow-[0_4px_16px_-4px_rgba(232,195,104,0.5)]'
-            : 'rounded-bl-sm border border-teal-400/30 bg-white/10 text-parchment-100 backdrop-blur-md'
+            ? 'rounded-br-sm border border-rose-300/70 bg-gradient-to-br from-rose-300 to-pink-400 text-rose-950 shadow-[0_4px_16px_-4px_rgba(244,114,182,0.45)]'
+            : 'rounded-bl-sm border border-violet-200 bg-violet-50/90 text-violet-950 backdrop-blur-md'
         }`}
       >
         {syllables.length === 2 ? (
@@ -111,7 +111,7 @@ function ChatBubble({ entry }) {
             <span>{syllables[0]}</span>
             <span
               className={`rounded-md px-2 py-0.5 text-sm font-bold ${
-                isPlayer ? 'bg-white/50 text-ink-900' : 'bg-teal-400/20 text-teal-200'
+                isPlayer ? 'bg-white/70 text-rose-950' : 'bg-violet-200/80 text-violet-950'
               }`}
             >
               {syllables[1]}
@@ -263,25 +263,25 @@ export function WordChainLesson({ puzzle, onCorrect }) {
           glow behind the card (instead) gives it the same "the card is the
           stage" weight Island 2's full-bleed scene gets for free. */}
       <div className="pointer-events-none absolute inset-x-0 -top-8 -bottom-8 -z-10 flex items-center justify-center">
-        <div className="animate-pulse-glow h-full w-[94%] rounded-[3rem] bg-gradient-to-b from-gold-400/20 via-gold-400/8 to-transparent blur-3xl" />
-        <div className="absolute inset-x-8 top-1/3 h-2/3 rounded-[3rem] bg-teal-500/10 blur-3xl" />
+        <div className="animate-pulse-glow h-full w-[94%] rounded-[3rem] bg-gradient-to-b from-rose-300/30 via-pink-200/15 to-transparent blur-3xl" />
+        <div className="absolute inset-x-8 top-1/3 h-2/3 rounded-[3rem] bg-violet-300/20 blur-3xl" />
       </div>
 
       {/* Eyebrow + prompt — same "small tracked-out label above a serif
           italic line" convention Island 2's chapter captions use, now
           rendered here instead of on PuzzleEngine's light parchment sheet
           (see PuzzleEngine.jsx's word-chain bypass). Drop-shadowed since it
-          now sits directly over the bright ocean, not a cream panel. */}
+          sits directly over the bright ocean, not a cream panel. */}
       <motion.div
         initial={{ opacity: 0, y: -8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
         className="mb-1 flex flex-col items-center gap-1.5 text-center"
       >
-        <span className="font-display text-[11px] font-semibold tracking-[0.3em] text-gold-200 uppercase drop-shadow-[0_2px_6px_rgba(0,0,0,0.6)]">
+        <span className="font-display text-[11px] font-semibold tracking-[0.3em] text-white uppercase drop-shadow-[0_2px_6px_rgba(0,0,0,0.6)]">
           Nối Từ
         </span>
-        <p className="font-serif text-lg text-parchment-100 italic drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)] sm:text-xl">
+        <p className="font-serif text-lg text-white italic drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)] sm:text-xl">
           {t(puzzle.prompt)}
         </p>
       </motion.div>
@@ -290,33 +290,34 @@ export function WordChainLesson({ puzzle, onCorrect }) {
         initial={{ opacity: 0, y: 18, scale: 0.97 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.6, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
-        className="relative overflow-hidden rounded-[2rem] border-2 border-gold-600/40 bg-gradient-to-b from-ocean-900/95 via-ocean-950/97 to-ocean-950 p-6 shadow-parchment outline outline-1 outline-gold-500/15 -outline-offset-8 backdrop-blur-xl sm:p-8"
+        className="relative overflow-hidden rounded-[2rem] border-2 border-rose-300/70 bg-gradient-to-b from-white via-rose-50 to-pink-100 p-6 shadow-parchment outline outline-1 outline-rose-300/30 -outline-offset-8 backdrop-blur-xl sm:p-8"
       >
         {/* A thin, continuously sweeping highlight along the top edge — the
             same shimmer keyframe Button's primary variant uses on hover,
             just always-on and confined to a hairline so it reads as light
-            glinting off a metal trim rather than a loading indicator. */}
+            glinting off a gold trim rather than a loading indicator. */}
         <div className="pointer-events-none absolute inset-x-0 top-0 h-[2px] overflow-hidden">
-          <div className="animate-shimmer h-full w-full bg-[length:200%_100%] bg-gradient-to-r from-transparent via-gold-200 to-transparent" />
+          <div className="animate-shimmer h-full w-full bg-[length:200%_100%] bg-gradient-to-r from-transparent via-gold-400 to-transparent" />
         </div>
 
-        {/* Decorative corner accent markers — same motif as ParchmentPanel */}
-        <span className="pointer-events-none absolute top-3 left-3 h-2 w-2 rounded-full border border-gold-400/50" />
-        <span className="pointer-events-none absolute top-3 right-3 h-2 w-2 rounded-full border border-gold-400/50" />
-        <span className="pointer-events-none absolute bottom-3 left-3 h-2 w-2 rounded-full border border-gold-400/50" />
-        <span className="pointer-events-none absolute bottom-3 right-3 h-2 w-2 rounded-full border border-gold-400/50" />
+        {/* Decorative corner accent markers — same motif as ParchmentPanel,
+            gold trim on the blush card like a keepsake jewel box. */}
+        <span className="pointer-events-none absolute top-3 left-3 h-2 w-2 rounded-full border border-gold-500/60" />
+        <span className="pointer-events-none absolute top-3 right-3 h-2 w-2 rounded-full border border-gold-500/60" />
+        <span className="pointer-events-none absolute bottom-3 left-3 h-2 w-2 rounded-full border border-gold-500/60" />
+        <span className="pointer-events-none absolute bottom-3 right-3 h-2 w-2 rounded-full border border-gold-500/60" />
 
-        <div className="pointer-events-none absolute -top-16 right-0 h-56 w-56 rounded-full bg-gold-400/10 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-20 -left-10 h-48 w-48 rounded-full bg-teal-400/10 blur-3xl" />
+        <div className="pointer-events-none absolute -top-16 right-0 h-56 w-56 rounded-full bg-rose-300/20 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-20 -left-10 h-48 w-48 rounded-full bg-violet-300/15 blur-3xl" />
 
         {/* Header: streak + progress on the left, timer ring on the right */}
         <div className="relative mb-5 flex items-center justify-between gap-3 pb-4">
           <div className="flex items-center gap-2.5">
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gold-400/20 text-gold-300 ring-1 ring-gold-400/40 shadow-[0_0_14px_-4px_rgba(232,195,104,0.6)]">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-rose-100 text-rose-500 ring-1 ring-rose-300/60 shadow-[0_0_14px_-4px_rgba(244,114,182,0.5)]">
               <User size={16} />
             </span>
-            <p className="font-display text-sm font-semibold text-parchment-100">
-              <strong className="text-gold-300">{playerCorrectCount}</strong>/{TARGET_CORRECT} {t(uiStrings.wordChainProgress)}
+            <p className="font-display text-sm font-semibold text-ink-900">
+              <strong className="text-rose-600">{playerCorrectCount}</strong>/{TARGET_CORRECT} {t(uiStrings.wordChainProgress)}
             </p>
             <AnimatePresence>
               {streak >= STREAK_FLAME_THRESHOLD ? (
@@ -324,9 +325,9 @@ export function WordChainLesson({ puzzle, onCorrect }) {
                   initial={{ opacity: 0, scale: 0.85 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0 }}
-                  className="flex items-center gap-1 rounded-full border border-gold-400/40 bg-gold-400/10 px-2.5 py-0.5 text-xs font-semibold text-gold-300"
+                  className="flex items-center gap-1 rounded-full border border-orange-300/60 bg-orange-100 px-2.5 py-0.5 text-xs font-semibold text-orange-600"
                 >
-                  <Flame size={12} className="text-gold-400" />
+                  <Flame size={12} className="text-orange-500" />
                   <span>{streak}</span>
                 </motion.span>
               ) : null}
@@ -337,7 +338,7 @@ export function WordChainLesson({ puzzle, onCorrect }) {
             <RadialTimerRing progress={timerProgress} seconds={secondsLeft} timerLow={timerLow} />
           ) : null}
         </div>
-        <div className="relative -mt-5 mb-5 h-px w-full bg-gradient-to-r from-transparent via-gold-500/30 to-transparent" />
+        <div className="relative -mt-5 mb-5 h-px w-full bg-gradient-to-r from-transparent via-rose-300/50 to-transparent" />
 
         {/* Chain History Log */}
         <div className="relative flex min-h-[15rem] flex-col gap-3 sm:min-h-[17rem]">
@@ -352,14 +353,14 @@ export function WordChainLesson({ puzzle, onCorrect }) {
               animate={{ opacity: 1, y: 0 }}
               className="flex items-center gap-2.5 self-start"
             >
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-teal-500/20 text-teal-300 ring-1 ring-teal-400/40">
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-violet-100 text-violet-500 ring-1 ring-violet-300/70">
                 <Bot size={16} />
               </span>
-              <span className="flex items-center gap-1 rounded-2xl rounded-bl-sm border border-teal-400/30 bg-white/10 px-4 py-3 backdrop-blur-md">
+              <span className="flex items-center gap-1 rounded-2xl rounded-bl-sm border border-violet-200 bg-violet-50/90 px-4 py-3 backdrop-blur-md">
                 {[0, 1, 2].map((dot) => (
                   <motion.span
                     key={dot}
-                    className="h-1.5 w-1.5 rounded-full bg-teal-300/80"
+                    className="h-1.5 w-1.5 rounded-full bg-violet-400/90"
                     animate={{ opacity: [0.3, 1, 0.3], y: [0, -3, 0] }}
                     transition={{ duration: 0.9, repeat: Infinity, delay: dot * 0.15 }}
                   />
@@ -371,17 +372,17 @@ export function WordChainLesson({ puzzle, onCorrect }) {
 
         {/* Syllable Target Display & Swap Word Pill */}
         <div className="relative mt-5 flex flex-col items-center gap-3 pt-5">
-          <div className="absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-gold-500/30 to-transparent" />
+          <div className="absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-rose-300/50 to-transparent" />
           {freeMove ? (
             <motion.div key="free" initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} className="relative">
-              <div className="pointer-events-none absolute inset-0 rounded-2xl bg-teal-400/20 blur-lg" />
-              <div className="relative rounded-2xl border border-teal-400/40 bg-teal-500/10 px-6 py-2.5 text-center font-display text-sm font-semibold text-teal-300">
+              <div className="pointer-events-none absolute inset-0 rounded-2xl bg-violet-300/25 blur-lg" />
+              <div className="relative rounded-2xl border border-violet-300/60 bg-violet-100/80 px-6 py-2.5 text-center font-display text-sm font-semibold text-violet-700">
                 Anh hết từ nối — em chọn từ tự do nhé!
               </div>
             </motion.div>
           ) : (
             <>
-              <span className="font-display text-xs font-semibold tracking-[0.25em] text-parchment-200/50 uppercase">
+              <span className="font-display text-xs font-semibold tracking-[0.25em] text-rose-900/50 uppercase">
                 {t(uiStrings.wordChainNeedsSyllable)}
               </span>
               <AnimatePresence mode="wait">
@@ -393,11 +394,11 @@ export function WordChainLesson({ puzzle, onCorrect }) {
                   transition={{ type: 'spring', stiffness: 420, damping: 24 }}
                   className="relative"
                 >
-                  <div className="pointer-events-none absolute inset-0 rounded-2xl bg-gold-400/30 blur-lg" />
-                  <div className="relative flex items-center gap-2.5 rounded-2xl border border-gold-400/60 bg-gradient-to-b from-gold-400/15 to-gold-400/5 px-9 py-3">
-                    <span className="pointer-events-none absolute inset-0 rounded-2xl border border-gold-300/20" />
-                    <Sparkles size={16} className="text-gold-400" />
-                    <span className="font-display text-2xl font-bold tracking-wide text-gold-200 sm:text-3xl">
+                  <div className="pointer-events-none absolute inset-0 rounded-2xl bg-rose-300/40 blur-lg" />
+                  <div className="relative flex items-center gap-2.5 rounded-2xl border border-rose-400/70 bg-gradient-to-b from-rose-100 to-pink-50 px-9 py-3">
+                    <span className="pointer-events-none absolute inset-0 rounded-2xl border border-gold-400/40" />
+                    <Sparkles size={16} className="text-gold-500" />
+                    <span className="font-display text-2xl font-bold tracking-wide text-rose-700 sm:text-3xl">
                       {requiredStartSyllable}
                     </span>
                   </div>
@@ -424,13 +425,13 @@ export function WordChainLesson({ puzzle, onCorrect }) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="absolute inset-0 z-30 flex flex-col items-center justify-center gap-4 bg-ocean-950/92 backdrop-blur-xl"
+              className="absolute inset-0 z-30 flex flex-col items-center justify-center gap-4 bg-gradient-to-b from-white/95 via-rose-50/95 to-pink-100/95 backdrop-blur-xl"
             >
-              <span className="pointer-events-none absolute top-4 left-4 h-2 w-2 rounded-full border border-gold-400/50" />
-              <span className="pointer-events-none absolute top-4 right-4 h-2 w-2 rounded-full border border-gold-400/50" />
-              <span className="pointer-events-none absolute bottom-4 left-4 h-2 w-2 rounded-full border border-gold-400/50" />
-              <span className="pointer-events-none absolute bottom-4 right-4 h-2 w-2 rounded-full border border-gold-400/50" />
-              <div className="pointer-events-none absolute h-40 w-40 rounded-full bg-gold-400/20 blur-3xl" />
+              <span className="pointer-events-none absolute top-4 left-4 h-2 w-2 rounded-full border border-gold-500/60" />
+              <span className="pointer-events-none absolute top-4 right-4 h-2 w-2 rounded-full border border-gold-500/60" />
+              <span className="pointer-events-none absolute bottom-4 left-4 h-2 w-2 rounded-full border border-gold-500/60" />
+              <span className="pointer-events-none absolute bottom-4 right-4 h-2 w-2 rounded-full border border-gold-500/60" />
+              <div className="pointer-events-none absolute h-40 w-40 rounded-full bg-rose-300/30 blur-3xl" />
 
               <motion.div
                 initial={{ scale: 0.4, opacity: 0, rotate: -20 }}
@@ -439,11 +440,11 @@ export function WordChainLesson({ puzzle, onCorrect }) {
                 className="relative flex h-20 w-20 items-center justify-center"
               >
                 <div className="pointer-events-none absolute inset-0 rounded-full bg-gold-400/30 blur-xl" />
-                <div className="relative flex h-20 w-20 items-center justify-center rounded-full border-2 border-gold-400/70 bg-gradient-to-b from-gold-400/25 to-gold-400/5 text-gold-300">
+                <div className="relative flex h-20 w-20 items-center justify-center rounded-full border-2 border-gold-500/70 bg-gradient-to-b from-gold-300/40 to-gold-200/10 text-gold-600">
                   <Crown size={34} />
                 </div>
               </motion.div>
-              <p className="relative px-6 text-center font-display text-xl font-bold text-parchment-100 sm:text-2xl">
+              <p className="relative px-6 text-center font-display text-xl font-bold text-rose-950 sm:text-2xl">
                 {victory === 'ai-stuck' ? 'Anh không thể nối tiếp — em giỏi quá!' : 'Xuất sắc! Đã hoàn thành 10 từ nối liên tiếp!'}
               </p>
             </motion.div>
@@ -461,7 +462,7 @@ export function WordChainLesson({ puzzle, onCorrect }) {
               animate={index === playerCorrectCount - 1 ? { scale: [0.6, 1.3, 1] } : { scale: 1 }}
               transition={{ duration: 0.3 }}
               className={`h-1.5 w-6 rounded-full transition-colors ${
-                lit ? 'bg-gradient-to-r from-gold-300 to-gold-500 shadow-[0_0_8px_-1px_rgba(232,195,104,0.7)]' : 'bg-white/10'
+                lit ? 'bg-gradient-to-r from-gold-400 to-gold-500 shadow-[0_0_8px_-1px_rgba(232,195,104,0.7)]' : 'bg-white/40'
               }`}
             />
           )
@@ -475,7 +476,7 @@ export function WordChainLesson({ puzzle, onCorrect }) {
           onChange={(event) => setInput(event.target.value)}
           placeholder={t(uiStrings.wordChainInputPlaceholder)}
           disabled={aiThinking || Boolean(victory)}
-          className="flex-1 rounded-2xl border border-gold-600/15 bg-ocean-950/80 px-5 py-3.5 font-display text-base text-parchment-100 placeholder:text-parchment-200/40 backdrop-blur-md transition-colors focus:border-gold-400/60 focus:outline-none focus:ring-2 focus:ring-gold-400/30 disabled:opacity-60"
+          className="flex-1 rounded-2xl border border-rose-300/50 bg-white/80 px-5 py-3.5 font-display text-base text-ink-900 placeholder:text-rose-400/60 backdrop-blur-md transition-colors focus:border-rose-400/70 focus:outline-none focus:ring-2 focus:ring-rose-300/40 disabled:opacity-60"
         />
         <Button
           type="submit"
@@ -489,15 +490,17 @@ export function WordChainLesson({ puzzle, onCorrect }) {
 
       {/* Error toast — same dark-glass card as AchievementToast, auto-
           dismissing rather than sitting parked in the layout below the
-          input. Rendered through a portal straight into <body>: this
-          component sits inside IslandPage's animated `motion.div`
-          (fadeStep), and framer-motion always sets an explicit `transform`
-          on that wrapper (even for a no-op like y: 0) — which makes it a
-          `position: fixed` containing block *and* a new stacking context.
-          Without the portal the toast would be trapped inside that
-          wrapper's box instead of the real viewport, landing underneath
-          the HUD instead of above it regardless of z-index. Positioned
-          below `top-20` to clear the HUD's own top-0 row entirely. */}
+          input. Kept dark regardless of the card's light theme — a high-
+          contrast alert reads as "pay attention" in any color scheme.
+          Rendered through a portal straight into <body>: this component
+          sits inside IslandPage's animated `motion.div` (fadeStep), and
+          framer-motion always sets an explicit `transform` on that wrapper
+          (even for a no-op like y: 0) — which makes it a `position: fixed`
+          containing block *and* a new stacking context. Without the portal
+          the toast would be trapped inside that wrapper's box instead of
+          the real viewport, landing underneath the HUD instead of above it
+          regardless of z-index. Positioned below `top-20` to clear the
+          HUD's own top-0 row entirely. */}
       {createPortal(
         <div className="pointer-events-none fixed inset-x-0 top-20 z-[60] flex justify-center px-4">
           <AnimatePresence>
