@@ -145,8 +145,13 @@ export function TitleIntroScene({ onSettled }) {
 
       <Birds />
 
-      {/* Photorealistic Grand Volcanic Paradise Island */}
-      <ParadiseIsland position={[-7.8, -0.05, -11.5]} scale={1.95} rotation={[0, 0.42, 0]} />
+      {/* Photorealistic Grand Volcanic Paradise Island — brought closer,
+          bigger, and further into frame than before: at its old distance
+          and position it sat almost entirely past the left edge of the
+          REST camera's view, so its actual detail (crater, lava pool,
+          rainforest clusters, shoreline foam) never really read as
+          anything more than a plain green mound. */}
+      <ParadiseIsland position={[-5.4, -0.05, -9]} scale={2.5} rotation={[0, 0.42, 0]} />
       <PalmIsland position={[15, 0, -24]} scale={1.1} />
 
       <Suspense fallback={null}>

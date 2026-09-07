@@ -25,13 +25,18 @@ export function PalmTree({ position = [0, 0, 0], scale = 1, lean = 0 }) {
     const count = 10
     for (let i = 0; i < count; i++) {
       const angle = (i / count) * Math.PI * 2
+      // Widened from the original (max width 0.14, depth 0.012) — a leaf
+      // that thin reads as a bare twig rather than a frond once this tree
+      // is shown at any real size (e.g. the title screen's intro island),
+      // even though it passed unnoticed at the small, distant scale this
+      // was previously always seen at (world-map island markers).
       const shape = new THREE.Shape()
       shape.moveTo(0, 0)
-      shape.quadraticCurveTo(0.06, 0.3, 0.14, 0.75)
-      shape.quadraticCurveTo(0.03, 0.5, 0, 0)
+      shape.quadraticCurveTo(0.09, 0.3, 0.2, 0.75)
+      shape.quadraticCurveTo(0.05, 0.5, 0, 0)
 
       const geo = new THREE.ExtrudeGeometry(shape, {
-        depth: 0.012,
+        depth: 0.02,
         bevelEnabled: true,
         bevelSize: 0.004,
         bevelThickness: 0.004,

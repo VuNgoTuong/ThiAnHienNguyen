@@ -16,7 +16,7 @@ export function VoyageOverlay({ isSailing, destinationName }) {
           className="pointer-events-none fixed inset-0 z-40 flex flex-col items-center justify-end gap-3 bg-gradient-to-t from-ocean-950/70 via-transparent to-transparent pb-16"
         >
           <motion.div animate={{ rotate: 360 }} transition={{ duration: 2.4, repeat: Infinity, ease: 'linear' }}>
-            <Compass size={22} className="text-gold-400" />
+            <Compass size={22} className="text-rose-300 drop-shadow-[0_0_8px_rgba(244,114,182,0.6)]" />
           </motion.div>
           <p className="font-display text-sm tracking-wide text-parchment-100">
             {t(uiStrings.sailingTo)} {t(destinationName)}…

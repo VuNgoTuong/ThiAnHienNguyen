@@ -40,7 +40,7 @@ function QuizQuestion({ question, onCorrect, onWrong }) {
 
   return (
     <>
-      <h2 className="mb-3 font-display text-sm tracking-widest text-gold-700 uppercase font-semibold">
+      <h2 className="mb-3 font-display text-sm tracking-widest text-rose-600 uppercase font-semibold">
         {t(uiStrings.verifyTitle)}
       </h2>
       <p className="mb-8 font-serif text-2xl font-medium text-ink-900 italic leading-snug">{t(question.prompt)}</p>
@@ -64,7 +64,7 @@ function QuizQuestion({ question, onCorrect, onWrong }) {
                   ? 'border-emerald-600 bg-emerald-500/20 text-emerald-950 shadow-[0_0_20px_rgba(16,185,129,0.35)]'
                   : showWrong
                     ? 'border-red-600 bg-red-500/20 text-red-950 shadow-[0_0_20px_rgba(239,68,68,0.35)]'
-                    : 'border-gold-600/35 bg-[#fbf5e6] text-ink-900 hover:border-gold-600 hover:bg-[#ffffff] hover:shadow-lg'
+                    : 'border-rose-300/50 bg-[#fdf6f8] text-ink-900 hover:border-rose-400 hover:bg-white hover:shadow-lg'
               }`}
             >
               <span>{t(option.label)}</span>
