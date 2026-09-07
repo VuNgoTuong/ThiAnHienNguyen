@@ -13,8 +13,7 @@ export function WorldMap({
   isUnlocked,
   isSolved,
   onSelectIsland,
-  shipPosition,
-  shipBearing,
+  shipRef,
 }) {
   return (
     <div className="relative h-full w-full bg-ocean-950">
@@ -26,8 +25,7 @@ export function WorldMap({
           isUnlocked={isUnlocked}
           isSolved={isSolved}
           onSelectIsland={onSelectIsland}
-          shipPosition={shipPosition}
-          shipBearing={shipBearing}
+          shipRef={shipRef}
         />
       </Suspense>
     </div>

@@ -1,4 +1,4 @@
-import { useGame } from '../../hooks/useGame.js'
+import { useGame, useCurrentScene } from '../../hooks/useGame.js'
 import { TitleScreen } from '../../pages/TitleScreen.jsx'
 import { NameEntryPage } from '../../pages/NameEntryPage.jsx'
 import { VerifyIdentityPage } from '../../pages/VerifyIdentityPage.jsx'
@@ -31,9 +31,9 @@ const SCENES = {
 const NO_HUD_SCENES = new Set(['title', 'name-entry', 'verify', 'greeting', 'ending', 'waterfall'])
 
 export function GameShell() {
-  const { state } = useGame()
-  const SceneComponent = SCENES[state.scene] ?? TitleScreen
-  const showHud = !NO_HUD_SCENES.has(state.scene)
+  const scene = useCurrentScene()
+  const SceneComponent = SCENES[scene] ?? TitleScreen
+  const showHud = !NO_HUD_SCENES.has(scene)
 
   return (
     <div className="relative h-screen w-screen overflow-hidden bg-ocean-950">

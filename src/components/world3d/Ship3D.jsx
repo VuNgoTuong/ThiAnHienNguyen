@@ -274,23 +274,25 @@ function CuteHeartFlag({ position }) {
   )
 }
 
-export function Ship3D({ position, bearing = 0, scale = 2.1 }) {
+// `shipRef` is the mutable { x, y, bearing } object from useShipVoyage (map-
+// percent coordinates) — read directly here every frame rather than through
+// props, so a voyage in progress never has to wait on a React re-render to
+// reach the screen. See useShipVoyage.js for why that distinction matters.
+export function Ship3D({ shipRef, scale = 2.1 }) {
   const groupRef = useRef(null)
-  const world = useMemo(() => (position ? percentToWorld3D(position.x, position.y) : null), [position])
   const chubbyHullGeo = useCheeseCuteHullGeometry()
   const cuteSailTexture = useCheeseCuteSailTexture()
 
   useFrame(({ clock }) => {
-    if (!groupRef.current || !world) return
+    if (!groupRef.current || !shipRef?.current) return
+    const world = percentToWorld3D(shipRef.current.x, shipRef.current.y)
     const t = clock.getElapsedTime()
     // Playful bouncing motion
     groupRef.current.position.set(world.x, 0.15 + Math.sin(t * 2.0) * 0.08 + Math.cos(t * 1.3) * 0.04, world.z)
-    groupRef.current.rotation.y = -(bearing * Math.PI) / 180
+    groupRef.current.rotation.y = -(shipRef.current.bearing * Math.PI) / 180
     groupRef.current.rotation.z = Math.sin(t * 1.4) * 0.04
     groupRef.current.rotation.x = Math.cos(t * 1.7) * 0.03
   })
-
-  if (!world) return null
 
   return (
     <group ref={groupRef} scale={scale}>

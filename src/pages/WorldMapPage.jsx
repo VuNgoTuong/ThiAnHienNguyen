@@ -9,8 +9,7 @@ import { VoyageOverlay } from '../components/world/VoyageOverlay.jsx'
 
 export function WorldMapPage() {
   const { state, arriveAtIsland, arriveAtFinalIsland } = useGame()
-  const { position, bearing, isSailing, sailTo } = useShipVoyage()
-  const [restingPosition, setRestingPosition] = useState(() => getShipRestingPosition(state))
+  const { shipRef, isSailing, sailTo } = useShipVoyage(getShipRestingPosition(state))
   const [destinationName, setDestinationName] = useState('')
 
   function handleSelectIsland(island) {
@@ -19,8 +18,7 @@ export function WorldMapPage() {
     if (!isFinal && !isIslandUnlocked(island, state)) return
 
     setDestinationName(island.name)
-    sailTo(restingPosition, island.position, () => {
-      setRestingPosition(island.position)
+    sailTo(island.position, () => {
       if (isFinal) {
         arriveAtFinalIsland()
       } else {
@@ -38,8 +36,7 @@ export function WorldMapPage() {
         isUnlocked={(island) => isIslandUnlocked(island, state)}
         isSolved={(island) => isIslandSolved(island, state)}
         onSelectIsland={handleSelectIsland}
-        shipPosition={position ?? restingPosition}
-        shipBearing={bearing}
+        shipRef={shipRef}
       />
       <VoyageOverlay isSailing={isSailing} destinationName={destinationName} />
     </div>

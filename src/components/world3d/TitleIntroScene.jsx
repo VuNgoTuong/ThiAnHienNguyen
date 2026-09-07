@@ -89,16 +89,15 @@ function IntroCamera({ onSettled, onDiveStart }) {
 }
 
 function ArrivingShip({ start }) {
-  const { position, bearing, sailTo } = useShipVoyage()
+  const { shipRef, sailTo } = useShipVoyage({ x: 92, y: 78 })
 
   useEffect(() => {
     if (!start) return
-    sailTo({ x: 92, y: 78 }, { x: 63, y: 50 })
+    sailTo({ x: 63, y: 50 })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [start])
 
-  if (!position) return null
-  return <Ship3D position={position} bearing={bearing} />
+  return <Ship3D shipRef={shipRef} />
 }
 
 export function TitleIntroScene({ onSettled }) {

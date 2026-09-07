@@ -1,20 +1,18 @@
 import { useEffect } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import * as Icons from 'lucide-react'
-import { useGame, useTranslation } from '../../hooks/useGame.js'
-import { getAchievementById } from '../../data/achievements.js'
+import { useAchievementToastQueue, useTranslation } from '../../hooks/useGame.js'
 import { uiStrings } from '../../data/uiStrings.js'
 
 export function AchievementToast() {
-  const { state, clearAchievementToasts } = useGame()
+  const { unlocked, clearAchievementToasts } = useAchievementToastQueue()
   const { t } = useTranslation()
-  const unlocked = state.lastUnlockedAchievementIds.map(getAchievementById).filter(Boolean)
 
   useEffect(() => {
-    if (state.lastUnlockedAchievementIds.length === 0) return
+    if (unlocked.length === 0) return
     const timeoutId = setTimeout(() => clearAchievementToasts(), 3200)
     return () => clearTimeout(timeoutId)
-  }, [state.lastUnlockedAchievementIds, clearAchievementToasts])
+  }, [unlocked, clearAchievementToasts])
 
   return (
     <div className="pointer-events-none fixed top-4 right-4 z-[60] flex flex-col gap-2">

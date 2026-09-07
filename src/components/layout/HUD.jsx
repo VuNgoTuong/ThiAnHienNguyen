@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Package, Award, Compass, Droplets } from 'lucide-react'
-import { useFragments, useTranslation, useGame } from '../../hooks/useGame.js'
+import { useFragments, useTranslation } from '../../hooks/useGame.js'
 import { ProgressRing } from '../ui/ProgressRing.jsx'
 import { LanguageToggle } from '../ui/LanguageToggle.jsx'
 import { FullscreenToggle } from '../ui/FullscreenToggle.jsx'
@@ -10,7 +10,6 @@ import { uiStrings } from '../../data/uiStrings.js'
 
 export function HUD() {
   const { t } = useTranslation()
-  const { setScene } = useGame()
   const [panel, setPanel] = useState(null) // 'inventory' | 'achievements' | null
   const { collected, total } = useFragments()
 
