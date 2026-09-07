@@ -4,7 +4,7 @@ import { Bot, Crown, Flame, Send, Sparkles, User, Compass, RefreshCw } from 'luc
 import { useTranslation } from '../../../hooks/useGame.js'
 import { uiStrings } from '../../../data/uiStrings.js'
 import { Button } from '../../ui/Button.jsx'
-import { getSyllables, validateNextWord, pickAiWord, hasAnyCandidate, pickRandomStartWord } from '../../../utils/wordChainEngine.js'
+import { getSyllables, validateNextWord, pickAiWord, pickAiFreeWord, hasAnyCandidate, pickRandomStartWord } from '../../../utils/wordChainEngine.js'
 
 const TARGET_CORRECT = 10
 const AI_THINK_DELAY_MS = 650
@@ -211,14 +211,23 @@ export function WordChainLesson({ puzzle, onCorrect }) {
     const nextRequired = getSyllables(result.word)[1]
 
     setTimeout(() => {
-      const aiWord = pickAiWord({ requiredStartSyllable: nextRequired, usedWords: nextUsed })
       setAiThinking(false)
+      const aiWord = pickAiWord({ requiredStartSyllable: nextRequired, usedWords: nextUsed })
       if (aiWord) {
         setChain((current) => [...current, { word: aiWord, by: 'ai' }])
-      } else {
-        clearInterval(intervalRef.current)
-        setVictory('ai-stuck')
+        return
       }
+
+      // No word continues this exact chain — same relief valve the player
+      // gets via `freeMove`: throw in a fresh word rather than surrender.
+      const freeWord = pickAiFreeWord(nextUsed)
+      if (freeWord) {
+        setChain((current) => [...current, { word: freeWord, by: 'start' }])
+        return
+      }
+
+      clearInterval(intervalRef.current)
+      setVictory('ai-stuck')
     }, AI_THINK_DELAY_MS)
   }
 
