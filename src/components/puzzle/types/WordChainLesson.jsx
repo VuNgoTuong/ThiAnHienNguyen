@@ -79,7 +79,6 @@ function ChatBubble({ entry }) {
   }
 
   const Icon = isPlayer ? User : Bot
-  const syllables = getSyllables(entry.word)
 
   return (
     <motion.div
@@ -106,20 +105,7 @@ function ChatBubble({ entry }) {
             : 'rounded-bl-sm border border-violet-200 bg-violet-50/90 text-violet-950 backdrop-blur-md'
         }`}
       >
-        {syllables.length === 2 ? (
-          <span className="flex items-center gap-1.5">
-            <span>{syllables[0]}</span>
-            <span
-              className={`rounded-md px-2 py-0.5 text-sm font-bold ${
-                isPlayer ? 'bg-white/70 text-rose-950' : 'bg-violet-200/80 text-violet-950'
-              }`}
-            >
-              {syllables[1]}
-            </span>
-          </span>
-        ) : (
-          entry.word
-        )}
+        {entry.word}
       </div>
     </motion.div>
   )
@@ -336,11 +322,24 @@ export function WordChainLesson({ puzzle, onCorrect }) {
         </div>
         <div className="relative -mt-5 mb-5 h-px w-full bg-gradient-to-r from-transparent via-rose-300/50 to-transparent" />
 
-        {/* Chain History Log */}
-        <div className="relative flex min-h-[15rem] flex-col gap-3 sm:min-h-[17rem]">
+        {/* Chain History Log — capped narrower than the card itself. The
+            card was widened (see IslandPage.jsx's isWideLesson) to feel
+            more substantial, but on an actually wide screen that stretched
+            the player/AI bubbles (aligned to opposite edges) far enough
+            apart to look broken rather than roomy. */}
+        <div className="relative mx-auto flex min-h-[15rem] w-full max-w-xl flex-col gap-3 sm:min-h-[17rem]">
           <AnimatePresence initial={false}>
+            {/* `entry.word` alone is a stable key here — every word in a
+                chain is guaranteed unique within one game (validateNextWord/
+                pickAiWord both reject already-used words). The previous key
+                mixed in `chain.length - visibleChain.length`, a value that
+                changes on every single turn even for a message that was
+                already on screen — so React tore down and remounted every
+                bubble each time instead of animating it into its new
+                position, which is what actually caused the jump/jerk on
+                every submit. */}
             {visibleChain.map((entry) => (
-              <ChatBubble key={`${chain.length - visibleChain.length}-${entry.word}`} entry={entry} />
+              <ChatBubble key={entry.word} entry={entry} />
             ))}
           </AnimatePresence>
           {aiThinking ? (
