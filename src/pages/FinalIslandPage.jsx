@@ -37,7 +37,7 @@ export function FinalIslandPage() {
       : finalIsland.arrival.lines
 
   return (
-    <div className="relative flex h-full w-full items-center justify-center p-6">
+    <div className="relative flex h-full w-full items-center justify-center p-4 sm:p-6">
       <Ocean />
       <div className="relative z-10 flex w-full flex-col items-center mx-auto max-w-2xl">
         <AnimatePresence mode="wait">
