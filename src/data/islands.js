@@ -44,10 +44,10 @@ export const islands = [
         id: 'level1-wordchain',
         type: 'word-chain',
         prompt: {
-          vi: 'Nối đúng 10 từ liên tiếp. Mỗi lượt có 20 giây.',
-          en: 'Connect 10 words in a row. 20 seconds per turn.',
+          vi: 'Nối đúng 10 từ liên tiếp. Mỗi lượt có 30 giây.',
+          en: 'Connect 10 words in a row. 30 seconds per turn.',
         },
-        data: { timeLimitMs: 20000 },
+        data: { timeLimitMs: 30000 },
       },
     ],
     outro: {

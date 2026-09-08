@@ -5,7 +5,7 @@ import { AlertCircle, Bot, Crown, Flame, Send, Sparkles, User, Compass, RefreshC
 import { useTranslation } from '../../../hooks/useGame.js'
 import { uiStrings } from '../../../data/uiStrings.js'
 import { Button } from '../../ui/Button.jsx'
-import { getSyllables, validateNextWord, pickAiWord, pickAiFreeWord, hasAnyCandidate, pickRandomStartWord } from '../../../utils/wordChainEngine.js'
+import { getSyllables, validateNextWord, pickAiWord, hasAnyCandidate, pickRandomStartWord } from '../../../utils/wordChainEngine.js'
 
 const TARGET_CORRECT = 10
 const AI_THINK_DELAY_MS = 650
@@ -139,7 +139,7 @@ export function WordChainLesson({ puzzle, onCorrect }) {
   const lastWord = chain[chain.length - 1].word
   const requiredStartSyllable = freeMove ? null : getSyllables(lastWord)[1]
 
-  const timeLimitMs = puzzle?.data?.timeLimitMs ?? 20000
+  const timeLimitMs = puzzle?.data?.timeLimitMs ?? 30000
   const [timeLeft, setTimeLeft] = useState(timeLimitMs)
   const intervalRef = useRef(null)
 
@@ -235,14 +235,10 @@ export function WordChainLesson({ puzzle, onCorrect }) {
         return
       }
 
-      // No word continues this exact chain — same relief valve the player
-      // gets via `freeMove`: throw in a fresh word rather than surrender.
-      const freeWord = pickAiFreeWord(nextUsed)
-      if (freeWord) {
-        setChain((current) => [...current, { word: freeWord, by: 'start' }])
-        return
-      }
-
+      // Genuinely cornered the AI on this word — that's a real win, not
+      // something it should get to dodge by throwing in an unrelated fresh
+      // word. (It used to do exactly that; players correctly called it out
+      // as an unfair way to avoid ever losing.)
       clearInterval(intervalRef.current)
       setVictory('ai-stuck')
     }, AI_THINK_DELAY_MS)
@@ -445,7 +441,7 @@ export function WordChainLesson({ puzzle, onCorrect }) {
                 </div>
               </motion.div>
               <p className="relative px-6 text-center font-display text-xl font-bold text-rose-950 sm:text-2xl">
-                {victory === 'ai-stuck' ? 'Anh không thể nối tiếp — em giỏi quá!' : 'Xuất sắc! Đã hoàn thành 10 từ nối liên tiếp!'}
+                {victory === 'ai-stuck' ? 'Oops! Anh bó tay, em win rồi... =))' : 'Xuất sắc! Đã hoàn thành 10 từ nối liên tiếp!'}
               </p>
             </motion.div>
           ) : null}
