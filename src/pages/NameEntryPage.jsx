@@ -33,7 +33,7 @@ export function NameEntryPage() {
   }
 
   return (
-    <div className="relative flex h-full w-full items-center justify-center p-6 sm:p-8 bg-ocean-950/40 backdrop-blur-sm">
+    <div className="relative flex h-full w-full items-center justify-center p-4 sm:p-8 bg-ocean-950/40 backdrop-blur-sm">
       <Ocean />
       <motion.div
         initial={{ opacity: 0, y: 20, scale: 0.96 }}
@@ -41,14 +41,14 @@ export function NameEntryPage() {
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
         className="relative z-10 w-full max-w-xl sm:max-w-2xl"
       >
-        <ParchmentPanel className="p-8 sm:p-12 text-center">
-          <h1 className="mb-3 font-display text-3xl font-bold tracking-wide text-ink-900 sm:text-4xl">
+        <ParchmentPanel className="p-6 sm:p-12 text-center">
+          <h1 className="mb-3 font-display text-2xl font-bold tracking-wide text-ink-900 sm:text-4xl">
             {t(uiStrings.nameEntryTitle)}
           </h1>
           {t(uiStrings.nameEntrySubtitle) ? (
             <>
               <div className="mx-auto mb-5 h-0.5 w-16 bg-gradient-to-r from-transparent via-rose-400/60 to-transparent" />
-              <p className="mb-8 font-serif text-lg sm:text-xl text-ink-700 italic whitespace-pre-line">{t(uiStrings.nameEntrySubtitle)}</p>
+              <p className="mb-8 font-serif text-base sm:text-xl text-ink-700 italic whitespace-pre-line">{t(uiStrings.nameEntrySubtitle)}</p>
             </>
           ) : (
             <div className="mb-8" />
@@ -60,10 +60,10 @@ export function NameEntryPage() {
                 value={name}
                 onChange={handleChange}
                 placeholder={t(uiStrings.nameEntryPlaceholder)}
-                className="w-full rounded-2xl border-2 border-rose-300/60 bg-[#fdf6f8] px-6 py-4 text-center font-body text-xl font-medium text-ink-900 placeholder:text-rose-400/50 shadow-[inset_0_2px_6px_rgba(0,0,0,0.1)] transition-all focus:border-rose-400 focus:bg-white focus:ring-4 focus:ring-rose-300/30 focus:outline-none"
+                className="w-full rounded-2xl border-2 border-rose-300/60 bg-[#fdf6f8] px-4 py-3 text-center font-body text-sm font-medium text-ink-900 placeholder:text-rose-400/50 shadow-[inset_0_2px_6px_rgba(0,0,0,0.1)] transition-all focus:border-rose-400 focus:bg-white focus:ring-4 focus:ring-rose-300/30 focus:outline-none sm:px-6 sm:py-4 sm:text-xl"
               />
             </div>
-            <Button type="submit" icon={ArrowRight} disabled={!name.trim()} className="w-full py-4 text-lg rounded-2xl shadow-lg">
+            <Button type="submit" icon={ArrowRight} disabled={!name.trim()} className="w-full py-3 text-base rounded-2xl shadow-lg sm:py-4 sm:text-lg">
               {t(uiStrings.nameEntryButton)}
             </Button>
           </form>

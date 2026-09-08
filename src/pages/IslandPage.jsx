@@ -104,7 +104,7 @@ export function IslandPage() {
   const isWideLesson = step === 'lesson' && currentLesson.type === 'word-chain'
 
   return (
-    <div className="relative flex h-full w-full items-center justify-center p-6">
+    <div className="relative flex h-full w-full items-center justify-center p-4 sm:p-6">
       <Ocean />
       <div className={`relative z-10 flex w-full flex-col items-center mx-auto ${isWideLesson ? 'max-w-5xl sm:max-w-6xl' : 'max-w-3xl sm:max-w-4xl'}`}>
         <AnimatePresence mode="wait">
@@ -120,7 +120,7 @@ export function IslandPage() {
 
           {step === 'discovery' ? (
             <motion.div key="discovery" {...fadeStep} className="flex w-full justify-center">
-              <ParchmentPanel className="w-full max-w-xl p-8 text-center sm:p-10">
+              <ParchmentPanel className="w-full max-w-xl p-6 text-center sm:p-10">
                 <h2 className="mb-4 font-display text-2xl font-bold text-ink-900">{t(island.discovery.title)}</h2>
                 {island.discovery.story.map((paragraph, index) => (
                   <p key={index} className="mb-3 font-serif text-lg leading-relaxed text-ink-900/90">
@@ -158,7 +158,7 @@ export function IslandPage() {
 
           {step === 'complete' ? (
             <motion.div key="complete" {...fadeStep} className="flex w-full justify-center">
-              <ParchmentPanel className="w-full max-w-xl p-8 text-center sm:p-10">
+              <ParchmentPanel className="w-full max-w-xl p-6 text-center sm:p-10">
                 {island.outro?.lines ? (
                   island.outro.lines.map((line, index) => (
                     <p key={index} className="mb-3 font-serif text-lg leading-relaxed text-ink-900/90 sm:text-xl">
@@ -195,7 +195,7 @@ export function IslandPage() {
 
           {step === 'revisit' ? (
             <motion.div key="revisit" {...fadeStep} className="flex w-full justify-center">
-              <ParchmentPanel className="w-full max-w-xl p-8 text-center sm:p-10">
+              <ParchmentPanel className="w-full max-w-xl p-6 text-center sm:p-10">
                 <h2 className="mb-3 font-display text-xl font-bold text-ink-900">{t(island.discovery.title)}</h2>
                 <p className="mb-6 font-serif text-base text-ink-700">{t(uiStrings.islandRevisitMessage)}</p>
                 <div className="flex justify-center">

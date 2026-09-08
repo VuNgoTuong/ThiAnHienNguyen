@@ -21,7 +21,7 @@ export function PuzzleEngine({ puzzle, onSolved, secretModeUnlocked = false }) {
   }
 
   return (
-    <ParchmentPanel className="w-full p-8 sm:p-10">
+    <ParchmentPanel className="w-full p-5 sm:p-10">
       <p className="mb-6 font-serif text-xl sm:text-2xl leading-relaxed font-medium text-ink-900 italic">{t(displayedPrompt)}</p>
       <PuzzleTypeComponent puzzle={puzzle} onCorrect={onSolved} />
     </ParchmentPanel>

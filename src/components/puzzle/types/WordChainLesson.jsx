@@ -5,7 +5,7 @@ import { AlertCircle, Bot, Crown, Flame, Send, Sparkles, User, Compass, RefreshC
 import { useTranslation } from '../../../hooks/useGame.js'
 import { uiStrings } from '../../../data/uiStrings.js'
 import { Button } from '../../ui/Button.jsx'
-import { getSyllables, validateNextWord, pickAiWord, pickAiFreeWord, hasAnyCandidate, pickRandomStartWord } from '../../../utils/wordChainEngine.js'
+import { getSyllables, validateNextWord, pickAiWord, hasAnyCandidate, pickRandomStartWord } from '../../../utils/wordChainEngine.js'
 
 const TARGET_CORRECT = 10
 const AI_THINK_DELAY_MS = 650
@@ -79,7 +79,6 @@ function ChatBubble({ entry }) {
   }
 
   const Icon = isPlayer ? User : Bot
-  const syllables = getSyllables(entry.word)
 
   return (
     <motion.div
@@ -106,20 +105,7 @@ function ChatBubble({ entry }) {
             : 'rounded-bl-sm border border-violet-200 bg-violet-50/90 text-violet-950 backdrop-blur-md'
         }`}
       >
-        {syllables.length === 2 ? (
-          <span className="flex items-center gap-1.5">
-            <span>{syllables[0]}</span>
-            <span
-              className={`rounded-md px-2 py-0.5 text-sm font-bold ${
-                isPlayer ? 'bg-white/70 text-rose-950' : 'bg-violet-200/80 text-violet-950'
-              }`}
-            >
-              {syllables[1]}
-            </span>
-          </span>
-        ) : (
-          entry.word
-        )}
+        {entry.word}
       </div>
     </motion.div>
   )
@@ -139,7 +125,7 @@ export function WordChainLesson({ puzzle, onCorrect }) {
   const lastWord = chain[chain.length - 1].word
   const requiredStartSyllable = freeMove ? null : getSyllables(lastWord)[1]
 
-  const timeLimitMs = puzzle?.data?.timeLimitMs ?? 20000
+  const timeLimitMs = puzzle?.data?.timeLimitMs ?? 30000
   const [timeLeft, setTimeLeft] = useState(timeLimitMs)
   const intervalRef = useRef(null)
 
@@ -235,14 +221,10 @@ export function WordChainLesson({ puzzle, onCorrect }) {
         return
       }
 
-      // No word continues this exact chain — same relief valve the player
-      // gets via `freeMove`: throw in a fresh word rather than surrender.
-      const freeWord = pickAiFreeWord(nextUsed)
-      if (freeWord) {
-        setChain((current) => [...current, { word: freeWord, by: 'start' }])
-        return
-      }
-
+      // Genuinely cornered the AI on this word — that's a real win, not
+      // something it should get to dodge by throwing in an unrelated fresh
+      // word. (It used to do exactly that; players correctly called it out
+      // as an unfair way to avoid ever losing.)
       clearInterval(intervalRef.current)
       setVictory('ai-stuck')
     }, AI_THINK_DELAY_MS)
@@ -340,11 +322,24 @@ export function WordChainLesson({ puzzle, onCorrect }) {
         </div>
         <div className="relative -mt-5 mb-5 h-px w-full bg-gradient-to-r from-transparent via-rose-300/50 to-transparent" />
 
-        {/* Chain History Log */}
-        <div className="relative flex min-h-[15rem] flex-col gap-3 sm:min-h-[17rem]">
+        {/* Chain History Log — capped narrower than the card itself. The
+            card was widened (see IslandPage.jsx's isWideLesson) to feel
+            more substantial, but on an actually wide screen that stretched
+            the player/AI bubbles (aligned to opposite edges) far enough
+            apart to look broken rather than roomy. */}
+        <div className="relative mx-auto flex min-h-[15rem] w-full max-w-xl flex-col gap-3 sm:min-h-[17rem]">
           <AnimatePresence initial={false}>
+            {/* `entry.word` alone is a stable key here — every word in a
+                chain is guaranteed unique within one game (validateNextWord/
+                pickAiWord both reject already-used words). The previous key
+                mixed in `chain.length - visibleChain.length`, a value that
+                changes on every single turn even for a message that was
+                already on screen — so React tore down and remounted every
+                bubble each time instead of animating it into its new
+                position, which is what actually caused the jump/jerk on
+                every submit. */}
             {visibleChain.map((entry) => (
-              <ChatBubble key={`${chain.length - visibleChain.length}-${entry.word}`} entry={entry} />
+              <ChatBubble key={entry.word} entry={entry} />
             ))}
           </AnimatePresence>
           {aiThinking ? (
@@ -445,7 +440,7 @@ export function WordChainLesson({ puzzle, onCorrect }) {
                 </div>
               </motion.div>
               <p className="relative px-6 text-center font-display text-xl font-bold text-rose-950 sm:text-2xl">
-                {victory === 'ai-stuck' ? 'Anh không thể nối tiếp — em giỏi quá!' : 'Xuất sắc! Đã hoàn thành 10 từ nối liên tiếp!'}
+                {victory === 'ai-stuck' ? 'Oops! Anh bó tay, em win rồi... =))' : 'Xuất sắc! Đã hoàn thành 10 từ nối liên tiếp!'}
               </p>
             </motion.div>
           ) : null}

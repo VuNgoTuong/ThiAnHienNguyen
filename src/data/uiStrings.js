@@ -1,10 +1,10 @@
 export const uiStrings = {
-  gameTitle: { vi: 'Ra Đảo Một Chuyến?', en: 'Trip to the Island?' },
+  gameTitle: { vi: 'Chào công chúa bận rộn.', en: 'Hello busy girl.' },
   gameSubtitle: {
     vi: '',
     en: '',
   },
-  newVoyage: { vi: 'Tôi mà sợ anh à?', en: 'I am not afraid of you!' },
+  newVoyage: { vi: 'Hôm nay cho anh mượn em một lúc.', en: 'Let me borrow you for a bit today.' },
   continueVoyage: { vi: 'Tiếp Tục Hành Trình', en: 'Continue Voyage' },
   resetProgress: { vi: 'Đặt lại tiến trình', en: 'Reset progress' },
 

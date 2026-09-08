@@ -36,7 +36,7 @@ export function GameShell() {
   const showHud = !NO_HUD_SCENES.has(scene)
 
   return (
-    <div className="relative h-screen w-screen overflow-hidden bg-ocean-950">
+    <div className="relative h-dvh w-screen overflow-hidden bg-ocean-950">
       <SceneComponent />
       {showHud ? <HUD /> : null}
       <AchievementToast />

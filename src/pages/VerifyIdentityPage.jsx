@@ -101,7 +101,7 @@ export function VerifyIdentityPage() {
   }
 
   return (
-    <div className="relative flex h-full w-full items-center justify-center p-6 sm:p-8">
+    <div className="relative flex h-full w-full items-center justify-center p-4 sm:p-8">
       <Ocean />
       <div
         className="pointer-events-none absolute inset-0 z-[5]"
@@ -112,7 +112,7 @@ export function VerifyIdentityPage() {
       <div className="relative z-10 w-full max-w-xl sm:max-w-2xl">
         <AnimatePresence mode="wait">
           <motion.div key={`${step}-${attempt}`} {...fadeStep}>
-            <ParchmentPanel className="p-8 sm:p-12 text-center">
+            <ParchmentPanel className="p-6 sm:p-12 text-center">
               <QuizQuestion question={QUESTIONS[step]} onCorrect={handleCorrect} onWrong={handleWrong} />
             </ParchmentPanel>
           </motion.div>

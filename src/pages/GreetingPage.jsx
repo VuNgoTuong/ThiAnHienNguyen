@@ -14,7 +14,7 @@ export function GreetingPage() {
   }
 
   return (
-    <div className="relative flex h-full w-full items-center justify-center p-6 bg-ocean-950/40 backdrop-blur-sm">
+    <div className="relative flex h-full w-full items-center justify-center p-4 sm:p-6 bg-ocean-950/40 backdrop-blur-sm">
       <Ocean />
       <motion.div
         initial={{ opacity: 0, y: 20, scale: 0.96 }}

@@ -25,8 +25,8 @@ export const islands = [
       ],
       secretLines: [
         {
-          vi: 'Ê An Hiền, sẵn sàng chưa? Đảo này dễ ợt à kkk!',
-          en: "Hey An Hiền, ready? This island's easy kkk!",
+          vi: 'Thử thách game 1, Công chúa sẵn sàng chưa?  haha',
+          en: 'Game challenge 1, is the Princess ready? haha',
         },
       ],
     },
@@ -34,8 +34,8 @@ export const islands = [
       title: { vi: 'Mở Màn Nhẹ Nhàng', en: 'A Gentle Warm-up' },
       story: [
         {
-          vi: 'Nối từ 10 lần liên tiếp là phá đảo này rùi nè. Dễ ợt à kkk!',
-          en: 'Chain 10 words in a row to clear this island. Easy peasy kkk!',
+          vi: 'Nối từ 10 lần liên tiếp là pass đảo 1. Dễ ợt mà phải khum kkk!',
+          en: 'Chain 10 words in a row to pass island 1. Super easy right kkk!',
         },
       ],
     },
@@ -44,10 +44,10 @@ export const islands = [
         id: 'level1-wordchain',
         type: 'word-chain',
         prompt: {
-          vi: 'Nối đúng 10 từ liên tiếp. Mỗi lượt có 20 giây.',
-          en: 'Connect 10 words in a row. 20 seconds per turn.',
+          vi: 'Nối đúng 10 từ liên tiếp. Mỗi lượt có 30 giây.',
+          en: 'Connect 10 words in a row. 30 seconds per turn.',
         },
-        data: { timeLimitMs: 20000 },
+        data: { timeLimitMs: 30000 },
       },
     ],
     outro: {
