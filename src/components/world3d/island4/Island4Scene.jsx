@@ -384,7 +384,7 @@ export function Island4Scene({ onSolved, secretModeUnlocked = false }) {
 
       {/* round progress pips */}
       {phase === 'round' ? (
-        <div className="pointer-events-none absolute inset-x-0 top-4 z-10 flex flex-col items-center gap-2">
+        <div className="pointer-events-none absolute inset-x-0 top-16 z-10 flex flex-col items-center gap-2 sm:top-20">
           <p className="font-display text-xs tracking-[0.3em] text-cyan-200/80">
             {t(island4Copy.eyebrow)} · {String(roundNumber).padStart(2, '0')} / {String(ROUND_COUNT).padStart(2, '0')}
           </p>

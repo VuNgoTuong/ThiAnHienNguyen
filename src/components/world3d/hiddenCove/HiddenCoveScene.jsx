@@ -46,7 +46,7 @@ function CoveCamera({ cameraRef, lookTargetRef }) {
       fov={48}
       position={[VIEW_REST.cam.x, VIEW_REST.cam.y, VIEW_REST.cam.z]}
       near={0.1}
-      far={120}
+      far={220}
     />
   )
 }
@@ -163,7 +163,7 @@ export function HiddenCoveScene({ lesson, onSolved }) {
 
       {/* chapter progress */}
       {phase === 'section-intro' || phase === 'question' ? (
-        <div className="pointer-events-none absolute inset-x-0 top-4 z-10 flex flex-col items-center gap-1.5">
+        <div className="pointer-events-none absolute inset-x-0 top-16 z-10 flex flex-col items-center gap-1.5 sm:top-20">
           <div className="flex items-center gap-2 rounded-full border border-parchment-200/15 bg-ocean-950/55 px-3 py-1.5 backdrop-blur">
             <Compass size={13} className="text-gold-400" />
             <span className="font-display text-[11px] font-semibold tracking-widest text-gold-300 uppercase">
