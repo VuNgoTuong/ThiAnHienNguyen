@@ -407,7 +407,7 @@ export function Island3Scene({ lesson, onSolved, secretModeUnlocked = false }) {
 
       {/* quiz progress pips */}
       {phase === 'quiz' ? (
-        <div className="pointer-events-none absolute inset-x-0 top-4 z-10 flex flex-col items-center gap-2">
+        <div className="pointer-events-none absolute inset-x-0 top-16 z-10 flex flex-col items-center gap-2 sm:top-20">
           <p className="font-display text-xs tracking-[0.3em] text-violet-200/80">
             {t(island3Copy.eyebrow)} · {String(questionIndex + 1).padStart(2, '0')} / {String(questions.length).padStart(2, '0')}
           </p>

@@ -15,7 +15,7 @@ export function AchievementToast() {
   }, [unlocked, clearAchievementToasts])
 
   return (
-    <div className="pointer-events-none fixed top-4 right-4 z-[60] flex flex-col gap-2">
+    <div className="pointer-events-none fixed top-16 right-3 z-[60] flex flex-col gap-2 sm:top-20 sm:right-5">
       <AnimatePresence>
         {unlocked.map((achievement) => {
           const Icon = Icons[achievement.icon] ?? Icons.Award

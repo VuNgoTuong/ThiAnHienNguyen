@@ -105,7 +105,14 @@ const FRAGMENT_SHADER = `
   }
 `
 
-export function Ocean3D() {
+export function Ocean3D({
+  deepColor = '#0077b6',
+  shallowColor = '#00e5ff',
+  skyColor = '#38bdf8',
+  fogColor = '#7dd3fc',
+  fogNear = 30.0,
+  fogFar = 160.0,
+}) {
   const meshRef = useRef(null)
   const materialRef = useRef(null)
 
@@ -113,13 +120,14 @@ export function Ocean3D() {
     () => ({
       uTime: { value: 0 },
       uSunPosition: { value: new THREE.Vector3(...SUN_POS) },
-      uDeepColor: { value: new THREE.Color('#0077b6') },
-      uShallowColor: { value: new THREE.Color('#00e5ff') },
-      uSkyColor: { value: new THREE.Color('#38bdf8') },
-      uFogColor: { value: new THREE.Color('#7dd3fc') },
-      uFogNear: { value: 30.0 },
-      uFogFar: { value: 160.0 },
+      uDeepColor: { value: new THREE.Color(deepColor) },
+      uShallowColor: { value: new THREE.Color(shallowColor) },
+      uSkyColor: { value: new THREE.Color(skyColor) },
+      uFogColor: { value: new THREE.Color(fogColor) },
+      uFogNear: { value: fogNear },
+      uFogFar: { value: fogFar },
     }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
   )
 

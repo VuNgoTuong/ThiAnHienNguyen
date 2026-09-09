@@ -73,7 +73,20 @@ export function HiddenCoveEnvironment() {
 
       <CoveDustParticles />
       <Birds />
-      <Ocean3D />
+      {/* Tinted + fogged much closer than the WorldMap's default (daytime
+          blue, fades over 30-160 units) — this cove is a warm sunset scene
+          seen from a low, close angle, so the stock cyan horizon would
+          otherwise dominate the frame and clash with the sky. Matching the
+          scene's own <fog> color (#e8956b) here lets the sea recede into
+          the same haze everything else fades into. */}
+      <Ocean3D
+        deepColor="#1c4f66"
+        shallowColor="#2fb0ab"
+        skyColor="#f2a56a"
+        fogColor="#e8956b"
+        fogNear={6}
+        fogFar={20}
+      />
     </>
   )
 }
