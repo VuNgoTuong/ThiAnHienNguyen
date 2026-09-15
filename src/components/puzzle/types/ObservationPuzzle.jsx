@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import * as Icons from 'lucide-react'
+import { Compass } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { useTranslation } from '../../../hooks/useGame.js'
 import { uiStrings } from '../../../data/uiStrings.js'
@@ -8,10 +8,14 @@ import { uiStrings } from '../../../data/uiStrings.js'
 // A grid of identical icons with one rotated/dimmed cell — click it before
 // the timer runs out. Timeout or a wrong click just re-randomizes and
 // resets the timer, no dead-end/fail state.
+// No island currently sets `data.icon`, so this only ever renders Compass —
+// a single named import (not `import * as Icons`) keeps the other ~4000
+// lucide-react icons out of the bundle; add more named imports here if a
+// future puzzle actually needs a different glyph.
 export function ObservationPuzzle({ puzzle, onCorrect }) {
   const { t } = useTranslation()
-  const { icon = 'Compass', gridSize = 16, timeLimitMs = 10000 } = puzzle.data
-  const Icon = Icons[icon] ?? Icons.Compass
+  const { gridSize = 16, timeLimitMs = 10000 } = puzzle.data
+  const Icon = Compass
 
   const [oddIndex, setOddIndex] = useState(() => Math.floor(Math.random() * gridSize))
   const [timeLeft, setTimeLeft] = useState(timeLimitMs)

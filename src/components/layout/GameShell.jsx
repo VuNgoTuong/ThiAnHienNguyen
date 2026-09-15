@@ -1,15 +1,28 @@
+import { lazy, Suspense } from 'react'
 import { useGame, useCurrentScene } from '../../hooks/useGame.js'
 import { TitleScreen } from '../../pages/TitleScreen.jsx'
-import { NameEntryPage } from '../../pages/NameEntryPage.jsx'
-import { VerifyIdentityPage } from '../../pages/VerifyIdentityPage.jsx'
-import { GreetingPage } from '../../pages/GreetingPage.jsx'
-import { WorldMapPage } from '../../pages/WorldMapPage.jsx'
-import { IslandPage } from '../../pages/IslandPage.jsx'
-import { FinalIslandPage } from '../../pages/FinalIslandPage.jsx'
-import { EndingPage } from '../../pages/EndingPage.jsx'
-import { WaterfallExperience } from '../waterfall/WaterfallExperience.jsx'
 import { HUD } from './HUD.jsx'
 import { AchievementToast } from '../achievements/AchievementToast.jsx'
+
+// Every scene past the title screen is code-split: none of it (nor its 3D/
+// shader/postprocessing weight) needs to be in the bundle the player waits
+// on before they've even pressed "new voyage". Only TitleScreen stays a
+// static import — it's the very first paint, so lazy-loading it would just
+// add a network round-trip before anything shows.
+const NameEntryPage = lazy(() => import('../../pages/NameEntryPage.jsx').then((m) => ({ default: m.NameEntryPage })))
+const VerifyIdentityPage = lazy(() =>
+  import('../../pages/VerifyIdentityPage.jsx').then((m) => ({ default: m.VerifyIdentityPage })),
+)
+const GreetingPage = lazy(() => import('../../pages/GreetingPage.jsx').then((m) => ({ default: m.GreetingPage })))
+const WorldMapPage = lazy(() => import('../../pages/WorldMapPage.jsx').then((m) => ({ default: m.WorldMapPage })))
+const IslandPage = lazy(() => import('../../pages/IslandPage.jsx').then((m) => ({ default: m.IslandPage })))
+const FinalIslandPage = lazy(() =>
+  import('../../pages/FinalIslandPage.jsx').then((m) => ({ default: m.FinalIslandPage })),
+)
+const EndingPage = lazy(() => import('../../pages/EndingPage.jsx').then((m) => ({ default: m.EndingPage })))
+const WaterfallExperience = lazy(() =>
+  import('../waterfall/WaterfallExperience.jsx').then((m) => ({ default: m.WaterfallExperience })),
+)
 
 function WaterfallSceneWrapper() {
   const { setScene } = useGame()
@@ -37,7 +50,9 @@ export function GameShell() {
 
   return (
     <div className="relative h-dvh w-screen overflow-hidden bg-ocean-950">
-      <SceneComponent />
+      <Suspense fallback={null}>
+        <SceneComponent />
+      </Suspense>
       {showHud ? <HUD /> : null}
       <AchievementToast />
     </div>

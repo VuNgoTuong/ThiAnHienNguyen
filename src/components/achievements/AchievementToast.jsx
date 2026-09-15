@@ -1,8 +1,8 @@
 import { useEffect } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import * as Icons from 'lucide-react'
 import { useAchievementToastQueue, useTranslation } from '../../hooks/useGame.js'
 import { uiStrings } from '../../data/uiStrings.js'
+import { achievementIcons, fallbackAchievementIcon } from '../../data/achievementIcons.js'
 
 export function AchievementToast() {
   const { unlocked, clearAchievementToasts } = useAchievementToastQueue()
@@ -18,7 +18,7 @@ export function AchievementToast() {
     <div className="pointer-events-none fixed top-16 right-3 z-[60] flex flex-col gap-2 sm:top-20 sm:right-5">
       <AnimatePresence>
         {unlocked.map((achievement) => {
-          const Icon = Icons[achievement.icon] ?? Icons.Award
+          const Icon = achievementIcons[achievement.icon] ?? fallbackAchievementIcon
           return (
             <motion.div
               key={achievement.id}

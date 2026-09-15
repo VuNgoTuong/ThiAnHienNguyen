@@ -1,19 +1,30 @@
-import { useEffect, useState } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Anchor, Sparkles } from 'lucide-react'
 import { useGame, useCurrentIsland, useIsIslandSolved, useTranslation } from '../hooks/useGame.js'
 import { Ocean } from '../components/world/Ocean.jsx'
 import { DialogBox } from '../components/dialog/DialogBox.jsx'
 import { PuzzleEngine } from '../components/puzzle/PuzzleEngine.jsx'
-import { HiddenCoveScene } from '../components/world3d/hiddenCove/HiddenCoveScene.jsx'
-import { Island3Scene } from '../components/world3d/island3/Island3Scene.jsx'
-import { Island4Scene } from '../components/world3d/island4/Island4Scene.jsx'
 import { FragmentRevealModal } from '../components/inventory/FragmentRevealModal.jsx'
 import { ParchmentPanel } from '../components/ui/ParchmentPanel.jsx'
 import { Button } from '../components/ui/Button.jsx'
 import { fadeStep } from '../utils/motionPresets.js'
 import { uiStrings } from '../data/uiStrings.js'
 import { pickRandomRiddles } from '../data/riddleBank.js'
+
+// Each of these is its own full-bleed Canvas + shaders + postprocessing —
+// only Island 2/3/4 respectively need theirs, so none of the three should
+// weigh down the bundle everyone else (including someone who never gets
+// that far) has to download.
+const HiddenCoveScene = lazy(() =>
+  import('../components/world3d/hiddenCove/HiddenCoveScene.jsx').then((m) => ({ default: m.HiddenCoveScene })),
+)
+const Island3Scene = lazy(() =>
+  import('../components/world3d/island3/Island3Scene.jsx').then((m) => ({ default: m.Island3Scene })),
+)
+const Island4Scene = lazy(() =>
+  import('../components/world3d/island4/Island4Scene.jsx').then((m) => ({ default: m.Island4Scene })),
+)
 
 export function IslandPage() {
   const { state, solvePuzzle, collectFragment, setScene, arriveAtIsland } = useGame()
@@ -73,7 +84,9 @@ export function IslandPage() {
   if (step === 'lesson' && currentLesson.type === 'little-things') {
     return (
       <div className="relative h-full w-full">
-        <HiddenCoveScene lesson={currentLesson} onSolved={handleLessonSolved} />
+        <Suspense fallback={null}>
+          <HiddenCoveScene lesson={currentLesson} onSolved={handleLessonSolved} />
+        </Suspense>
         <FragmentRevealModal fragment={revealedFragment} onContinue={handleFragmentContinue} />
       </div>
     )
@@ -82,11 +95,13 @@ export function IslandPage() {
   if (island.id === 'level-3-challenge' && step === 'arrival') {
     return (
       <div className="relative h-full w-full">
-        <Island3Scene
-          lesson={island.lessons[0]}
-          onSolved={handleLessonSolved}
-          secretModeUnlocked={state.secretModeUnlocked}
-        />
+        <Suspense fallback={null}>
+          <Island3Scene
+            lesson={island.lessons[0]}
+            onSolved={handleLessonSolved}
+            secretModeUnlocked={state.secretModeUnlocked}
+          />
+        </Suspense>
         <FragmentRevealModal fragment={revealedFragment} onContinue={handleFragmentContinue} />
       </div>
     )
@@ -95,7 +110,9 @@ export function IslandPage() {
   if (island.id === 'level-4-wit' && step === 'arrival') {
     return (
       <div className="relative h-full w-full">
-        <Island4Scene onSolved={handleLessonSolved} secretModeUnlocked={state.secretModeUnlocked} />
+        <Suspense fallback={null}>
+          <Island4Scene onSolved={handleLessonSolved} secretModeUnlocked={state.secretModeUnlocked} />
+        </Suspense>
         <FragmentRevealModal fragment={revealedFragment} onContinue={handleFragmentContinue} />
       </div>
     )

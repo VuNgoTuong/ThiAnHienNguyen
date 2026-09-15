@@ -1,7 +1,7 @@
-import * as Icons from 'lucide-react'
 import { Modal } from '../ui/Modal.jsx'
 import { useAchievements, useTranslation } from '../../hooks/useGame.js'
 import { uiStrings } from '../../data/uiStrings.js'
+import { achievementIcons, fallbackAchievementIcon } from '../../data/achievementIcons.js'
 
 export function AchievementsPanel({ isOpen, onClose }) {
   const { t } = useTranslation()
@@ -11,7 +11,7 @@ export function AchievementsPanel({ isOpen, onClose }) {
     <Modal isOpen={isOpen} onClose={onClose} title={t(uiStrings.achievementsTitle)}>
       <ul className="space-y-3">
         {achievements.map((achievement) => {
-          const Icon = Icons[achievement.icon] ?? Icons.Award
+          const Icon = achievementIcons[achievement.icon] ?? fallbackAchievementIcon
           return (
             <li
               key={achievement.id}
